@@ -252,7 +252,11 @@ com
 	|	^(WHILE t=expr com)
 				{ checkType(Type.BOOL, t, $WHILE);
 				}
-	|	^(SEQ com*)
+	|	^(FOR ID t1=$e1 t2=$e2 seq_com) 
+				{checkType(type.INT, t1, $FOR);
+				 checkType(type.INT, t2, $FOR)
+				}
+|	^(SEQ com*)
 	;
 
 
