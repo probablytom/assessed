@@ -252,10 +252,18 @@ com
 	|	^(WHILE t=expr com)
 				{ checkType(Type.BOOL, t, $WHILE);
 				}
-	|	^(FOR ID t1=$e1 t2=$e2 seq_com) 
-				{checkType(type.INT, t1, $FOR);
-				 checkType(type.INT, t2, $FOR)
+	// Added by Tom Wallis, BEGIN
+	|	^(FOR ID t1=expr t2=expr com) 
+				{ define($ID.text, Type.INT, t1);
+				  checkType(Type.INT, t1, $FOR);
+				  checkType(Type.INT, t2, $FOR);
 				}
+
+	|	^(DO t1=expr com)
+				{ checkType(Type.INT, t1, $DO);
+				}
+	// Added by Tom Wallis, END.
+	
 |	^(SEQ com*)
 	;
 
