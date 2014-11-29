@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 Fun.g 2014-11-27 15:38:06
+// $ANTLR 3.5 Fun.g 2014-11-28 23:54:41
 
 import org.antlr.runtime.*;
 import java.util.Stack;
@@ -294,19 +294,19 @@ public class FunParser extends Parser {
 		CommonTree COLON19_tree=null;
 		CommonTree RETURN22_tree=null;
 		CommonTree DOT24_tree=null;
+		RewriteRuleTokenStream stream_COLON=new RewriteRuleTokenStream(adaptor,"token COLON");
+		RewriteRuleTokenStream stream_RPAR=new RewriteRuleTokenStream(adaptor,"token RPAR");
+		RewriteRuleTokenStream stream_LPAR=new RewriteRuleTokenStream(adaptor,"token LPAR");
+		RewriteRuleTokenStream stream_ID=new RewriteRuleTokenStream(adaptor,"token ID");
+		RewriteRuleTokenStream stream_DOT=new RewriteRuleTokenStream(adaptor,"token DOT");
+		RewriteRuleTokenStream stream_FUNC=new RewriteRuleTokenStream(adaptor,"token FUNC");
 		RewriteRuleTokenStream stream_RETURN=new RewriteRuleTokenStream(adaptor,"token RETURN");
 		RewriteRuleTokenStream stream_PROC=new RewriteRuleTokenStream(adaptor,"token PROC");
-		RewriteRuleTokenStream stream_FUNC=new RewriteRuleTokenStream(adaptor,"token FUNC");
-		RewriteRuleTokenStream stream_LPAR=new RewriteRuleTokenStream(adaptor,"token LPAR");
-		RewriteRuleTokenStream stream_DOT=new RewriteRuleTokenStream(adaptor,"token DOT");
-		RewriteRuleTokenStream stream_RPAR=new RewriteRuleTokenStream(adaptor,"token RPAR");
-		RewriteRuleTokenStream stream_COLON=new RewriteRuleTokenStream(adaptor,"token COLON");
-		RewriteRuleTokenStream stream_ID=new RewriteRuleTokenStream(adaptor,"token ID");
 		RewriteRuleSubtreeStream stream_formal=new RewriteRuleSubtreeStream(adaptor,"rule formal");
 		RewriteRuleSubtreeStream stream_seq_com=new RewriteRuleSubtreeStream(adaptor,"rule seq_com");
 		RewriteRuleSubtreeStream stream_expr=new RewriteRuleSubtreeStream(adaptor,"rule expr");
-		RewriteRuleSubtreeStream stream_var_decl=new RewriteRuleSubtreeStream(adaptor,"rule var_decl");
 		RewriteRuleSubtreeStream stream_type=new RewriteRuleSubtreeStream(adaptor,"rule type");
+		RewriteRuleSubtreeStream stream_var_decl=new RewriteRuleSubtreeStream(adaptor,"rule var_decl");
 
 		try {
 			// Fun.g:49:2: ( PROC ID LPAR formal RPAR COLON ( var_decl )* seq_com DOT -> ^( PROC ID formal ( var_decl )* seq_com ) | FUNC type ID LPAR formal RPAR COLON ( var_decl )* seq_com RETURN expr DOT -> ^( FUNC type ID formal ( var_decl )* seq_com expr ) )
@@ -385,7 +385,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT12);
 
 					// AST REWRITE
-					// elements: formal, ID, var_decl, PROC, seq_com
+					// elements: seq_com, var_decl, formal, ID, PROC
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -493,7 +493,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT24);
 
 					// AST REWRITE
-					// elements: expr, formal, var_decl, type, ID, seq_com, FUNC
+					// elements: type, expr, var_decl, seq_com, FUNC, ID, formal
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -733,7 +733,7 @@ public class FunParser extends Parser {
 			if (state.failed) return retval;
 			if ( state.backtracking==0 ) stream_expr.add(expr30.getTree());
 			// AST REWRITE
-			// elements: type, ID, expr
+			// elements: expr, ID, type
 			// token labels: 
 			// rule labels: retval
 			// token list labels: 
@@ -804,8 +804,8 @@ public class FunParser extends Parser {
 
 		CommonTree BOOL31_tree=null;
 		CommonTree INT32_tree=null;
-		RewriteRuleTokenStream stream_BOOL=new RewriteRuleTokenStream(adaptor,"token BOOL");
 		RewriteRuleTokenStream stream_INT=new RewriteRuleTokenStream(adaptor,"token INT");
+		RewriteRuleTokenStream stream_BOOL=new RewriteRuleTokenStream(adaptor,"token BOOL");
 
 		try {
 			// Fun.g:73:2: ( BOOL -> BOOL | INT -> INT )
@@ -988,23 +988,23 @@ public class FunParser extends Parser {
 		CommonTree DO64_tree=null;
 		CommonTree WHILE66_tree=null;
 		CommonTree DOT68_tree=null;
-		RewriteRuleTokenStream stream_REPEAT=new RewriteRuleTokenStream(adaptor,"token REPEAT");
-		RewriteRuleTokenStream stream_DOT=new RewriteRuleTokenStream(adaptor,"token DOT");
-		RewriteRuleTokenStream stream_FOR=new RewriteRuleTokenStream(adaptor,"token FOR");
-		RewriteRuleTokenStream stream_RPAR=new RewriteRuleTokenStream(adaptor,"token RPAR");
 		RewriteRuleTokenStream stream_COLON=new RewriteRuleTokenStream(adaptor,"token COLON");
-		RewriteRuleTokenStream stream_DO=new RewriteRuleTokenStream(adaptor,"token DO");
-		RewriteRuleTokenStream stream_UNTIL=new RewriteRuleTokenStream(adaptor,"token UNTIL");
 		RewriteRuleTokenStream stream_ASSN=new RewriteRuleTokenStream(adaptor,"token ASSN");
 		RewriteRuleTokenStream stream_LPAR=new RewriteRuleTokenStream(adaptor,"token LPAR");
-		RewriteRuleTokenStream stream_ELSE=new RewriteRuleTokenStream(adaptor,"token ELSE");
 		RewriteRuleTokenStream stream_WHILE=new RewriteRuleTokenStream(adaptor,"token WHILE");
-		RewriteRuleTokenStream stream_ID=new RewriteRuleTokenStream(adaptor,"token ID");
 		RewriteRuleTokenStream stream_TO=new RewriteRuleTokenStream(adaptor,"token TO");
+		RewriteRuleTokenStream stream_UNTIL=new RewriteRuleTokenStream(adaptor,"token UNTIL");
+		RewriteRuleTokenStream stream_ELSE=new RewriteRuleTokenStream(adaptor,"token ELSE");
+		RewriteRuleTokenStream stream_DO=new RewriteRuleTokenStream(adaptor,"token DO");
+		RewriteRuleTokenStream stream_FOR=new RewriteRuleTokenStream(adaptor,"token FOR");
+		RewriteRuleTokenStream stream_RPAR=new RewriteRuleTokenStream(adaptor,"token RPAR");
+		RewriteRuleTokenStream stream_REPEAT=new RewriteRuleTokenStream(adaptor,"token REPEAT");
+		RewriteRuleTokenStream stream_ID=new RewriteRuleTokenStream(adaptor,"token ID");
+		RewriteRuleTokenStream stream_DOT=new RewriteRuleTokenStream(adaptor,"token DOT");
 		RewriteRuleTokenStream stream_IF=new RewriteRuleTokenStream(adaptor,"token IF");
+		RewriteRuleSubtreeStream stream_seq_com=new RewriteRuleSubtreeStream(adaptor,"rule seq_com");
 		RewriteRuleSubtreeStream stream_actual=new RewriteRuleSubtreeStream(adaptor,"rule actual");
 		RewriteRuleSubtreeStream stream_expr=new RewriteRuleSubtreeStream(adaptor,"rule expr");
-		RewriteRuleSubtreeStream stream_seq_com=new RewriteRuleSubtreeStream(adaptor,"rule seq_com");
 
 		try {
 			// Fun.g:81:2: ( ID ASSN expr -> ^( ASSN ID expr ) | ID LPAR actual RPAR -> ^( PROCCALL ID actual ) | IF expr COLON c1= seq_com ( DOT -> ^( IF expr $c1) | ELSE COLON c2= seq_com DOT -> ^( IFELSE expr $c1 $c2) ) | WHILE expr COLON seq_com DOT -> ^( WHILE expr seq_com ) | FOR ID ASSN e1= expr TO e2= expr COLON seq_com DOT -> ^( FOR ID $e1 $e2 seq_com ) | REPEAT seq_com UNTIL expr DOT -> ^( REPEAT seq_com expr ) | DO seq_com WHILE expr DOT -> ^( DO seq_com expr ) )
@@ -1082,7 +1082,7 @@ public class FunParser extends Parser {
 					if (state.failed) return retval;
 					if ( state.backtracking==0 ) stream_expr.add(expr35.getTree());
 					// AST REWRITE
-					// elements: ASSN, ID, expr
+					// elements: expr, ASSN, ID
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -1204,16 +1204,16 @@ public class FunParser extends Parser {
 							if ( state.backtracking==0 ) stream_DOT.add(DOT43);
 
 							// AST REWRITE
-							// elements: expr, IF, c1
+							// elements: IF, c1, expr
 							// token labels: 
-							// rule labels: c1, retval
+							// rule labels: retval, c1
 							// token list labels: 
 							// rule list labels: 
 							// wildcard labels: 
 							if ( state.backtracking==0 ) {
 							retval.tree = root_0;
-							RewriteRuleSubtreeStream stream_c1=new RewriteRuleSubtreeStream(adaptor,"rule c1",c1!=null?c1.getTree():null);
 							RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
+							RewriteRuleSubtreeStream stream_c1=new RewriteRuleSubtreeStream(adaptor,"rule c1",c1!=null?c1.getTree():null);
 
 							root_0 = (CommonTree)adaptor.nil();
 							// 85:30: -> ^( IF expr $c1)
@@ -1253,16 +1253,16 @@ public class FunParser extends Parser {
 							if ( state.backtracking==0 ) stream_DOT.add(DOT46);
 
 							// AST REWRITE
-							// elements: expr, c1, c2
+							// elements: c2, c1, expr
 							// token labels: 
-							// rule labels: c1, retval, c2
+							// rule labels: retval, c1, c2
 							// token list labels: 
 							// rule list labels: 
 							// wildcard labels: 
 							if ( state.backtracking==0 ) {
 							retval.tree = root_0;
-							RewriteRuleSubtreeStream stream_c1=new RewriteRuleSubtreeStream(adaptor,"rule c1",c1!=null?c1.getTree():null);
 							RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
+							RewriteRuleSubtreeStream stream_c1=new RewriteRuleSubtreeStream(adaptor,"rule c1",c1!=null?c1.getTree():null);
 							RewriteRuleSubtreeStream stream_c2=new RewriteRuleSubtreeStream(adaptor,"rule c2",c2!=null?c2.getTree():null);
 
 							root_0 = (CommonTree)adaptor.nil();
@@ -1314,7 +1314,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT51);
 
 					// AST REWRITE
-					// elements: WHILE, seq_com, expr
+					// elements: WHILE, expr, seq_com
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -1381,17 +1381,17 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT58);
 
 					// AST REWRITE
-					// elements: e2, seq_com, FOR, e1, ID
+					// elements: e2, ID, e1, FOR, seq_com
 					// token labels: 
-					// rule labels: e1, e2, retval
+					// rule labels: retval, e1, e2
 					// token list labels: 
 					// rule list labels: 
 					// wildcard labels: 
 					if ( state.backtracking==0 ) {
 					retval.tree = root_0;
+					RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 					RewriteRuleSubtreeStream stream_e1=new RewriteRuleSubtreeStream(adaptor,"rule e1",e1!=null?e1.getTree():null);
 					RewriteRuleSubtreeStream stream_e2=new RewriteRuleSubtreeStream(adaptor,"rule e2",e2!=null?e2.getTree():null);
-					RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 					root_0 = (CommonTree)adaptor.nil();
 					// 93:36: -> ^( FOR ID $e1 $e2 seq_com )
@@ -1438,7 +1438,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT63);
 
 					// AST REWRITE
-					// elements: expr, REPEAT, seq_com
+					// elements: REPEAT, expr, seq_com
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -1491,7 +1491,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT68);
 
 					// AST REWRITE
-					// elements: seq_com, expr, DO
+					// elements: expr, DO, seq_com
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -2001,15 +2001,15 @@ public class FunParser extends Parser {
 		CommonTree NOT89_tree=null;
 		CommonTree LPAR91_tree=null;
 		CommonTree RPAR93_tree=null;
+		RewriteRuleTokenStream stream_RPAR=new RewriteRuleTokenStream(adaptor,"token RPAR");
 		RewriteRuleTokenStream stream_NOT=new RewriteRuleTokenStream(adaptor,"token NOT");
 		RewriteRuleTokenStream stream_LPAR=new RewriteRuleTokenStream(adaptor,"token LPAR");
-		RewriteRuleTokenStream stream_NUM=new RewriteRuleTokenStream(adaptor,"token NUM");
-		RewriteRuleTokenStream stream_TRUE=new RewriteRuleTokenStream(adaptor,"token TRUE");
-		RewriteRuleTokenStream stream_RPAR=new RewriteRuleTokenStream(adaptor,"token RPAR");
-		RewriteRuleTokenStream stream_FALSE=new RewriteRuleTokenStream(adaptor,"token FALSE");
 		RewriteRuleTokenStream stream_ID=new RewriteRuleTokenStream(adaptor,"token ID");
-		RewriteRuleSubtreeStream stream_actual=new RewriteRuleSubtreeStream(adaptor,"rule actual");
+		RewriteRuleTokenStream stream_FALSE=new RewriteRuleTokenStream(adaptor,"token FALSE");
+		RewriteRuleTokenStream stream_TRUE=new RewriteRuleTokenStream(adaptor,"token TRUE");
+		RewriteRuleTokenStream stream_NUM=new RewriteRuleTokenStream(adaptor,"token NUM");
 		RewriteRuleSubtreeStream stream_prim_expr=new RewriteRuleSubtreeStream(adaptor,"rule prim_expr");
+		RewriteRuleSubtreeStream stream_actual=new RewriteRuleSubtreeStream(adaptor,"rule actual");
 		RewriteRuleSubtreeStream stream_expr=new RewriteRuleSubtreeStream(adaptor,"rule expr");
 
 		try {
@@ -2249,7 +2249,7 @@ public class FunParser extends Parser {
 					if (state.failed) return retval;
 					if ( state.backtracking==0 ) stream_prim_expr.add(prim_expr90.getTree());
 					// AST REWRITE
-					// elements: NOT, prim_expr
+					// elements: prim_expr, NOT
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 

@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 FunEncoder.g 2014-11-27 15:38:21
+// $ANTLR 3.5 FunEncoder.g 2014-11-28 23:57:26
 
 import org.antlr.runtime.*;
 import org.antlr.runtime.tree.*;

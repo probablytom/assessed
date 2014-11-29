@@ -152,7 +152,7 @@ EQ	:	'==' ;
 LT	:	'<' ;
 GT	:	'>' ;
 PLUS	:	'+' ;
-INUS	:	'-' ;
+MINUS	:	'-' ;
 TIMES	:	'*' ;
 DIV	:	'/' ;
 NOT	:	'not' ;
