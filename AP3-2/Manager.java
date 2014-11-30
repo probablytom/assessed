@@ -25,6 +25,7 @@ class Manager {
 				int noOfThreads = 1; // Default single thread.
 			}
 
+			
 			// Find the pattern, and determine whether it's a word or a BASH pattern.
 			String pattern = args[0];
 			this.regex = Regex.cvtPattern(pattern);
@@ -50,22 +51,25 @@ class Manager {
 	    if (entries != null) {	// not a symlink
                System.out.println(name);// print out the name
                for (String entry : entries ) {
-                if (entry.compareTo(".") == 0)
-                 continue;
-               if (entry.compareTo("..") == 0)
-                 continue;
-			   this.workQueue.add(name + "/" + entry);
-               processDirectory(name+"/"+entry);
-             }
-           }
-         } else {   // We found a file, deal with it using the inputted regex.
-		 	
-		 	if (file.getName().matches(this.regex)) {System.out.println(file.getName());}
 
-		 }
-       } catch (Exception e) {
-         System.err.println("Error processing "+name+": "+e);
-       }
-     }
+                	if (entry.compareTo(".") == 0)
+                 		continue;
+               		if (entry.compareTo("..") == 0)
+                 		continue;
+			   		this.workQueue.add(name + "/" + entry);
+            		processDirectory(name+"/"+entry);
+				}
+        }
+    } else {   // We found a file, deal with it using the inputted regex.
+		//System.out.printf("%s: %s ", file.getName(), this.regex);
+		//System.out.print(file.getName().matches(this.regex));
+		//System.out.println();
+		if (file.getName().matches(this.regex)) {System.out.println(file.getName());}
+
+	}
+    } catch (Exception e) {
+    	System.err.println("Error processing "+name+": "+e);
+    }
+	}
 
 }
