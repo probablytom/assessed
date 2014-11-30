@@ -13,7 +13,7 @@ class fileCrawler {
 			String pattern = args[0];
 			if (pattern.contains("?")) {
 				System.out.println("We found a '?'.");
-			} else if(pattern.contains(@*)) {
+			} else if(pattern.contains("*")) {
 				System.out.println("We found a '*'.");
 			} else if (pattern.contains("[")) {
 				System.out.println("We found a '['.");
