@@ -33,14 +33,18 @@ public class Regex {
 		}
 		for (int i = start; i < length; i++) {
 			switch(str.charAt(i)) {
-			case '*': pat.append('.'); pat.append('*'); break;
-			case '.': pat.append('\\'); pat.append('.'); break;
-			case '?': pat.append('.'); break;
-			default:  pat.append(str.charAt(i)); break;
+				case '*': pat.append('.'); pat.append('*'); break;
+				case '.': if (osIsWindows()){  pat.append('\\'); } pat.append('.');  break;
+				case '?': pat.append('.'); break;
+				default:  pat.append(str.charAt(i)); break;
 			}
 		}
 		pat.append('$');
 		return new String(pat);
+	}
+
+	public static Boolean osIsWindows() {
+		return System.getProperty("os.name").startsWith("Windows");
 	}
 
 	// simple main program - expects bash pattern in Arg[0]

@@ -1,4 +1,4 @@
-import java.util.concurrent.*;
+from java.util.concurrent import *;
 
 class fileCrawler {
 
@@ -20,7 +20,7 @@ class fileCrawler {
 			String regex = Regex.cvtPattern(pattern);
 			
 			// Populate a work queue.
-			ConcurrentLinkedQueue<String> workQueue = new ConcurrentLinkedQueue<String>();
+			workQueue = 
 
 			for (int index = 1; index < args.length; index++) {
 			//	
