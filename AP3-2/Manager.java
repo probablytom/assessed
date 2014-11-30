@@ -51,7 +51,6 @@ class Manager {
 	    if (entries != null) {	// not a symlink
                System.out.println(name);// print out the name
                for (String entry : entries ) {
-
                 	if (entry.compareTo(".") == 0)
                  		continue;
                		if (entry.compareTo("..") == 0)
