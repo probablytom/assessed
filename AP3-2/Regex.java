@@ -34,7 +34,7 @@ public class Regex {
 		for (int i = start; i < length; i++) {
 			switch(str.charAt(i)) {
 				case '*': pat.append('.'); pat.append('*'); break;
-				case '.': if (osIsWindows()){  pat.append('\\'); } pat.append('.');  break;
+				case '.': pat.append('\\'); pat.append('.');  break;
 				case '?': pat.append('.'); break;
 				default:  pat.append(str.charAt(i)); break;
 			}

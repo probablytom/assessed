@@ -1,10 +1,11 @@
 import java.util.concurrent.*;
 import java.io.*;
+import java.util.regex.*;
 
 class Manager {
 
 
-	String regex = "";
+	String regex;
 	ConcurrentLinkedQueue<String> workQueue = new ConcurrentLinkedQueue<String>();
 
 	public void process(String[] args) {
