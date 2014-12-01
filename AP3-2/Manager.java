@@ -9,12 +9,11 @@ class Manager {
 
 	public void process(String[] args) {
 		
-		DirectoryTree dTree = new DirectoryTree();	
 		
 		// Print an error message if we don't have a valid input.
 		if(args.length == 0) { 
 			System.err.println("Usage: 'java -classpath fileCrawler pattern [directory]'"); 	
-			
+		
 		// We have valid input! Let's do our thing. 	
 		} else {
 
@@ -60,9 +59,7 @@ class Manager {
 				}
         }
     } else {   // We found a file, deal with it using the inputted regex.
-		//System.out.printf("%s: %s ", file.getName(), this.regex);
-		//System.out.print(file.getName().matches(this.regex));
-		//System.out.println();
+
 		if (file.getName().matches(this.regex)) {System.out.println(file.getName());}
 
 	}

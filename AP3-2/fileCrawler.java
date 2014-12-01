@@ -1,6 +1,3 @@
-import java.util.concurrent.*;
-import java.io.*;
-
 class FileCrawler {
 	
 	public static void main(String[] args){
