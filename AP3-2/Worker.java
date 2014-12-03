@@ -21,7 +21,7 @@ public class Worker implements Runnable{
 	@Override
 	public void run() {
 		if (this.fileToWork == null) {
-			// We're just catching dumy threads to simplify lower logic down below. 
+			// We're just catching dummy threads to simplify lower logic down below. 
 			// This means we can populate Manager.threads with dead threads, because this will exit as soon as it begins.
 		}
 		if (this.fileToWork.isDirectory()) {

@@ -22,6 +22,7 @@ class Manager {
 			System.err.println("Usage: 'java -classpath fileCrawler pattern [directory]'");
 
 		} else { // On with the show.
+			
 
 			this.regex = cvtPattern(args[0]);
 
@@ -49,23 +50,33 @@ class Manager {
 				}
 			}
 
+			// Populate our list of threads with dead threads. 
 			for (int i = 0; i < noThreads; i++) {
 				threads.add(new Thread(new Worker()));
 			}
 
+			// To track program flow in th while loop below.
+			boolean replace = true;
+			
 			// Process the work queue.
 			while (!workQueue.isEmpty()) {
 				// Wait until a thread is dead to run it with the code from this workQueue.poll().
 				while (!anyAvailableThreads()) {
 					continue;		
 				}
-				// Find the right thread and execute it with the new workQueue.poll().
+				// Find the right thread and execute it with the new workQueue.poll(). So we don't do anythin
 				for (int index = 0; index < noThreads; index++) {
-					if (!threads.get(index).isAlive()) {
+					if (!threads.get(index).isAlive() && replace) {
 						threads.remove(index);
 						// Add a new thread to run a worker with the most recent workQueue.poll()
 						Thread current = new Thread( new Worker( new File(workQueue.poll()) ) );
 						current.start();
+						try {
+							current.join();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						threads.add( current );
 					}
 				}
@@ -102,6 +113,12 @@ class Manager {
 			}
 		}
 		return anyThreadsDead;
+	}
+	
+	// Checks to see if all of the work fed to workers has been fed to them, and also whether it is finished. 
+	public static boolean finishedThreadWork() {
+		boolean areWeFinished = false;
+		return areWeFinished;
 	}
 	
 	// Returns the filename from a path.
