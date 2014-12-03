@@ -1,68 +1,113 @@
 import java.util.concurrent.*;
 import java.io.*;
 import java.util.regex.*;
+import java.util.ArrayList;
 
 
 class Manager {
 
 
 	String regex;
-	ConcurrentLinkedQueue<String> workQueue = new ConcurrentLinkedQueue<String>();
-	ConcurrentLinkedQueue<String> fileQueue = new ConcurrentLinkedQueue<String>();
+	static ConcurrentLinkedQueue<String> workQueue = new ConcurrentLinkedQueue<String>();
+	static ConcurrentLinkedQueue<String> fileQueue = new ConcurrentLinkedQueue<String>();
+	static int noThreads;
+	static ArrayList<Thread> threads = new ArrayList<Thread>();
 
-	
-	
-	public void process(String[] args) {
-		
+
+
+	public void process(String args[]) {
+
 		// Print an error message if we don't have a valid input.
 		if(args.length == 0) {
 			System.err.println("Usage: 'java -classpath fileCrawler pattern [directory]'");
-		
+
 		} else { // On with the show.
-			
+
 			this.regex = cvtPattern(args[0]);
-			
-			// Seperate out files and directories.
+
+			// Populate the work queue with the directories to process given.
 			if (args.length == 1) {
-				try {
-					populateQueue(new File("."));
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-					e.printStackTrace();
+				// Only this directory to search.
+				addToWorkQueue(".");
+			} else {
+				for (int i = 1; i < args.length; i++) {
+					addToWorkQueue(args[i]);
 				}
 			}
-			 
-			
-			for (int index = 1; index < args.length; index++) {
-				this.workQueue.add(args[index]);
-				while(!this.workQueue.isEmpty()) {
-					try {
-						populateQueue( new File(this.workQueue.poll()) );
-					} catch (Exception e) {
-						System.out.println(e.getMessage());
-						e.printStackTrace();
+
+			// Get the maximum number of threads available.
+			String noThreadsString = System.getenv("CRAWLER_THREADS");
+			if (noThreadsString == null) {
+				noThreads = 1;
+			} else {
+				try {
+					noThreads = Integer.parseInt(noThreadsString);
+				} catch (Exception e) {
+					System.err.println("Invalid number of threads given; cannot convert to integer.");
+					System.err.println("Assuming minimum (1) threads.");
+					noThreads = 1;
+				}
+			}
+
+			for (int i = 0; i < noThreads; i++) {
+				threads.add(new Thread(new Worker()));
+			}
+
+			// Process the work queue.
+			while (!workQueue.isEmpty()) {
+				// Wait until a thread is dead to run it with the code from this workQueue.poll().
+				while (!anyAvailableThreads()) {
+					continue;		
+				}
+				// Find the right thread and execute it with the new workQueue.poll().
+				for (int index = 0; index < noThreads; index++) {
+					if (!threads.get(index).isAlive()) {
+						threads.remove(index);
+						// Add a new thread to run a worker with the most recent workQueue.poll()
+						Thread current = new Thread( new Worker( new File(workQueue.poll()) ) );
+						current.start();
+						threads.add( current );
 					}
 				}
 			}
-			
-			System.out.println(this.regex);
-			
-			
-			// Process all of the files we have.
+
+			// We've processed all of the directories and found each file, and stored in fileQueue.
+			// Now, search through all of the files found and print if the file is a match.
 			String current;
 			while (!this.fileQueue.isEmpty()) {
 				current = this.fileQueue.poll();
-//				Matcher matcher = this.regex.matches(current);
-				boolean matched = Pattern.matches(this.regex, current);
+				boolean matched = Pattern.matches(this.regex, getFilename(current));
 				if (matched) System.out.println(current);
 			}
+
 		}
-		
-		
+
+	}
+
+	public static void addToWorkQueue(String toAdd) {
+		workQueue.add(toAdd);
+	}
+
+	public static void addToFileQueue(String toAdd) {
+		fileQueue.add(toAdd);
+	}
+
+	// Returns whether there are any threads alive.
+	public static boolean anyAvailableThreads() {
+		boolean anyThreadsDead = false;
+		// See if we can find a dead thread, update AnyThreadsDead if so. 
+		for (int i = 0; i < noThreads; i++) {
+			if ( !threads.get(i).isAlive() ) {
+				anyThreadsDead = true;
+			}
+		}
+		return anyThreadsDead;
 	}
 	
-	
-
+	// Returns the filename from a path.
+	public String getFilename(String path) {
+		return (new File(path)).getName();
+	}
 
 	/**
 	 * Note: Code borrowed heavily from https://gist.github.com/yangls06/5464683. Modifications were then made to make this work as intended.
@@ -73,7 +118,7 @@ class Manager {
 		line = line.trim();
 		int strLen = line.length();
 		StringBuilder sb = new StringBuilder(strLen);
-		
+
 		if (line.charAt(0) == '\'') {	// double quoting on Windows
 			strLen--;
 			line = line.substring(1);
@@ -82,7 +127,7 @@ class Manager {
 			strLen--;
 			line = line.substring(0, line.length()-1);
 		}
-		
+
 		boolean escaping = false;
 		int inCurlies = 0;
 		sb.append("^");
@@ -130,7 +175,7 @@ class Manager {
 				if (escaping)
 				{
 					sb.append("\\{");
-					}
+				}
 				else
 				{
 					sb.append('(');
@@ -167,24 +212,6 @@ class Manager {
 		}
 		sb.append("$");
 		return sb.toString();
-	}
-	
-	public void populateQueue(File toPopulate) throws Exception {
-		if (toPopulate.isDirectory()) {
-			String entries[] = toPopulate.list();
-			for (String entry : entries) {
-				// If the entry represents another directory, add it to the workQueue.
-				File fEntry = new File(toPopulate.getAbsolutePath() + "/" + entry);
-				boolean fEntryDir = fEntry.isDirectory();
-				if (fEntry.isDirectory()) {
-					this.workQueue.add(fEntry.getAbsolutePath());
-				} else {
-					this.fileQueue.add(entry);
-				}
-			}
-		} else {
-			throw new Exception(); // This should NEVER happen.
-		}
 	}
 
 
