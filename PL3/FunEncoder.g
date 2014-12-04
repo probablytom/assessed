@@ -215,6 +215,49 @@ com
 				  obj.patch12(condaddr, exitaddr);
 				}
 		 )
+	//////// Additions by Tom Wallis BEGIN
+	|	^(FOR
+				{ int startaddr = obj.currentOffset();
+				}
+			ID
+			e1=expr
+				{ String id = $ID.text; 
+				  Address varaddr = addrTable.get(id);
+				  System.out.println(varaddr.offset);
+				  switch (varaddr.locale) {
+				    case Address.GLOBAL:
+				      obj.emit12(SVM.STOREG,
+				        varaddr.offset);
+				      break;
+				    case Address.LOCAL:
+				      obj.emit12(SVM.STOREL,
+				        varaddr.offset);
+				  }
+				}
+			expr
+				{ int conaddr = obj.currentOffset();
+				  obj.emit12(SVM.JUMPF, 0);
+				}
+			com
+				{ 
+				  obj.emit12(SVM.LOADC, 1);
+				  switch (varaddr.locale) {
+					case Address.GLOBAL:
+					  obj.emit12(SVM.LOADG, varaddr.offset);
+					  obj.emit1(SVM.ADD);
+					  obj.emit12(SVM.STOREG, varaddr.offset);
+					  break;
+					case Address.LOCAL:
+					  obj.emit12(SVM.LOADL, varaddr.offset);
+					  obj.emit1(SVM.ADD);
+					  obj.emit12(SVM.STOREL, varaddr.offset);
+				  }
+				  obj.emit12(SVM.JUMP, conaddr);
+				  int exitaddr = obj.currentOffset();
+				  obj.patch12(conaddr, exitaddr);
+				}
+		)
+	//////// Additions by Tom Wallis END
 	|	^(SEQ
 		  com*
 		 )

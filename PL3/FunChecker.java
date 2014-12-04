@@ -1,4 +1,4 @@
-// $ANTLR 3.5 FunChecker.g 2014-11-28 23:57:22
+// $ANTLR 3.5 FunChecker.g 2014-12-04 02:07:27
 
 import org.antlr.runtime.*;
 import org.antlr.runtime.tree.*;
@@ -808,16 +808,18 @@ public class FunChecker extends TreeParser {
 
 					match(input, Token.UP, null); 
 
-					 define((ID17!=null?ID17.getText():null), Type.INT, FOR18);
-									  Type tvar = retrieve((ID17!=null?ID17.getText():null), FOR18);  //  define((ID17!=null?ID17.getText():null), Type.INT, FOR18);
+					 Type tvar = retrieve((ID17!=null?ID17.getText():null), FOR18);  //  define((ID17!=null?ID17.getText():null), Type.INT, FOR18);
 									  checkType(tvar, t1, FOR18);
-									  checkType(Type.INT, t1, FOR18);
+
+									  //checkType(Type.INT, t1, FOR18);
 									  checkType(Type.INT, t2, FOR18);
+					                  //define((ID17!=null?ID17.getText():null), tvar, FOR18);
+
 									
 					}
 					break;
 				case 7 :
-					// FunChecker.g:264:4: ^( DO t1= expr com )
+					// FunChecker.g:266:4: ^( DO t1= expr com )
 					{
 					DO19=(CommonTree)match(input,DO,FOLLOW_DO_in_com469); 
 					match(input, Token.DOWN, null); 
@@ -836,12 +838,12 @@ public class FunChecker extends TreeParser {
 					}
 					break;
 				case 8 :
-					// FunChecker.g:269:3: ^( SEQ ( com )* )
+					// FunChecker.g:271:3: ^( SEQ ( com )* )
 					{
 					match(input,SEQ,FOLLOW_SEQ_in_com491); 
 					if ( input.LA(1)==Token.DOWN ) {
 						match(input, Token.DOWN, null); 
-						// FunChecker.g:269:9: ( com )*
+						// FunChecker.g:271:9: ( com )*
 						loop8:
 						while (true) {
 							int alt8=2;
@@ -852,7 +854,7 @@ public class FunChecker extends TreeParser {
 
 							switch (alt8) {
 							case 1 :
-								// FunChecker.g:269:9: com
+								// FunChecker.g:271:9: com
 								{
 								pushFollow(FOLLOW_com_in_com493);
 								com();
@@ -887,7 +889,7 @@ public class FunChecker extends TreeParser {
 
 
 	// $ANTLR start "expr"
-	// FunChecker.g:275:1: expr returns [Type type] : ( FALSE | TRUE | NUM | ID | ^( FUNCCALL ID t= expr ) | ^( EQ t1= expr t2= expr ) | ^( LT t1= expr t2= expr ) | ^( GT t1= expr t2= expr ) | ^( PLUS t1= expr t2= expr ) | ^( MINUS t1= expr t2= expr ) | ^( TIMES t1= expr t2= expr ) | ^( DIV t1= expr t2= expr ) | ^( NOT t= expr ) | NOACTUAL );
+	// FunChecker.g:277:1: expr returns [Type type] : ( FALSE | TRUE | NUM | ID | ^( FUNCCALL ID t= expr ) | ^( EQ t1= expr t2= expr ) | ^( LT t1= expr t2= expr ) | ^( GT t1= expr t2= expr ) | ^( PLUS t1= expr t2= expr ) | ^( MINUS t1= expr t2= expr ) | ^( TIMES t1= expr t2= expr ) | ^( DIV t1= expr t2= expr ) | ^( NOT t= expr ) | NOACTUAL );
 	public final Type expr() throws RecognitionException {
 		Type type = null;
 
@@ -908,7 +910,7 @@ public class FunChecker extends TreeParser {
 		Type t2 =null;
 
 		try {
-			// FunChecker.g:276:2: ( FALSE | TRUE | NUM | ID | ^( FUNCCALL ID t= expr ) | ^( EQ t1= expr t2= expr ) | ^( LT t1= expr t2= expr ) | ^( GT t1= expr t2= expr ) | ^( PLUS t1= expr t2= expr ) | ^( MINUS t1= expr t2= expr ) | ^( TIMES t1= expr t2= expr ) | ^( DIV t1= expr t2= expr ) | ^( NOT t= expr ) | NOACTUAL )
+			// FunChecker.g:278:2: ( FALSE | TRUE | NUM | ID | ^( FUNCCALL ID t= expr ) | ^( EQ t1= expr t2= expr ) | ^( LT t1= expr t2= expr ) | ^( GT t1= expr t2= expr ) | ^( PLUS t1= expr t2= expr ) | ^( MINUS t1= expr t2= expr ) | ^( TIMES t1= expr t2= expr ) | ^( DIV t1= expr t2= expr ) | ^( NOT t= expr ) | NOACTUAL )
 			int alt10=14;
 			switch ( input.LA(1) ) {
 			case FALSE:
@@ -988,28 +990,28 @@ public class FunChecker extends TreeParser {
 			}
 			switch (alt10) {
 				case 1 :
-					// FunChecker.g:276:4: FALSE
+					// FunChecker.g:278:4: FALSE
 					{
 					match(input,FALSE,FOLLOW_FALSE_in_expr516); 
 					 type = Type.BOOL; 
 					}
 					break;
 				case 2 :
-					// FunChecker.g:278:4: TRUE
+					// FunChecker.g:280:4: TRUE
 					{
 					match(input,TRUE,FOLLOW_TRUE_in_expr527); 
 					 type = Type.BOOL; 
 					}
 					break;
 				case 3 :
-					// FunChecker.g:280:4: NUM
+					// FunChecker.g:282:4: NUM
 					{
 					match(input,NUM,FOLLOW_NUM_in_expr538); 
 					 type = Type.INT; 
 					}
 					break;
 				case 4 :
-					// FunChecker.g:282:4: ID
+					// FunChecker.g:284:4: ID
 					{
 					ID20=(CommonTree)match(input,ID,FOLLOW_ID_in_expr549); 
 					 type = retrieve((ID20!=null?ID20.getText():null), ID20);
@@ -1017,7 +1019,7 @@ public class FunChecker extends TreeParser {
 					}
 					break;
 				case 5 :
-					// FunChecker.g:285:4: ^( FUNCCALL ID t= expr )
+					// FunChecker.g:287:4: ^( FUNCCALL ID t= expr )
 					{
 					FUNCCALL22=(CommonTree)match(input,FUNCCALL,FOLLOW_FUNCCALL_in_expr561); 
 					match(input, Token.DOWN, null); 
@@ -1039,7 +1041,7 @@ public class FunChecker extends TreeParser {
 					}
 					break;
 				case 6 :
-					// FunChecker.g:294:4: ^( EQ t1= expr t2= expr )
+					// FunChecker.g:296:4: ^( EQ t1= expr t2= expr )
 					{
 					EQ23=(CommonTree)match(input,EQ,FOLLOW_EQ_in_expr580); 
 					match(input, Token.DOWN, null); 
@@ -1058,7 +1060,7 @@ public class FunChecker extends TreeParser {
 					}
 					break;
 				case 7 :
-					// FunChecker.g:297:4: ^( LT t1= expr t2= expr )
+					// FunChecker.g:299:4: ^( LT t1= expr t2= expr )
 					{
 					LT24=(CommonTree)match(input,LT,FOLLOW_LT_in_expr601); 
 					match(input, Token.DOWN, null); 
@@ -1077,7 +1079,7 @@ public class FunChecker extends TreeParser {
 					}
 					break;
 				case 8 :
-					// FunChecker.g:300:4: ^( GT t1= expr t2= expr )
+					// FunChecker.g:302:4: ^( GT t1= expr t2= expr )
 					{
 					GT25=(CommonTree)match(input,GT,FOLLOW_GT_in_expr622); 
 					match(input, Token.DOWN, null); 
@@ -1096,7 +1098,7 @@ public class FunChecker extends TreeParser {
 					}
 					break;
 				case 9 :
-					// FunChecker.g:303:4: ^( PLUS t1= expr t2= expr )
+					// FunChecker.g:305:4: ^( PLUS t1= expr t2= expr )
 					{
 					PLUS26=(CommonTree)match(input,PLUS,FOLLOW_PLUS_in_expr643); 
 					match(input, Token.DOWN, null); 
@@ -1115,7 +1117,7 @@ public class FunChecker extends TreeParser {
 					}
 					break;
 				case 10 :
-					// FunChecker.g:306:4: ^( MINUS t1= expr t2= expr )
+					// FunChecker.g:308:4: ^( MINUS t1= expr t2= expr )
 					{
 					MINUS27=(CommonTree)match(input,MINUS,FOLLOW_MINUS_in_expr664); 
 					match(input, Token.DOWN, null); 
@@ -1134,7 +1136,7 @@ public class FunChecker extends TreeParser {
 					}
 					break;
 				case 11 :
-					// FunChecker.g:309:4: ^( TIMES t1= expr t2= expr )
+					// FunChecker.g:311:4: ^( TIMES t1= expr t2= expr )
 					{
 					TIMES28=(CommonTree)match(input,TIMES,FOLLOW_TIMES_in_expr685); 
 					match(input, Token.DOWN, null); 
@@ -1153,7 +1155,7 @@ public class FunChecker extends TreeParser {
 					}
 					break;
 				case 12 :
-					// FunChecker.g:312:4: ^( DIV t1= expr t2= expr )
+					// FunChecker.g:314:4: ^( DIV t1= expr t2= expr )
 					{
 					DIV29=(CommonTree)match(input,DIV,FOLLOW_DIV_in_expr706); 
 					match(input, Token.DOWN, null); 
@@ -1172,7 +1174,7 @@ public class FunChecker extends TreeParser {
 					}
 					break;
 				case 13 :
-					// FunChecker.g:315:4: ^( NOT t= expr )
+					// FunChecker.g:317:4: ^( NOT t= expr )
 					{
 					NOT30=(CommonTree)match(input,NOT,FOLLOW_NOT_in_expr727); 
 					match(input, Token.DOWN, null); 
@@ -1186,7 +1188,7 @@ public class FunChecker extends TreeParser {
 					}
 					break;
 				case 14 :
-					// FunChecker.g:317:4: NOACTUAL
+					// FunChecker.g:319:4: NOACTUAL
 					{
 					match(input,NOACTUAL,FOLLOW_NOACTUAL_in_expr743); 
 					 type = Type.VOID; 

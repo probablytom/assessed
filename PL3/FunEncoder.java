@@ -1,4 +1,4 @@
-// $ANTLR 3.5 FunEncoder.g 2014-11-28 23:57:26
+// $ANTLR 3.5 FunEncoder.g 2014-12-04 02:07:28
 
 import org.antlr.runtime.*;
 import org.antlr.runtime.tree.*;
@@ -499,14 +499,15 @@ public class FunEncoder extends TreeParser {
 
 
 	// $ANTLR start "com"
-	// FunEncoder.g:152:1: com : ( ^( ASSN ID expr ) | ^( PROCCALL ID expr ) | ^( IF expr com ) | ^( IFELSE expr com com ) | ^( WHILE expr com ) | ^( SEQ ( com )* ) );
+	// FunEncoder.g:152:1: com : ( ^( ASSN ID expr ) | ^( PROCCALL ID expr ) | ^( IF expr com ) | ^( IFELSE expr com com ) | ^( WHILE expr com ) | ^( FOR ID expr expr com ) | ^( SEQ ( com )* ) );
 	public final void com() throws RecognitionException {
 		CommonTree ID5=null;
 		CommonTree ID6=null;
+		CommonTree ID7=null;
 
 		try {
-			// FunEncoder.g:153:2: ( ^( ASSN ID expr ) | ^( PROCCALL ID expr ) | ^( IF expr com ) | ^( IFELSE expr com com ) | ^( WHILE expr com ) | ^( SEQ ( com )* ) )
-			int alt8=6;
+			// FunEncoder.g:153:2: ( ^( ASSN ID expr ) | ^( PROCCALL ID expr ) | ^( IF expr com ) | ^( IFELSE expr com com ) | ^( WHILE expr com ) | ^( FOR ID expr expr com ) | ^( SEQ ( com )* ) )
+			int alt8=7;
 			switch ( input.LA(1) ) {
 			case ASSN:
 				{
@@ -533,9 +534,14 @@ public class FunEncoder extends TreeParser {
 				alt8=5;
 				}
 				break;
-			case SEQ:
+			case FOR:
 				{
 				alt8=6;
+				}
+				break;
+			case SEQ:
+				{
+				alt8=7;
 				}
 				break;
 			default:
@@ -672,25 +678,82 @@ public class FunEncoder extends TreeParser {
 					}
 					break;
 				case 6 :
-					// FunEncoder.g:218:4: ^( SEQ ( com )* )
+					// FunEncoder.g:219:4: ^( FOR ID expr expr com )
 					{
-					match(input,SEQ,FOLLOW_SEQ_in_com514); 
+					match(input,FOR,FOLLOW_FOR_in_com516); 
+					 int startaddr = obj.currentOffset();
+									
+					match(input, Token.DOWN, null); 
+					ID7=(CommonTree)match(input,ID,FOLLOW_ID_in_com527); 
+					pushFollow(FOLLOW_expr_in_com532);
+					expr();
+					state._fsp--;
+
+					 String id = (ID7!=null?ID7.getText():null); 
+									  Address varaddr = addrTable.get(id);
+									  System.out.println(varaddr.offset); //REMOVEMEMREOVEMER
+									  switch (varaddr.locale) {
+									    case Address.GLOBAL:
+									      obj.emit12(SVM.STOREG,
+									        varaddr.offset);
+									      break;
+									    case Address.LOCAL:
+									      obj.emit12(SVM.STOREL,
+									        varaddr.offset);
+									  }
+									
+					pushFollow(FOLLOW_expr_in_com543);
+					expr();
+					state._fsp--;
+
+					 int conaddr = obj.currentOffset();
+									  obj.emit12(SVM.JUMPF, 0);
+									
+					pushFollow(FOLLOW_com_in_com554);
+					com();
+					state._fsp--;
+
+					 
+									  obj.emit12(SVM.LOADC, 1);
+									  switch (varaddr.locale) {
+										case Address.GLOBAL:
+										  obj.emit12(SVM.LOADG, varaddr.offset);
+										  obj.emit1(SVM.ADD);
+										  obj.emit12(SVM.STOREG, varaddr.offset);
+										  break;
+										case Address.LOCAL:
+										  obj.emit12(SVM.LOADL, varaddr.offset);
+										  obj.emit1(SVM.ADD);
+										  obj.emit12(SVM.STOREL, varaddr.offset);
+									  }
+									  obj.emit12(SVM.JUMP, conaddr);
+									  int exitaddr = obj.currentOffset();
+									  obj.patch12(conaddr, exitaddr);
+									
+					match(input, Token.UP, null); 
+
+					}
+					break;
+				case 7 :
+					// FunEncoder.g:261:4: ^( SEQ ( com )* )
+					{
+					match(input,SEQ,FOLLOW_SEQ_in_com572); 
 					if ( input.LA(1)==Token.DOWN ) {
 						match(input, Token.DOWN, null); 
-						// FunEncoder.g:219:5: ( com )*
+						// FunEncoder.g:262:5: ( com )*
 						loop7:
 						while (true) {
 							int alt7=2;
 							int LA7_0 = input.LA(1);
-							if ( (LA7_0==ASSN||(LA7_0 >= IF && LA7_0 <= IFELSE)||LA7_0==PROCCALL||LA7_0==SEQ||LA7_0==WHILE) ) {
+							if ( (LA7_0==ASSN||LA7_0==FOR||(LA7_0 >= IF && LA7_0 <= IFELSE)||LA7_0==PROCCALL||LA7_0==SEQ||LA7_0==WHILE) ) {
 								alt7=1;
 							}
 
 							switch (alt7) {
 							case 1 :
-								// FunEncoder.g:219:5: com
+								// FunEncoder.g:262:5: com
 								{
-								pushFollow(FOLLOW_com_in_com520);
+								pushFollow(FOLLOW_com_in_com578);
 								com();
 								state._fsp--;
 
@@ -723,14 +786,14 @@ public class FunEncoder extends TreeParser {
 
 
 	// $ANTLR start "expr"
-	// FunEncoder.g:226:1: expr : ( FALSE | TRUE | NUM | ID | ^( FUNCCALL ID expr ) | ^( EQ expr expr ) | ^( LT expr expr ) | ^( GT expr expr ) | ^( PLUS expr expr ) | ^( MINUS expr expr ) | ^( TIMES expr expr ) | ^( DIV expr expr ) | ^( NOT expr ) | NOACTUAL );
+	// FunEncoder.g:269:1: expr : ( FALSE | TRUE | NUM | ID | ^( FUNCCALL ID expr ) | ^( EQ expr expr ) | ^( LT expr expr ) | ^( GT expr expr ) | ^( PLUS expr expr ) | ^( MINUS expr expr ) | ^( TIMES expr expr ) | ^( DIV expr expr ) | ^( NOT expr ) | NOACTUAL );
 	public final void expr() throws RecognitionException {
-		CommonTree NUM7=null;
-		CommonTree ID8=null;
+		CommonTree NUM8=null;
 		CommonTree ID9=null;
+		CommonTree ID10=null;
 
 		try {
-			// FunEncoder.g:227:2: ( FALSE | TRUE | NUM | ID | ^( FUNCCALL ID expr ) | ^( EQ expr expr ) | ^( LT expr expr ) | ^( GT expr expr ) | ^( PLUS expr expr ) | ^( MINUS expr expr ) | ^( TIMES expr expr ) | ^( DIV expr expr ) | ^( NOT expr ) | NOACTUAL )
+			// FunEncoder.g:270:2: ( FALSE | TRUE | NUM | ID | ^( FUNCCALL ID expr ) | ^( EQ expr expr ) | ^( LT expr expr ) | ^( GT expr expr ) | ^( PLUS expr expr ) | ^( MINUS expr expr ) | ^( TIMES expr expr ) | ^( DIV expr expr ) | ^( NOT expr ) | NOACTUAL )
 			int alt9=14;
 			switch ( input.LA(1) ) {
 			case FALSE:
@@ -810,34 +873,34 @@ public class FunEncoder extends TreeParser {
 			}
 			switch (alt9) {
 				case 1 :
-					// FunEncoder.g:227:4: FALSE
+					// FunEncoder.g:270:4: FALSE
 					{
-					match(input,FALSE,FOLLOW_FALSE_in_expr540); 
+					match(input,FALSE,FOLLOW_FALSE_in_expr598); 
 					 obj.emit12(SVM.LOADC, 0); 
 					}
 					break;
 				case 2 :
-					// FunEncoder.g:229:4: TRUE
+					// FunEncoder.g:272:4: TRUE
 					{
-					match(input,TRUE,FOLLOW_TRUE_in_expr551); 
+					match(input,TRUE,FOLLOW_TRUE_in_expr609); 
 					 obj.emit12(SVM.LOADC, 1); 
 					}
 					break;
 				case 3 :
-					// FunEncoder.g:231:4: NUM
+					// FunEncoder.g:274:4: NUM
 					{
-					NUM7=(CommonTree)match(input,NUM,FOLLOW_NUM_in_expr562); 
+					NUM8=(CommonTree)match(input,NUM,FOLLOW_NUM_in_expr620); 
 					 int value =
-									    Integer.parseInt((NUM7!=null?NUM7.getText():null));
+									    Integer.parseInt((NUM8!=null?NUM8.getText():null));
 									  obj.emit12(SVM.LOADC, value);
 									
 					}
 					break;
 				case 4 :
-					// FunEncoder.g:236:4: ID
+					// FunEncoder.g:279:4: ID
 					{
-					ID8=(CommonTree)match(input,ID,FOLLOW_ID_in_expr573); 
-					 String id = (ID8!=null?ID8.getText():null);
+					ID9=(CommonTree)match(input,ID,FOLLOW_ID_in_expr631); 
+					 String id = (ID9!=null?ID9.getText():null);
 									  Address varaddr = addrTable.get(id);
 									  switch (varaddr.locale) {
 									    case Address.GLOBAL:
@@ -852,16 +915,16 @@ public class FunEncoder extends TreeParser {
 					}
 					break;
 				case 5 :
-					// FunEncoder.g:249:4: ^( FUNCCALL ID expr )
+					// FunEncoder.g:292:4: ^( FUNCCALL ID expr )
 					{
-					match(input,FUNCCALL,FOLLOW_FUNCCALL_in_expr585); 
+					match(input,FUNCCALL,FOLLOW_FUNCCALL_in_expr643); 
 					match(input, Token.DOWN, null); 
-					ID9=(CommonTree)match(input,ID,FOLLOW_ID_in_expr591); 
-					pushFollow(FOLLOW_expr_in_expr597);
+					ID10=(CommonTree)match(input,ID,FOLLOW_ID_in_expr649); 
+					pushFollow(FOLLOW_expr_in_expr655);
 					expr();
 					state._fsp--;
 
-					 String id = (ID9!=null?ID9.getText():null);
+					 String id = (ID10!=null?ID10.getText():null);
 									  Address funcaddr = addrTable.get(id);
 									  // Assume that funcaddr.locale == CODE.
 									  obj.emit12(SVM.CALL,
@@ -872,45 +935,9 @@ public class FunEncoder extends TreeParser {
 					}
 					break;
 				case 6 :
-					// FunEncoder.g:259:4: ^( EQ expr expr )
+					// FunEncoder.g:302:4: ^( EQ expr expr )
 					{
-					match(input,EQ,FOLLOW_EQ_in_expr614); 
-					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_expr_in_expr620);
-					expr();
-					state._fsp--;
-
-					pushFollow(FOLLOW_expr_in_expr626);
-					expr();
-					state._fsp--;
-
-					 obj.emit1(SVM.CMPEQ); 
-					match(input, Token.UP, null); 
-
-					}
-					break;
-				case 7 :
-					// FunEncoder.g:264:4: ^( LT expr expr )
-					{
-					match(input,LT,FOLLOW_LT_in_expr643); 
-					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_expr_in_expr649);
-					expr();
-					state._fsp--;
-
-					pushFollow(FOLLOW_expr_in_expr655);
-					expr();
-					state._fsp--;
-
-					 obj.emit1(SVM.CMPLT); 
-					match(input, Token.UP, null); 
-
-					}
-					break;
-				case 8 :
-					// FunEncoder.g:269:4: ^( GT expr expr )
-					{
-					match(input,GT,FOLLOW_GT_in_expr672); 
+					match(input,EQ,FOLLOW_EQ_in_expr672); 
 					match(input, Token.DOWN, null); 
 					pushFollow(FOLLOW_expr_in_expr678);
 					expr();
@@ -920,15 +947,15 @@ public class FunEncoder extends TreeParser {
 					expr();
 					state._fsp--;
 
-					 obj.emit1(SVM.CMPGT); 
+					 obj.emit1(SVM.CMPEQ); 
 					match(input, Token.UP, null); 
 
 					}
 					break;
-				case 9 :
-					// FunEncoder.g:274:4: ^( PLUS expr expr )
+				case 7 :
+					// FunEncoder.g:307:4: ^( LT expr expr )
 					{
-					match(input,PLUS,FOLLOW_PLUS_in_expr701); 
+					match(input,LT,FOLLOW_LT_in_expr701); 
 					match(input, Token.DOWN, null); 
 					pushFollow(FOLLOW_expr_in_expr707);
 					expr();
@@ -938,15 +965,15 @@ public class FunEncoder extends TreeParser {
 					expr();
 					state._fsp--;
 
-					 obj.emit1(SVM.ADD); 
+					 obj.emit1(SVM.CMPLT); 
 					match(input, Token.UP, null); 
 
 					}
 					break;
-				case 10 :
-					// FunEncoder.g:279:4: ^( MINUS expr expr )
+				case 8 :
+					// FunEncoder.g:312:4: ^( GT expr expr )
 					{
-					match(input,MINUS,FOLLOW_MINUS_in_expr730); 
+					match(input,GT,FOLLOW_GT_in_expr730); 
 					match(input, Token.DOWN, null); 
 					pushFollow(FOLLOW_expr_in_expr736);
 					expr();
@@ -956,15 +983,15 @@ public class FunEncoder extends TreeParser {
 					expr();
 					state._fsp--;
 
-					 obj.emit1(SVM.SUB); 
+					 obj.emit1(SVM.CMPGT); 
 					match(input, Token.UP, null); 
 
 					}
 					break;
-				case 11 :
-					// FunEncoder.g:284:4: ^( TIMES expr expr )
+				case 9 :
+					// FunEncoder.g:317:4: ^( PLUS expr expr )
 					{
-					match(input,TIMES,FOLLOW_TIMES_in_expr759); 
+					match(input,PLUS,FOLLOW_PLUS_in_expr759); 
 					match(input, Token.DOWN, null); 
 					pushFollow(FOLLOW_expr_in_expr765);
 					expr();
@@ -974,15 +1001,15 @@ public class FunEncoder extends TreeParser {
 					expr();
 					state._fsp--;
 
-					 obj.emit1(SVM.MUL); 
+					 obj.emit1(SVM.ADD); 
 					match(input, Token.UP, null); 
 
 					}
 					break;
-				case 12 :
-					// FunEncoder.g:289:4: ^( DIV expr expr )
+				case 10 :
+					// FunEncoder.g:322:4: ^( MINUS expr expr )
 					{
-					match(input,DIV,FOLLOW_DIV_in_expr788); 
+					match(input,MINUS,FOLLOW_MINUS_in_expr788); 
 					match(input, Token.DOWN, null); 
 					pushFollow(FOLLOW_expr_in_expr794);
 					expr();
@@ -992,17 +1019,53 @@ public class FunEncoder extends TreeParser {
 					expr();
 					state._fsp--;
 
+					 obj.emit1(SVM.SUB); 
+					match(input, Token.UP, null); 
+
+					}
+					break;
+				case 11 :
+					// FunEncoder.g:327:4: ^( TIMES expr expr )
+					{
+					match(input,TIMES,FOLLOW_TIMES_in_expr817); 
+					match(input, Token.DOWN, null); 
+					pushFollow(FOLLOW_expr_in_expr823);
+					expr();
+					state._fsp--;
+
+					pushFollow(FOLLOW_expr_in_expr829);
+					expr();
+					state._fsp--;
+
+					 obj.emit1(SVM.MUL); 
+					match(input, Token.UP, null); 
+
+					}
+					break;
+				case 12 :
+					// FunEncoder.g:332:4: ^( DIV expr expr )
+					{
+					match(input,DIV,FOLLOW_DIV_in_expr846); 
+					match(input, Token.DOWN, null); 
+					pushFollow(FOLLOW_expr_in_expr852);
+					expr();
+					state._fsp--;
+
+					pushFollow(FOLLOW_expr_in_expr858);
+					expr();
+					state._fsp--;
+
 					 obj.emit1(SVM.DIV); 
 					match(input, Token.UP, null); 
 
 					}
 					break;
 				case 13 :
-					// FunEncoder.g:294:4: ^( NOT expr )
+					// FunEncoder.g:337:4: ^( NOT expr )
 					{
-					match(input,NOT,FOLLOW_NOT_in_expr817); 
+					match(input,NOT,FOLLOW_NOT_in_expr875); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_expr_in_expr823);
+					pushFollow(FOLLOW_expr_in_expr881);
 					expr();
 					state._fsp--;
 
@@ -1012,9 +1075,9 @@ public class FunEncoder extends TreeParser {
 					}
 					break;
 				case 14 :
-					// FunEncoder.g:298:4: NOACTUAL
+					// FunEncoder.g:341:4: NOACTUAL
 					{
-					match(input,NOACTUAL,FOLLOW_NOACTUAL_in_expr839); 
+					match(input,NOACTUAL,FOLLOW_NOACTUAL_in_expr897); 
 					 
 					}
 					break;
@@ -1040,14 +1103,14 @@ public class FunEncoder extends TreeParser {
 	public static final BitSet FOLLOW_proc_decl_in_program90 = new BitSet(new long[]{0x0000000400040008L});
 	public static final BitSet FOLLOW_PROC_in_proc_decl117 = new BitSet(new long[]{0x0000000000000004L});
 	public static final BitSet FOLLOW_ID_in_proc_decl123 = new BitSet(new long[]{0x0000000040020000L});
-	public static final BitSet FOLLOW_formal_in_proc_decl135 = new BitSet(new long[]{0x0000C10800C00010L});
-	public static final BitSet FOLLOW_var_decl_in_proc_decl141 = new BitSet(new long[]{0x0000C10800C00010L});
+	public static final BitSet FOLLOW_formal_in_proc_decl135 = new BitSet(new long[]{0x0000C10800C10010L});
+	public static final BitSet FOLLOW_var_decl_in_proc_decl141 = new BitSet(new long[]{0x0000C10800C10010L});
 	public static final BitSet FOLLOW_com_in_proc_decl148 = new BitSet(new long[]{0x0000000000000008L});
 	public static final BitSet FOLLOW_FUNC_in_proc_decl165 = new BitSet(new long[]{0x0000000000000004L});
 	public static final BitSet FOLLOW_type_in_proc_decl171 = new BitSet(new long[]{0x0000000000200000L});
 	public static final BitSet FOLLOW_ID_in_proc_decl177 = new BitSet(new long[]{0x0000000040020000L});
-	public static final BitSet FOLLOW_formal_in_proc_decl189 = new BitSet(new long[]{0x0000C10800C00010L});
-	public static final BitSet FOLLOW_var_decl_in_proc_decl195 = new BitSet(new long[]{0x0000C10800C00010L});
+	public static final BitSet FOLLOW_formal_in_proc_decl189 = new BitSet(new long[]{0x0000C10800C10010L});
+	public static final BitSet FOLLOW_var_decl_in_proc_decl195 = new BitSet(new long[]{0x0000C10800C10010L});
 	public static final BitSet FOLLOW_com_in_proc_decl202 = new BitSet(new long[]{0x00001403B838C200L});
 	public static final BitSet FOLLOW_expr_in_proc_decl208 = new BitSet(new long[]{0x0000000000000008L});
 	public static final BitSet FOLLOW_FORMAL_in_formal231 = new BitSet(new long[]{0x0000000000000004L});
@@ -1065,46 +1128,51 @@ public class FunEncoder extends TreeParser {
 	public static final BitSet FOLLOW_ID_in_com366 = new BitSet(new long[]{0x00001403B838C200L});
 	public static final BitSet FOLLOW_expr_in_com372 = new BitSet(new long[]{0x0000000000000008L});
 	public static final BitSet FOLLOW_IF_in_com389 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expr_in_com395 = new BitSet(new long[]{0x0000810800C00010L});
+	public static final BitSet FOLLOW_expr_in_com395 = new BitSet(new long[]{0x0000810800C10010L});
 	public static final BitSet FOLLOW_com_in_com407 = new BitSet(new long[]{0x0000000000000008L});
 	public static final BitSet FOLLOW_IFELSE_in_com424 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expr_in_com430 = new BitSet(new long[]{0x0000810800C00010L});
-	public static final BitSet FOLLOW_com_in_com442 = new BitSet(new long[]{0x0000810800C00010L});
+	public static final BitSet FOLLOW_expr_in_com430 = new BitSet(new long[]{0x0000810800C10010L});
+	public static final BitSet FOLLOW_com_in_com442 = new BitSet(new long[]{0x0000810800C10010L});
 	public static final BitSet FOLLOW_com_in_com454 = new BitSet(new long[]{0x0000000000000008L});
 	public static final BitSet FOLLOW_WHILE_in_com471 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expr_in_com484 = new BitSet(new long[]{0x0000810800C00010L});
+	public static final BitSet FOLLOW_expr_in_com484 = new BitSet(new long[]{0x0000810800C10010L});
 	public static final BitSet FOLLOW_com_in_com497 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_SEQ_in_com514 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_com_in_com520 = new BitSet(new long[]{0x0000810800C00018L});
-	public static final BitSet FOLLOW_FALSE_in_expr540 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_TRUE_in_expr551 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_NUM_in_expr562 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_ID_in_expr573 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_FUNCCALL_in_expr585 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_ID_in_expr591 = new BitSet(new long[]{0x00001403B838C200L});
-	public static final BitSet FOLLOW_expr_in_expr597 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_EQ_in_expr614 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expr_in_expr620 = new BitSet(new long[]{0x00001403B838C200L});
-	public static final BitSet FOLLOW_expr_in_expr626 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_LT_in_expr643 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expr_in_expr649 = new BitSet(new long[]{0x00001403B838C200L});
+	public static final BitSet FOLLOW_FOR_in_com516 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_ID_in_com527 = new BitSet(new long[]{0x00001403B838C200L});
+	public static final BitSet FOLLOW_expr_in_com532 = new BitSet(new long[]{0x00001403B838C200L});
+	public static final BitSet FOLLOW_expr_in_com543 = new BitSet(new long[]{0x0000810800C10010L});
+	public static final BitSet FOLLOW_com_in_com554 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_SEQ_in_com572 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_com_in_com578 = new BitSet(new long[]{0x0000810800C10018L});
+	public static final BitSet FOLLOW_FALSE_in_expr598 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_TRUE_in_expr609 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_NUM_in_expr620 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_ID_in_expr631 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_FUNCCALL_in_expr643 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_ID_in_expr649 = new BitSet(new long[]{0x00001403B838C200L});
 	public static final BitSet FOLLOW_expr_in_expr655 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_GT_in_expr672 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_EQ_in_expr672 = new BitSet(new long[]{0x0000000000000004L});
 	public static final BitSet FOLLOW_expr_in_expr678 = new BitSet(new long[]{0x00001403B838C200L});
 	public static final BitSet FOLLOW_expr_in_expr684 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_PLUS_in_expr701 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_LT_in_expr701 = new BitSet(new long[]{0x0000000000000004L});
 	public static final BitSet FOLLOW_expr_in_expr707 = new BitSet(new long[]{0x00001403B838C200L});
 	public static final BitSet FOLLOW_expr_in_expr713 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_MINUS_in_expr730 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_GT_in_expr730 = new BitSet(new long[]{0x0000000000000004L});
 	public static final BitSet FOLLOW_expr_in_expr736 = new BitSet(new long[]{0x00001403B838C200L});
 	public static final BitSet FOLLOW_expr_in_expr742 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_TIMES_in_expr759 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_PLUS_in_expr759 = new BitSet(new long[]{0x0000000000000004L});
 	public static final BitSet FOLLOW_expr_in_expr765 = new BitSet(new long[]{0x00001403B838C200L});
 	public static final BitSet FOLLOW_expr_in_expr771 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_DIV_in_expr788 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_MINUS_in_expr788 = new BitSet(new long[]{0x0000000000000004L});
 	public static final BitSet FOLLOW_expr_in_expr794 = new BitSet(new long[]{0x00001403B838C200L});
 	public static final BitSet FOLLOW_expr_in_expr800 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_NOT_in_expr817 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expr_in_expr823 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_NOACTUAL_in_expr839 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_TIMES_in_expr817 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_expr_in_expr823 = new BitSet(new long[]{0x00001403B838C200L});
+	public static final BitSet FOLLOW_expr_in_expr829 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_DIV_in_expr846 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_expr_in_expr852 = new BitSet(new long[]{0x00001403B838C200L});
+	public static final BitSet FOLLOW_expr_in_expr858 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_NOT_in_expr875 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_expr_in_expr881 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_NOACTUAL_in_expr897 = new BitSet(new long[]{0x0000000000000002L});
 }
