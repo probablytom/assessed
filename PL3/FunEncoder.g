@@ -217,14 +217,13 @@ com
 		 )
 	//////// Additions by Tom Wallis BEGIN
 	|	^(FOR
-				{ int startaddr = obj.currentOffset();
-				}
-			ID
-			e1=expr
+			ID	
 				{ String id = $ID.text; 
 				  Address varaddr = addrTable.get(id);
-				  System.out.println(varaddr.offset);
-				  switch (varaddr.locale) {
+				  }
+				
+			expr
+			  {     switch (varaddr.locale) {
 				    case Address.GLOBAL:
 				      obj.emit12(SVM.STOREG,
 				        varaddr.offset);
@@ -232,12 +231,15 @@ com
 				    case Address.LOCAL:
 				      obj.emit12(SVM.STOREL,
 				        varaddr.offset);
+
 				  }
-				}
+				  int startaddr = obj.currentOffset();
+			}
 			expr
-				{ int conaddr = obj.currentOffset();
-				  // IN HERE, COMPARE I AND M, PUSH TO THE QUEUE, AND JUMPF.
-				  obj.emit12(SVM.JUMPF, exitaddr);
+				{ // IN HERE, COMPARE I AND M, PUSH TO THE QUEUE, AND JUMPF.
+				  obj.emit1(SVM.CMPLT);
+                  int conaddr = obj.currentOffset();
+				  obj.emit12(SVM.JUMPF, 0);
 				}
 			com
 				{ 
@@ -253,7 +255,7 @@ com
 					  obj.emit1(SVM.ADD);
 					  obj.emit12(SVM.STOREL, varaddr.offset);
 				  }
-				  obj.emit12(SVM.JUMP, conaddr);
+				  obj.emit12(SVM.JUMP, startaddr);
 				  int exitaddr = obj.currentOffset();
 				  obj.patch12(conaddr, exitaddr);
 				}
@@ -268,6 +270,7 @@ com
 			expr
 				{ // Here, test the expression. push to stack and jumpf.
 				  obj.emit12(SVM.JUMPF, 0); // Is this right?!
+				  obj.emit12(SVM.JUMPT, conaddr);
 				}
 	  )
 	//////// Additions by Tom Wallis END
@@ -278,6 +281,7 @@ com
 
 
 //////// Expressions
+
 
 expr
 	:	FALSE
