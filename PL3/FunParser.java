@@ -1,4 +1,4 @@
-// $ANTLR 3.5 Fun.g 2014-12-04 02:07:25
+// $ANTLR 3.5 Fun.g 2014-12-04 13:23:01
 
 import org.antlr.runtime.*;
 import java.util.Stack;
@@ -385,7 +385,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT12);
 
 					// AST REWRITE
-					// elements: seq_com, var_decl, formal, ID, PROC
+					// elements: ID, PROC, var_decl, formal, seq_com
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -493,7 +493,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT24);
 
 					// AST REWRITE
-					// elements: type, expr, var_decl, seq_com, FUNC, ID, formal
+					// elements: var_decl, FUNC, ID, expr, seq_com, formal, type
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -607,7 +607,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_ID.add(ID26);
 
 					// AST REWRITE
-					// elements: ID, type
+					// elements: type, ID
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -733,7 +733,7 @@ public class FunParser extends Parser {
 			if (state.failed) return retval;
 			if ( state.backtracking==0 ) stream_expr.add(expr30.getTree());
 			// AST REWRITE
-			// elements: expr, ID, type
+			// elements: ID, expr, type
 			// token labels: 
 			// rule labels: retval
 			// token list labels: 
@@ -1082,7 +1082,7 @@ public class FunParser extends Parser {
 					if (state.failed) return retval;
 					if ( state.backtracking==0 ) stream_expr.add(expr35.getTree());
 					// AST REWRITE
-					// elements: expr, ASSN, ID
+					// elements: expr, ID, ASSN
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -1253,7 +1253,7 @@ public class FunParser extends Parser {
 							if ( state.backtracking==0 ) stream_DOT.add(DOT46);
 
 							// AST REWRITE
-							// elements: c2, c1, expr
+							// elements: expr, c1, c2
 							// token labels: 
 							// rule labels: retval, c1, c2
 							// token list labels: 
@@ -1314,7 +1314,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT51);
 
 					// AST REWRITE
-					// elements: WHILE, expr, seq_com
+					// elements: seq_com, WHILE, expr
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -1381,7 +1381,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT58);
 
 					// AST REWRITE
-					// elements: e2, ID, e1, FOR, seq_com
+					// elements: FOR, e2, e1, seq_com, ID
 					// token labels: 
 					// rule labels: retval, e1, e2
 					// token list labels: 
@@ -1438,7 +1438,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT63);
 
 					// AST REWRITE
-					// elements: REPEAT, expr, seq_com
+					// elements: seq_com, REPEAT, expr
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -1491,7 +1491,7 @@ public class FunParser extends Parser {
 					if ( state.backtracking==0 ) stream_DOT.add(DOT68);
 
 					// AST REWRITE
-					// elements: expr, DO, seq_com
+					// elements: seq_com, expr, DO
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 

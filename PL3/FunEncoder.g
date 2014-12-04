@@ -237,7 +237,7 @@ com
 			expr
 				{ int conaddr = obj.currentOffset();
 				  // IN HERE, COMPARE I AND M, PUSH TO THE QUEUE, AND JUMPF.
-				  obj.emit12(SVM.JUMPF, exitaddr);
+				  obj.emit12(SVM.JUMPF, 0);
 				}
 			com
 				{ 
