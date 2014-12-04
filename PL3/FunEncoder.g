@@ -236,7 +236,8 @@ com
 				}
 			expr
 				{ int conaddr = obj.currentOffset();
-				  obj.emit12(SVM.JUMPF, 0);
+				  // IN HERE, COMPARE I AND M, PUSH TO THE QUEUE, AND JUMPF.
+				  obj.emit12(SVM.JUMPF, exitaddr);
 				}
 			com
 				{ 
@@ -257,6 +258,18 @@ com
 				  obj.patch12(conaddr, exitaddr);
 				}
 		)
+	| ^(DO
+				{ int startaddr = obj.currentOffset();
+				}
+			com
+				{ int conaddr = obj.currentOffset();
+				  
+				}
+			expr
+				{ // Here, test the expression. push to stack and jumpf.
+				  obj.emit12(SVM.JUMPF, 0); // Is this right?!
+				}
+	  )
 	//////// Additions by Tom Wallis END
 	|	^(SEQ
 		  com*
