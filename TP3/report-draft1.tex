@@ -13,8 +13,10 @@ Draft 1}
 
 
 \section{Preliminaries}\par
-A project management tool or suite is a program or set of programs which allow a team of developers, managers, and customers to understand the state of a project. These tools tend to manage \emph{tickets}, which allow the team to record progress on problems they are having with the project. These problems are referred to as \emph{bugs} and \emph{issues}. \par
-Examples of project management tools used today are \emph{Trac}, \emph{Jira}, \emph{Asana} and \emph{Trello}. Others, such as \emph{Codebook} by Microsoft, have been theorised and had papers published about them, but have not come to fruition. 
+A project management tool or suite is a program or set of programs which allow a team of developers, managers, and customers to understand the state of a project. These tools tend to be used to manage \emph{tickets}.(The act of managing tickets is referred to as \emph{ticket management}.) \emph{Tickets} are notices that members of a development team can set up, discuss code on, and see information about a problem such as its severity and who is responsible for fixing this. \emph{Issues} and \emph{bugs} would be found recorded in \emph{tickets}. \emph{Tickets} are also used to see what development has been done on a project in the past. \par
+Examples of project management tools used today are \emph{Trac}, \emph{Jira}, \emph{Asana} and \emph{Trello}. Others, such as \emph{Codebook} by Microsoft, have been theorised and had papers published about them, but have not come to fruition. \par
+In a software development team, one finds that there exists a set of \emph{developers} who have their work managed by \emph{Quality Assurance Managers}. This whole system is overlooked and monitored by a \emph{Project Manager}. \par
+When one develops code, to keep working and non-working versions maintained side-by-side one employs \emph{branches}. These \emph{branches} contain different versions of code which are being worked on and maintained by different sets of developers. Often, quites of software that manage \emph{branches} can manage \emph{issue tracking} in the form of \emph{ticket management}. An example of a tool that does this is Github. Often, a development team will use the most stable branch of their project while developing their new version; this process is called \emph{dog-fooding}.\par
 
 
 \section{Motivation} 
@@ -41,7 +43,7 @@ As an aside, it should be noted that our team uses Trello alongside Facebook to 
 
 
 \section{Aims}\par
-This project attempts to cumulate the functionality of Asana, Codebook, and Trello into one web-based package where project managers, developers, and customers can discuss a project in a social-networking oriented way. \emph{Using these conversations}, this project should then develop \emph{tickets} as the conversations being had with calculable and attachable metadata. \par
+This project attempts to cumulate the functionality of Asana, Codebook, and Trello into one web-based package where project managers, developers, and customers can discuss a project in a social-networking oriented way. Using these conversations, this project should then develop \emph{tickets} as the conversations being had with calculable and attachable metadata. \par
 The project should be able to socially network at least developers, their quality assurance managers, and their project managers, and should be able to manage multiple projects. This is functionality also found in Codebook. It should be able to process metadata like Asana can, and allow users to keep track of issues and bugs like Trello enables with its lists. However, the project should \emph{also} do this while fixing the flaw found with all three aforementioned solutions: it should do so in a way centered around conversations. \par
 With appropriate user interface design, using conversatons as tickets should also solve the three issues laid out in the \emph{Motivation} section:
 \begin{enumerate}
@@ -51,13 +53,25 @@ With appropriate user interface design, using conversatons as tickets should als
 \end{enumerate}
 
 
-\section{Progress}
+\section{Progress} \par
+Firstly, meetings were held with a project supervisor to determine exactly what the requirements of the project were. Our development team were given a choice to integrate conversation and social networking capabilities into an existing ticket management system such as Jira via a plugin, or to create our own solution, potentially as a website hosted online. We decided to create our own project, as it would allow us to resist restriction in the form of another project's setup and style of working. \par
+Currently, the project is nearly in a useable state for communicating as a chat platform. Chats exist and sync between different browser sessions. As time goes on, profiles will become more useful for users and networking will be implemented. Currently, user types -- Developers, Q.A. Managers, Project Managers -- exist, but are being merged into a beta branch of the code. \par 
+The project is being written in Django on the backend. This was done for a number of reasons:
+\begin{itemize} 
+\item Django is a Python backend, and Python is a relatively simple langauge to program in. 
+\item Django's template system is powerful and provides all of the functionality we need.
+\item Django provides a user model with permissions and groups we can utilise to ease the social networking aspect of the project.
+\item Django has copious documentation and an active developer community. This was particularly important, as the majority of our team had no prior experience in web development.
+\item Django's model framework is both powerful and intuitive, and ER diagrams are easy to develop as Django code. 
+\end{itemize} \par
+Once requirements had been solicited from the project supervisor, project setup was initiated. Most of the work performed for the first month was simply setting up the framework we would create the rest of the project in. Once this was done, actual pages of the website -- chats, project pages, permission settings, and so on -- were added to the project. Additionally, admin pages had to be written and configured so that the project management tool could itself be managed by some superuser. Naturally, now that much of the backend of the code has been written, future features will be far easier to implement. \par
+The code was developed primarily in Jetbrains' PyCharm IDE, and is being maintained on a Github page. The team meet at least once per week to discuss current issues (which are being tracked on Trello) and to catch up on work each other have done. The project currently has a master branch being hosted on Heroku.\par 
 
 
-
-
-\section{Conclusion}
-
+\section{Conclusion}\par
+To conclude, the project's development has run smoothly so far. Ample progress has been made, and we feel we are sticking to the requirements solicited with the project supervisor at the beginning of the project (and in subsequent weekly meetings also). \par
+An interesting observation is that the utility of the program has become evident during its own development. While bugs are discussed on Facebook Messenger, detailed on Trello, and written on Github, there can sometimes be confusion as to who is developing various parts of the program, and there are often problems with information kept on Trello being out-of-date. While this is partly due to the management skills of the team, it also has to do with the tools available. A tool such as the one we are developing would be very useful to us, and this knowledge makes it easier to develop something useful. A mantra we can employ would be that \emph{if we would use it for managing this project, other people will want to too}. \par
+As a result, we are eager to begin dog-fooding and use the tool ourselves while it is in development.
 
 
 \end{document}
