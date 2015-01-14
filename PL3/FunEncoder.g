@@ -223,7 +223,7 @@ com
 				  }
 				
 			expr
-			  {     switch (varaddr.locale) {
+			  {   switch (varaddr.locale) {
 				    case Address.GLOBAL:
 				      obj.emit12(SVM.STOREG,
 				        varaddr.offset);
@@ -237,24 +237,17 @@ com
 			}
 			expr
 				{ // IN HERE, COMPARE I AND M, PUSH TO THE QUEUE, AND JUMPF.
+				  obj.emit12(SVM.LOADL, varaddr.offset);
 				  obj.emit1(SVM.CMPLT);
                   int conaddr = obj.currentOffset();
-				  obj.emit12(SVM.JUMPF, 0);
+				  obj.emit12(SVM.JUMPT, 0);
 				}
 			com
 				{ 
+				  obj.emit12(SVM.LOADL, varaddr.offset);
 				  obj.emit12(SVM.LOADC, 1);
-				  switch (varaddr.locale) {
-					case Address.GLOBAL:
-					  obj.emit12(SVM.LOADG, varaddr.offset);
-					  obj.emit1(SVM.ADD);
-					  obj.emit12(SVM.STOREG, varaddr.offset);
-					  break;
-					case Address.LOCAL:
-					  obj.emit12(SVM.LOADL, varaddr.offset);
-					  obj.emit1(SVM.ADD);
-					  obj.emit12(SVM.STOREL, varaddr.offset);
-				  }
+				  obj.emit1(SVM.ADD);
+				  obj.emit12(SVM.STOREL, varaddr.offset);
 				  obj.emit12(SVM.JUMP, startaddr);
 				  int exitaddr = obj.currentOffset();
 				  obj.patch12(conaddr, exitaddr);
@@ -269,9 +262,10 @@ com
 				}
 			expr
 				{ // Here, test the expression. push to stack and jumpf.
-				  obj.emit12(SVM.JUMPF, 0); // Is this right?!
-				  obj.emit12(SVM.JUMPT, conaddr);
+				  //obj.emit12(SVM.JUMPF, 0); // Is this right?!
+				  obj.emit12(SVM.JUMPT, startaddr);
 				}
+
 	  )
 	//////// Additions by Tom Wallis END
 	|	^(SEQ
