@@ -254,13 +254,15 @@ com
 				}
 	// Added by Tom Wallis, BEGIN
 	|	^(FOR ID t1=expr t2=expr com) 
-				{ define($ID.text, Type.INT, $FOR);
-				  Type tvar = retrieve($ID.text, $FOR);  //  define($ID.text, Type.INT, $FOR);
+				{ Type tvar = retrieve($ID.text, $FOR);  //  define($ID.text, Type.INT, $FOR);
 				  checkType(tvar, t1, $FOR);
-				  checkType(Type.INT, t1, $FOR);
-				  checkType(Type.INT, t2, $FOR);
-				}
 
+				  //checkType(Type.INT, t1, $FOR);
+				  checkType(tvar, t2, $FOR); // They should be the same type
+                  //define($ID.text, tvar, $FOR);
+
+				}
+	
 	|	^(DO t1=expr com)
 				{ checkType(Type.INT, t1, $DO);
 				}

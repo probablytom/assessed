@@ -91,8 +91,9 @@ com
     // Next three clauses added by SG
     |   FOR ID ASSN e1=expr TO e2=expr COLON
           seq_com DOT              -> ^(FOR ID $e1 $e2 seq_com) 
-    |   REPEAT seq_com UNTIL expr DOT
-                                   -> ^(REPEAT seq_com expr)
+/// Removed: present in sample grammar but not implemented so as not to duplicate my own work...
+///    |   REPEAT seq_com UNTIL expr DOT
+///                                   -> ^(REPEAT seq_com expr)
     |   DO seq_com WHILE expr DOT  -> ^(DO seq_com expr)
 	;
 
