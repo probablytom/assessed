@@ -80,7 +80,7 @@ hs_err_pid*
 
 ### CUSTOM ###
 # Avoiding Eclipse data
-*/.metadata/*
+*/.metadata
 */.classpath
 */.project
 
