@@ -80,6 +80,9 @@ hs_err_pid*
 
 ### CUSTOM ###
 # Avoiding Eclipse data
-#*/.metadata/*
-#*/.classpath
-#*/.project
+*/.metadata/*
+*/.classpath
+*/.project
+
+# Avoiding storing generated java from PL3 Assessed Exercise.
+*/PL3/*.java
