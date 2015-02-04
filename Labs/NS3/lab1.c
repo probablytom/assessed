@@ -76,6 +76,7 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 
 // Create our file descriptor.
 int fileDescriptor = socket(AF_INET, SOCK_STEAM, 0);
@@ -83,7 +84,12 @@ if (fileDescriptor == -1) {
 	// An error occurred, deal with this.
 }
 
+// Some configuring (?)
+
+
 // Bind to a socket.
 if ( bind(fileDescriptor, (struct sockaddr *) &addr, sizeof(addr)) == -1 ) {
 	// We hit an error, deal with this.
 }
+
+
