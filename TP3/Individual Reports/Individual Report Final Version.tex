@@ -1,6 +1,10 @@
 \documentclass[10pt]{article}
 \usepackage{fullpage}
 \usepackage{indentfirst}
+\usepackage[usenames,dvipsnames]{xcolor}
+\definecolor{customURL}{HTML}{08096E}
+\usepackage{hyperref}
+\hypersetup{linkcolor=MidnightBlue, urlcolor=customURL, colorlinks}
 \author{\bf Tom Wallis \\ \bf Matriculation No.: 2025138}
 \date{\today}
 \title{Team Project 3 Individual Report\\
@@ -11,12 +15,11 @@ A social network for project management\\ \vspace{4mm}
 \begin{document}
 \maketitle
 
-% Should mention codebook more as it is more to do with conversations than the other things we looked at.
-% Also, plan based management (?)
+%D Should mention codebook more as it is more to do with conversations than the other things we looked at.
+%----- Also, plan based management (?)
 \section{Preliminaries}\par
 A project management tool or suite is a program or set of programs which allow a team of developers, managers, and customers to understand the state of a project. These tools tend to be used to manage \emph{tickets}.(The act of managing tickets is referred to as \emph{ticket management}.) \emph{Tickets} are notices that members of a development team can set up, discuss code on, and see information about a problem such as its severity and who is responsible for fixing this. \emph{Issues} and \emph{bugs} would be found recorded in \emph{tickets}. \emph{Tickets} are also used to see what development has been done on a project in the past. \par
-% Here he's put a bracket around the below paragraph and said "exists".
-Examples of project management tools used today are \emph{Trac}, \emph{Jira}, \emph{Asana} and \emph{Trello}. Others, such as \emph{Codebook} by Microsoft, have been theorised and had papers published about them, but have not come to fruition. \par
+Examples of project management tools used today are \emph{Trac}, \emph{Jira}, \emph{Asana} and \emph{Trello}. Others, such as \emph{Codebook} by Microsoft, have attempted to produce a system where social networking allowed for collaboration on bug reporting. However, Codebook saw little adoption and was not ideally user-friendly, using graph theory to draw connections between people and bugs. \par
 In a software development team, one finds that there exists a set of \emph{developers} who have their work managed by \emph{Quality Assurance Managers}. This whole system is overlooked and monitored by a \emph{Project Manager}. \par
 When one develops code, to keep working and non-working versions maintained side-by-side one employs \emph{branches}. These \emph{branches} contain different versions of code which are being worked on and maintained by different sets of developers. Often, quites of software that manage \emph{branches} can manage \emph{issue tracking} in the form of \emph{ticket management}. An example of a tool that does this is Github. Often, a development team will use the most stable branch of their project while developing their new version; this process is called \emph{dog-fooding}.\par
 
@@ -24,24 +27,27 @@ When one develops code, to keep working and non-working versions maintained side
 \section{Motivation} 
 When writing a software project as a team, it can be difficult to manage issues and bugs. This is generally done with a project management suite such as Trac, in the form of tickets. However, it is often found that programmers discuss these tickets in an informal environment and, once a conversation is had detailing the issue, this work must be carried out a second time in the creation and comments section of a ticket. \par
 This is a problem for two reasons: firstly, it duplicates work and wastes time. Secondly, project management tools can be cumbersome to work, making their integration into people's work schedule difficult.\par
-This problem is clearly one worth solving, and is one we are faced with daily as software developers working in a team. 
-% He's put a comment here, "to address this we wil build a conversation oriented system..."
+This problem is clearly one worth solving, and is one we are faced with daily as software developers working in a team. \par 
+%D He's put a comment here, "to address this we wil build a conversation oriented system..."
+To address this, we will build a conversation-oriented system which allows for ease of use similar to a standard social networking site. However, using metrics obtained from conversation data and metadata generated and inputted by users, developers will be able to track and manage bugs and issues in software development projects. \par
 
 
-% The only comment on this section is "slack.com" at the top of the section. Incidentally, slack are doing a similar thing to what we're trying to do, so this is maybe worth commenting on!
+%D The only comment on this section is "slack.com" at the top of the section. Incidentally, slack are doing a similar thing to what we're trying to do, so this is maybe worth commenting on!
 \section{Background}
 There are several related works we have had to build our ideas upon in the design stage of this project. 
 \begin{itemize}
 \item Asana\\
-Asana is a system which attempts to remove the need for email to update people regarding news they are to be aware of: due dates, tasks, comments on their work etc. Asana was founded by Facebook executives and developers initially working on improving productivity at Facebook. Asana is a useful tool, but aims to pull together many different pieces of information into one central hub -- the idea powering the product is to \emph{kill email}. \\
+	\emph{Asana} is a system which attempts to remove the need for email to update people regarding news they are to be aware of: due dates, tasks, comments on their work etc. Asana was founded by Facebook executives and developers initially working on improving productivity at Facebook. Asana is a useful tool, but aims to pull together many different pieces of information into one central hub -- the idea powering the product is to \emph{kill email}. \\
 Because we are looking to collect only information and meta-information about tickets, Asana does not solve the problem noticed in the programming world. 
 \item Codebook \\
-Codebook is a social networking oriented way to manage code repositories and the people who maintain them. Codebook creates graphs and connections between people and project management artifacts like tickets.\\
+	\emph{Codebook} is a social networking oriented way to manage code repositories and the people who maintain them. Codebook creates graphs and connections between people and project management artifacts like tickets.\\
 Codebook doesn't quite solve the problem we are faced with, however. This is because, while the social network Codebook creates allows managers, developers, and customers to link together, the graphs it creates are complex and do not necessarily permit easy communication. While networking people and code together is useful, the main concern here is that programmers will communicate using channels other than their project management tools. 
 \item Trello \\
-Trello is a web-based tool based on the KanBan system of managing lists. It can be used to track and archive progress at various specific points in a project's development cycle. \\
+	\emph{Trello} is a web-based tool based on the KanBan system of managing lists. It can be used to track and archive progress at various specific points in a project's development cycle. \\
 However, while Trello is useful, it can also add to the clutter we are seeking to prevent. Trello does not actively track tickets and also does not allow for "chats" -- instead, it manages lists of arbitrary things and provides a commenting system and history of recent actions on a board of cards. \\
 As an aside, it should be noted that our team uses Trello alongside Facebook to manage our own tasks, as a to-do list. 
+\item Slack \\
+	While only a young startup, \emph{\url{slack.com}} is of note due to the similarities between this project and their product. \url{Slack.com} provides a conversation-based way of managing projects, and shares most of this project's design goals. Crucially however, slack.com is geared toward general project management and is not heavily tailored to software development projects. Additionally, \url{slack.com} has less of a focus on metadata than this project. \url{Slack.com} has become the focus of much attention, and has routinely found millions of dollars in funding since its release two years ago. 
 \end{itemize}
 \par As can be seen, there have been many attempts to solve the problem identified in this introduction's \emph{Motivation} section. However, none of them come at the problem at an angle which allows for all conversation and project-management to be done in one place. Therefore, a new system must be devised. 
 
@@ -53,7 +59,7 @@ With appropriate user interface design, using conversatons as tickets should als
 \begin{enumerate}
 \item The project allows for discussion of the issues and bugs within their project management suite.
 \item Because discussion occurs directly within a ticket, there is no need to duplicate work as there would be creating tickets on the basis of Skype or Facebook conversations.
-\item An easy-to-use user interface would allow for easy ticket management, meaning that the tool would be convenient enough that tickets would get created in the first place, which is sometimes untrue of tools such as Trac. % He's crossed out "ticket" and replaced it with "conversaton". Also, he's underlined "that tickets would get created in the first place" and stated, "more that tickets are created implicitly as a result of a conversation". No other notes for this section.
+\item An easy-to-use user interface would allow for easy covnersation management, meaning that the tool would be able to implicitly manage "tickets" through conversation and metadata management, which is diffuclt to do with tools such as Trac. %D He's crossed out "ticket" and replaced it with "conversaton". Also, he's underlined "that tickets would get created in the first place" and stated, "more that tickets are created implicitly as a result of a conversation". No other notes for this section.
 \end{enumerate}
 
 
