@@ -16,9 +16,14 @@
 -- "                                      ->  Seq Scan on release  (cost=0.00..18.54 rows=954 width=8)"
 -- "                          ->  Index Only Scan using band_pkey on band  (cost=0.00..0.32 rows=1 width=4)"
 -- "                                Index Cond: (bid = release.bid)"
+--
+--
+-- Comment on efficiency: The query makes appropriate use of indexing and runs very quicky. I feel that it is efficient enough for ordinary use.
 
 
-SELECT b.name AS Band_Name, cds.count AS BONUS_NUMBER
+
+
+SELECT b.name AS Band_Name, cds.count AS Bonus_Num
 FROM Band AS b, (SELECT count(cdbonus) as count, Band.bid as band_bid
 		FROM Band, Release, Song
 		WHERE Song.cdbonus = 'Y' AND Band.bid = Release.bid AND Release.rid = Song.rid
