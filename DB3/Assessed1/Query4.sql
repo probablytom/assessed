@@ -1,18 +1,9 @@
---SELECT
---FROM Band as b, Release as r, (SELECT count(Song.title) as SongCount, 
---				FROM Song, Release, 
---				WHERE Release.rid == Song.rid AND 
-
-
-
---;
---SELECT MAX(song.title) as song_count, Release.rid as release_id
---FROM Song, Release
---WHERE Release.rid = Song.rid
---GROUP BY Release.rid
---ORDER BY song_count DESC;
-
-SELECT max(sumSongs.songCount)
-FROM (SELECT COUNT(title) AS songCount
-FROM Song
-GROUP BY title) as sumSongs;
+-- This almost definitely works. Finds everything needed, but uncertain that it's finding the albums with the _most_ songs...
+select b.name as Band_Name, r.title as Album_Title, cs.countsongs as Song_Num
+from band as b inner join release as r on b.bid = r.rid INNER JOIN (Select count(DISTINCT Song.title) as countsongs, release.rid as release_id
+							FROM Song, Release
+							WHERE Song.rid = Release.rid
+							GROUP BY release_id) as cs on r.rid = release_id, Memberof
+where Memberof.bid = b.bid and Memberof.instrument like 'vocals'
+group by b.name, r.title, cs.countsongs
+order by Band_Name ASC 
