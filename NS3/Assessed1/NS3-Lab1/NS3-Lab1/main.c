@@ -25,11 +25,17 @@
 #include <arpa/inet.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/wait.h>
+#include <sys/malloc.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+
 
 // Defining constants...
 #define BUFFERLEN 65536
 #define MAXPATHLENGTH 1024
-#define PORT "8013"
+#define PORT "8025"
 #define BACKLOG 10
 #define TESTMSG "Chunkiest of baconbaconbacon!"
 
@@ -38,42 +44,96 @@ typedef enum { false, true } bool;
 
 
 int send_server_error(int connfd) {
-    if(send(connfd, "HTTP/1.0 500 INTERNAL SERVER ERROR", 34,0 )) {
+    if(send(connfd, "HTTP/1.0 500 INTERNAL SERVER ERROR", 34,0 ) == -1) {
         // Error here too!
         return -1;
     }
     return 0;
 }
 
-bool check_get_request(char request[BUFFERLEN]) {
-    return request[0] == 'G' && request[1] == 'E' && request[2] == 'T';
+int send_file_not_found(int connfd) {
+    if(send(connfd, "HTTP/1.0 404 FILE NOT FOUND", 27,0 ) == -1) {
+        // Error here too!
+        return -1;
+    }
+    return 0;
 }
 
-int get_request_path(char request[BUFFERLEN], char *filepath[MAXPATHLENGTH]) {
-    char toReturn[MAXPATHLENGTH];
+void prevent_interrupts(int s)
+{
+    while(waitpid(-1, NULL, WNOHANG) > 0);
+}
+
+long get_file_contents(char* filepath, int path_length, char* source) {
+    FILE *fp = fopen(strcat("./", filepath), "r");
+    long amount_read;
+    size_t newLen;
+    if (fp != NULL) {
+        newLen = fread(source, sizeof(char), BUFFERLEN, fp);
+        if (newLen == 0) {
+            fputs("Error reading file", stderr);
+            return -2;
+        } else {
+            source[++newLen] = '\0'; /* Just to be safe. */
+            amount_read = newLen;
+        }
+        
+        fclose(fp);
+    } else {
+        return -2; // here, -2 specifically means that the file wasn't found or there was an error reading it.
+    }
+    return amount_read;
+}
+
+
+int check_request(char request[BUFFERLEN]) {
+    if (request[0] == 'G' && request[1] == 'E' && request[2] == 'T') return 200;
+    return -1;
+}
+
+int get_request_path(char request[BUFFERLEN], char *filepath, long filepath_length) {
+    char *toReturn[MAXPATHLENGTH];
     memset(&toReturn, ' ', MAXPATHLENGTH);
     int index;
     for (index = 0; index < MAXPATHLENGTH; index++) {
-        if (*filepath[index+5] == ' ') {
-            return 0;
-        }
-        *filepath[index] = request[index+5];
+        //printf("index: %d\tChar: %c\treqChar: %c\n", index, *(filepath+index), request[index+5]);
+        if (request[index+5] == ' ') {
+            return index;
+        } else
+        *(filepath+index) = request[index+5];
     }
     return -1; //  WE MAXED OUT THE BUFFER AND SHOULD DEAL WITH THIS ERROR!
 }
 
 int send_200_request(int connfd, char request[BUFFERLEN]) {
-    char *filepath[MAXPATHLENGTH];
-    if (get_request_path(request, filepath) == -1) {
+    printf("Sending 200.\n");
+    char *filepath = (char *) malloc(sizeof(char) * MAXPATHLENGTH);
+    int path_length = get_request_path(request, filepath, MAXPATHLENGTH);
+    if (path_length == -1) {
         fprintf(stderr, "Error getting file path %d.\n", connfd);
         return -1;
     } else {
-        printf("%s", *filepath);
+        printf("Got file path.\n");
+        //char *file_contents;
+        //long file_length = get_file_contents(filepath, path_length, file_contents);
+        printf("Got file contents.\n");
+        //if (file_length == -2) printf("The file could not be read.\n");
+        //printf("%s\n", file_contents);
+        //long amountSent = send(connfd, file_contents, file_length, 0);
+        //printf("%ld\n", amountSent);
+        printf("Sending...\n");
+        int filefd = open(strcat("./",filepath), 'r');
+        printf("%d\n", filefd);
+        long amountSent = sendfile(filefd, connfd, 0, 0, NULL, 0);
+        printf("Sent?\n");
+        if (amountSent == -1) {
+            fprintf(stderr, "Error sending to socket with file descriptor %d.\n", connfd);
+            return -1;
+        } else {
+            printf("Sent file...?\n");
+        }
     }
-    if (send(connfd, &request, BUFFERLEN, 0) == -1) {
-        fprintf(stderr, "Error sending to socket with file descriptor %d.\n", connfd);
-        return -1;
-    }
+    
     return 0;
 }
 
@@ -87,9 +147,10 @@ int process_request(struct sockaddr_storage client_addr, int connfd) {
             fprintf(stderr, "Error reading! Errno: %d.\n", errno_saved);
             return -1;
         }
-        if(check_get_request(request)) {
+        if(check_request(request) == 200) {
             send_200_request(connfd, request);
         } else {
+            printf("%s\n", request);
             send_server_error(connfd);
         }
         
@@ -99,26 +160,30 @@ int process_request(struct sockaddr_storage client_addr, int connfd) {
 
 int acceptConnections(int serverfd) {
     // Now that we have a socket, let's accept a connection to it.
+    int connfd;
+    struct sockaddr_storage client_addr;
+    socklen_t client_addr_len = sizeof client_addr;
     while(1) {
-        int connfd;
-        struct sockaddr_storage client_addr;
-        socklen_t client_addr_len = sizeof client_addr;
-        printf("%d\n", serverfd);
         connfd = accept(serverfd, (struct sockaddr *)&client_addr, &client_addr_len);
         if (connfd == -1) {
-            int errno_saved = errno;
-            fprintf(stderr, "Having trouble accepting the connection! Errno: %d\n", errno_saved);
-            return -1;
-        } else
+            printf("Error accepting connection; continuing out of stubbornness.\n");
+            continue;
+        } else {
             printf("Connection made!\n");
         
-        // Process the request found at the connection, and return a server error if something goes wrong.
-        if (process_request(client_addr, connfd) == -1) {
-            send_server_error(connfd);
+            // Process the request found at the connection, and return a server error if something goes wrong.
+            if (process_request(client_addr, connfd) == -1) {
+                printf("Error processing request, sending server error message.\n");
+                send_server_error(connfd);
+            }
         }
-        close(connfd);
-        return 0;
     }
+    // Clean up. We only hit this if there's an error.
+    int errno_saved = errno;
+    fprintf(stderr, "Having trouble accepting the connection! Errno: %d\n", errno_saved);
+    close(connfd);
+    return -1;
+
 }
 
 
@@ -176,11 +241,24 @@ int main(int argc, const char * argv[]) {
         printf("Had an error listening! Errno code: %d.\n", errno_saved);
     }
     
+    // This appears to be entirely unncessesary.
+    
+    // Making sure connections don't get interrupted later (this segment from http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html -- credit where it's due.)
+    struct sigaction sa;
+    sa.sa_handler = prevent_interrupts; // reap all dead processes
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    if (sigaction(SIGCHLD, &sa, NULL) == -1) {
+        perror("sigaction");
+        return 1; // Error...
+    }
+    
+    
     // Loop for accepting.
     while(1){
         if (acceptConnections(serverfd) == -1) {
             fprintf(stderr, "We got ourselves an error accepting connections! Aborting all plans.\n");
-            return 1;
+            return 1; // Error, but we might not have a connfd, so let's not send a 500, eh?
             break;
         }
     }
@@ -189,5 +267,3 @@ int main(int argc, const char * argv[]) {
     return 0;
     
 }
-
-
