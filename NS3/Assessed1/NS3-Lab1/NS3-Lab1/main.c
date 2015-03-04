@@ -19,11 +19,15 @@
 #include <netdb.h>
 #include <signal.h>
 #include <sys/wait.h>
+#include <arpa/inet.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 // Defining constants...
 #define BUFFERLEN 65536
 #define PORT "8080"
 #define BACKLOG 10
+#define TESTMSG "Chunkiest of bacon!"
 
 
 
@@ -31,21 +35,42 @@ void sigchld_handler(int s)
 {
     while(waitpid(-1, NULL, WNOHANG) > 0);
 }
-// get sockaddr, IPv4 or IPv6:
-void *get_in_addr(struct sockaddr *sa)
-{
-    if (sa->sa_family == AF_INET) {
-        return &(((struct sockaddr_in*)sa)->sin_addr);
+
+void process_request(struct sockaddr_storage client_addr, int connfd) {
+    if (!fork()) { // This is a child process
+        
+        
+        if (send(connfd, TESTMSG, strlen(TESTMSG), 0) == -1) {
+            fprintf(stderr, "Error sending to socket with file descriptor %d.\n", connfd);
+        }
     }
-    
-    return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
+
+int acceptConnections(int serverfd) {
+    // Now that we have a socket, let's accept a connection to it.
+    while(1) {
+        int connfd;
+        struct sockaddr_storage client_addr;
+        socklen_t client_addr_len = sizeof client_addr;
+        connfd = accept(serverfd, (struct sockaddr *)&client_addr, &client_addr_len);
+        if (connfd == -1) {
+            int errno_saved = errno;
+            fprintf(stderr, "Having trouble accepting the connection! Errno: %d\n", errno_saved);
+            return -1;
+        } else
+            printf("Connection made!\n");
+        process_request(client_addr, connfd);
+        close(connfd);
+        return 0;
+    }
+}
+
 
 int main(int argc, const char * argv[]) {
     
     // Get address information.
     struct addrinfo hints, *server_info_results, *server_info;
-	int serverfd;
+    int serverfd = -1;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
@@ -56,32 +81,31 @@ int main(int argc, const char * argv[]) {
         fprintf(stderr, "Error getting local server information. Errno: %d", errno_saved);
     }
     
-
-
+    
+    
     for(server_info = server_info_results; server_info != NULL; server_info = server_info->ai_next) {
         if ((serverfd = socket(server_info->ai_family, server_info->ai_socktype,
-                server_info->ai_protocol)) == -1) {
+                               server_info->ai_protocol)) == -1) {
             perror("server: socket");
             continue;
         }
-
-		// reuse addresses
-		int set_sock_opt = 1;
+        
+        // reuse addresses
+        int set_sock_opt = 1;
         if (setsockopt(serverfd, SOL_SOCKET, SO_REUSEADDR, &set_sock_opt, sizeof(int)) == -1) {
             perror("setsockopt");
             return 1;
         }
-
-        //if (bind(serverfd, (struct sockaddr *) &server_info,sizeof(struct addrinfo)) == -1) {
-				if (bind(serverfd, server_info->ai_addr, server_info->ai_addrlen) == -1) {
-			fprintf(stderr, "Error binding!\n");
-			continue;
-		}
-
+        
+        if (bind(serverfd, server_info->ai_addr, server_info->ai_addrlen) == -1) {
+            fprintf(stderr, "Error binding!\n");
+            continue;
+        }
+        
         break;
     }
-
-	fprintf(stdout, "Current serverfd: %d.\n", serverfd);
+    
+    fprintf(stdout, "Current serverfd: %d.\n", serverfd);
     
     // Check to see if we bind()ed successfully or ran out of options.
     if (server_info == NULL) {
@@ -107,24 +131,16 @@ int main(int argc, const char * argv[]) {
     }
     
     // Loop for accepting.
-    while(1) {
-        // Now that we have a socket, let's accept a connection to it.
-        int connfd;
-        struct sockaddr_storage client_addr;
-        socklen_t client_addr_len = sizeof client_addr;
-        connfd = accept(serverfd, (struct sockaddr *)&client_addr, &client_addr_len);
-        if (connfd == -1) {
-			//fprintf(stderr, "File descriptor tried upon: %d\n", serverfd);
-            int errno_saved = errno;
-            //fprintf(stderr, "Having trouble accepting the connection! Errno: %d\n", errno_saved);
-            continue;
-        } else {
-            printf("Connection made! Exiting now.\n");
-            return 0;
+    while(1){
+        if (acceptConnections(serverfd) == -1) {
+            fprintf(stderr, "We got ourselves an error accepting connections! Aborting all plans.");
+            break;
         }
     }
+    close(serverfd);
+    
     return 0;
-
+    
     
 }
 
