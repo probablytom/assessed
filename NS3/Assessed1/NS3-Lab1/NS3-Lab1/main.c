@@ -7,6 +7,10 @@
 //
 //  Of note: development was helped by the guide at http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html
 //
+//
+//  TODO: Catch all buffer overflows.
+//
+//
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -24,7 +28,8 @@
 
 // Defining constants...
 #define BUFFERLEN 65536
-#define PORT "8010"
+#define MAXPATHLENGTH 1024
+#define PORT "8013"
 #define BACKLOG 10
 #define TESTMSG "Chunkiest of baconbaconbacon!"
 
@@ -44,7 +49,27 @@ bool check_get_request(char request[BUFFERLEN]) {
     return request[0] == 'G' && request[1] == 'E' && request[2] == 'T';
 }
 
+int get_request_path(char request[BUFFERLEN], char *filepath[MAXPATHLENGTH]) {
+    char toReturn[MAXPATHLENGTH];
+    memset(&toReturn, ' ', MAXPATHLENGTH);
+    int index;
+    for (index = 0; index < MAXPATHLENGTH; index++) {
+        if (*filepath[index+5] == ' ') {
+            return 0;
+        }
+        *filepath[index] = request[index+5];
+    }
+    return -1; //  WE MAXED OUT THE BUFFER AND SHOULD DEAL WITH THIS ERROR!
+}
+
 int send_200_request(int connfd, char request[BUFFERLEN]) {
+    char *filepath[MAXPATHLENGTH];
+    if (get_request_path(request, filepath) == -1) {
+        fprintf(stderr, "Error getting file path %d.\n", connfd);
+        return -1;
+    } else {
+        printf("%s", *filepath);
+    }
     if (send(connfd, &request, BUFFERLEN, 0) == -1) {
         fprintf(stderr, "Error sending to socket with file descriptor %d.\n", connfd);
         return -1;
@@ -78,6 +103,7 @@ int acceptConnections(int serverfd) {
         int connfd;
         struct sockaddr_storage client_addr;
         socklen_t client_addr_len = sizeof client_addr;
+        printf("%d\n", serverfd);
         connfd = accept(serverfd, (struct sockaddr *)&client_addr, &client_addr_len);
         if (connfd == -1) {
             int errno_saved = errno;
@@ -153,7 +179,8 @@ int main(int argc, const char * argv[]) {
     // Loop for accepting.
     while(1){
         if (acceptConnections(serverfd) == -1) {
-            fprintf(stderr, "We got ourselves an error accepting connections! Aborting all plans.");
+            fprintf(stderr, "We got ourselves an error accepting connections! Aborting all plans.\n");
+            return 1;
             break;
         }
     }
