@@ -18,37 +18,58 @@
 #include <string.h>
 #include <netdb.h>
 #include <signal.h>
-#include <sys/wait.h>
 #include <arpa/inet.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 
 // Defining constants...
 #define BUFFERLEN 65536
-#define PORT "8080"
+#define PORT "8010"
 #define BACKLOG 10
 #define TESTMSG "Chunkiest of baconbaconbacon!"
 
+// Because there's no reason not to use true/false...
+typedef enum { false, true } bool;
 
 
-void sigchld_handler(int s)
-{
-    while(waitpid(-1, NULL, WNOHANG) > 0);
+int send_server_error(int connfd) {
+    if(send(connfd, "HTTP/1.0 500 INTERNAL SERVER ERROR", 34,0 )) {
+        // Error here too!
+        return -1;
+    }
+    return 0;
 }
 
-void process_request(struct sockaddr_storage client_addr, int connfd) {
+bool check_get_request(char request[BUFFERLEN]) {
+    return request[0] == 'G' && request[1] == 'E' && request[2] == 'T';
+}
+
+int send_200_request(int connfd, char request[BUFFERLEN]) {
+    if (send(connfd, &request, BUFFERLEN, 0) == -1) {
+        fprintf(stderr, "Error sending to socket with file descriptor %d.\n", connfd);
+        return -1;
+    }
+    return 0;
+}
+
+int process_request(struct sockaddr_storage client_addr, int connfd) {
     if (!fork()) { // This is a child process
         char request[BUFFERLEN];
-        memset(&request, '\0', BUFFERLEN);
-        int recv_response = recv(connfd, request, BUFFERLEN, 0);
+        memset(&request, ' ', BUFFERLEN);
+        long recv_response = recv(connfd, request, BUFFERLEN, 0);
         if (recv_response == -1) {
             int errno_saved = errno;
             fprintf(stderr, "Error reading! Errno: %d.\n", errno_saved);
+            return -1;
         }
-        if (send(connfd, &recv_response, strlen(TESTMSG), 0) == -1) {
-            fprintf(stderr, "Error sending to socket with file descriptor %d.\n", connfd);
+        if(check_get_request(request)) {
+            send_200_request(connfd, request);
+        } else {
+            send_server_error(connfd);
         }
+        
     }
+    return 0;
 }
 
 int acceptConnections(int serverfd) {
@@ -64,7 +85,11 @@ int acceptConnections(int serverfd) {
             return -1;
         } else
             printf("Connection made!\n");
-        process_request(client_addr, connfd);
+        
+        // Process the request found at the connection, and return a server error if something goes wrong.
+        if (process_request(client_addr, connfd) == -1) {
+            send_server_error(connfd);
+        }
         close(connfd);
         return 0;
     }
@@ -125,16 +150,6 @@ int main(int argc, const char * argv[]) {
         printf("Had an error listening! Errno code: %d.\n", errno_saved);
     }
     
-    // Please, god, let this work.
-    struct sigaction sa;
-    sa.sa_handler = sigchld_handler; // reap all dead processes
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    if (sigaction(SIGCHLD, &sa, NULL) == -1) {
-        fprintf(stderr,"sigaction");
-        return 1;
-    }
-    
     // Loop for accepting.
     while(1){
         if (acceptConnections(serverfd) == -1) {
@@ -145,7 +160,6 @@ int main(int argc, const char * argv[]) {
     close(serverfd);
     
     return 0;
-    
     
 }
 
