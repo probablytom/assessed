@@ -27,7 +27,7 @@
 #define BUFFERLEN 65536
 #define PORT "8080"
 #define BACKLOG 10
-#define TESTMSG "Chunkiest of bacon!"
+#define TESTMSG "Chunkiest of baconbaconbacon!"
 
 
 
@@ -38,9 +38,14 @@ void sigchld_handler(int s)
 
 void process_request(struct sockaddr_storage client_addr, int connfd) {
     if (!fork()) { // This is a child process
-        
-        
-        if (send(connfd, TESTMSG, strlen(TESTMSG), 0) == -1) {
+        char request[BUFFERLEN];
+        memset(&request, '\0', BUFFERLEN);
+        int recv_response = recv(connfd, request, BUFFERLEN, 0);
+        if (recv_response == -1) {
+            int errno_saved = errno;
+            fprintf(stderr, "Error reading! Errno: %d.\n", errno_saved);
+        }
+        if (send(connfd, &recv_response, strlen(TESTMSG), 0) == -1) {
             fprintf(stderr, "Error sending to socket with file descriptor %d.\n", connfd);
         }
     }
