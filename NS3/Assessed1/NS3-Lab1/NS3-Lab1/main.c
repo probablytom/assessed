@@ -36,11 +36,7 @@
 #define MAXPATHLENGTH 1024
 #define PORT "8068"
 #define BACKLOG 10
-#define TESTMSG "Chunkiest of baconbaconbacon!"
 #define PACKETSIZE 512 // Packet size in bytes.
-
-// Because there's no reason not to use true/false...
-typedef enum { false, true } bool;
 
 // Getting horrible path problems, so saving the working directory here.
 const char *abs_path;
@@ -66,34 +62,27 @@ void report_errno(char *message) {
 }
 
 
-long get_file_contents(char *filepath_in, char *file_contents) {
+long get_file_contents(char *filepath_in, char *file_contents) {  // not getting past this
     char *filepath = (char *)malloc(strlen(filepath_in) + strlen(abs_path));
-    filepath = strcat(abs_path, filepath_in);
+    //filepath = strcat(abs_path, filepath_in);
     printf("Test.\n");
-    printf("Filepath: %s\n\n", filepath);
+    printf("Filepath: %s\n", filepath_in);
     printf("Attempting open()...");
-    int fd = open(filepath, O_RDONLY);
-    report_errno("Error opening.");
-    long read_status = read(fd, file_contents, BUFFERLEN);
-    report_errno("Error reading.");
-    printf("Through to the other side.\nFile contents: %s\n", file_contents);
-    /*
-    printf("%s\n.", filepath_in);
-    FILE *fd = fopen(filepath_in, O_RDONLY);
-    if (fd == NULL) {
-        report_errno("Problem opening designated file.");
+    int fd = fopen(filepath_in, "r");
+    long file_length = 0;
+    char char_read;
+    while( ( char_read = getc(fd) ) != EOF ) {
+        *(file_contents+file_length) = char_read;
+        file_length++;
     }
-    
-    //printf("\n%d\n", filefd);
-    long file_length = fread(fd, file_contents, BUFFERLEN, 0);
-    printf("\n%ld\n", file_length);
-    return file_length;*/
-    return 0;
+    printf("\n");
+    printf("Through to the other side.\nFile contents: %s\n", file_contents);
+    return file_length;
 }
 
 
 int send_file_not_found(int connfd) {
-    if(send(connfd, "HTTP/1.0 404 FILE NOT FOUND", 27,0 ) == -1) {
+    if(send(connfd, "HTTP/1.0 404 FILE NOT FOUND\r\n\r\n404 FILE NOT FOUND", 27,0 ) == -1) {
         // Error here too!
         return -1;
     }
@@ -106,14 +95,13 @@ int send_packets(int connfd, char *file_contents, char* filepath) {
     printf("sending packets\n");
     int offset;
     long bytes_to_send = get_file_contents(filepath, file_contents);
-    printf("got file contents\n%s\n", file_contents);
     char *message = (char *) malloc(BUFFERLEN);
     message = "HTTP/1.1 200 OK \r\n\r\n";
     send(connfd, message, strlen(message), 0);
     printf("hit\n");
 
     bytes_to_send = strlen(file_contents);
-    printf("test\n");
+    printf("%ld\n", bytes_to_send);
     
     printf("\n\n%s\n\n", message);
     
@@ -122,12 +110,15 @@ int send_packets(int connfd, char *file_contents, char* filepath) {
     } else if (bytes_to_send == -1) {
         send_server_error(connfd);
     }
-    
+
+    printf("\n\n%ld\n\n", bytes_to_send);
     for (offset = 0; offset < bytes_to_send; offset += PACKETSIZE) {
         int to_send = PACKETSIZE;
         if (offset + PACKETSIZE > bytes_to_send) {
             to_send = bytes_to_send % PACKETSIZE;
+            printf("MOD\n");
         }
+        printf("%d\n", to_send);
         long amount_sent = send(connfd, file_contents, to_send, offset);
         if (amount_sent == -1) {
             char *error_message = "Error sending to socket with file descriptor %d.\n";
@@ -135,19 +126,19 @@ int send_packets(int connfd, char *file_contents, char* filepath) {
             return -1;
         }
     }
+
+    // We will do nothing with this connection once the packets are all sent, so we can close the connection here.
+    printf("Closing connection %d.", connfd);
+    close(connfd);
     
     return 0; // Everything went smoothly!
 
 }
 
 
-
-void prevent_interrupts(int s)
-{
+void prevent_interrupts(int s) {
     while(waitpid(-1, NULL, WNOHANG) > 0);
 }
-
-
 
 
 int check_request(char request[BUFFERLEN]) {
@@ -174,7 +165,8 @@ int send_200_request(int connfd, char request[BUFFERLEN]) {
     char *filepath = (char *) malloc(sizeof(char) * MAXPATHLENGTH);
     int path_length = get_request_path(request, filepath, MAXPATHLENGTH);
     if (path_length == -1) {
-        fprintf(stderr, "Error getting file path %d.\n", connfd);
+        report_errno("Error getting filepath.");
+        send_server_error(connfd);
         return -1;
     } else {
         if (path_length == 0) filepath = "index.html";
@@ -191,7 +183,8 @@ int send_200_request(int connfd, char request[BUFFERLEN]) {
         printf("Sent all packets!\n");
 		
     }
-    
+    // Now we're done with this, we can close the connection.
+//    close(connfd);
     return 0;
 }
 
@@ -211,8 +204,12 @@ int process_request(struct sockaddr_storage client_addr, int connfd) {
             printf("%s\n", request);
             send_server_error(connfd);
         }
-        
+
     }
+
+    // The request's been processed now, so we no longer need our connection.
+//    printf("Closing connection %d.\n", connfd);
+//    close(connfd);
     return 0;
 }
 
@@ -222,10 +219,11 @@ int acceptConnections(int serverfd) {
     struct sockaddr_storage client_addr;
     socklen_t client_addr_len = sizeof client_addr;
     while(1) {
+        printf("Looping?\n");
         connfd = accept(serverfd, (struct sockaddr *)&client_addr, &client_addr_len);
         if (connfd == -1) {
-            printf("Error accepting connection; continuing out of stubbornness.\n");
-            continue;
+            report_errno("Error accepting connection.");
+            break;
         } else {
             printf("Connection made!\n");
         
@@ -241,7 +239,13 @@ int acceptConnections(int serverfd) {
 
 
 int main(int argc, const char * argv[]) {
-    
+
+    int index;
+    for(index = 0; index < argc; index++) {
+
+    }
+
+
     // Before we do anything else, let's be aware of the path we're at.
     printf("%s\n", argv[0]);
     abs_path = (const char *)malloc(strlen(argv[0]) + 1);
