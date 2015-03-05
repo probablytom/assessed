@@ -26,7 +26,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/wait.h>
-//#include <sys/malloc.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -35,21 +34,63 @@
 // Defining constants...
 #define BUFFERLEN 65536
 #define MAXPATHLENGTH 1024
-#define PORT "8025"
+#define PORT "8068"
 #define BACKLOG 10
 #define TESTMSG "Chunkiest of baconbaconbacon!"
+#define PACKETSIZE 512 // Packet size in bytes.
 
 // Because there's no reason not to use true/false...
 typedef enum { false, true } bool;
 
+// Getting horrible path problems, so saving the working directory here.
+const char *abs_path;
+
 
 int send_server_error(int connfd) {
-    if(send(connfd, "HTTP/1.0 500 INTERNAL SERVER ERROR", 34,0 ) == -1) {
+    if(send(connfd, "HTTP/1.0 500 INTERNAL SERVER ERROR\r\n\r\nInternal Server Error.", 34,0 ) == -1) {
         // Error here too!
         return -1;
     }
     return 0;
 }
+
+void report_errno(char *message) {
+    long length = strlen(message);
+    int index = 0;
+    int errno_saved = errno;
+    fprintf(stderr, "\n");
+    for (;index < length; index++) {
+        fprintf(stderr, "%c", message[index]);
+    }
+    fprintf(stderr, "\nErrno was: %d\n", errno_saved);
+}
+
+
+long get_file_contents(char *filepath_in, char *file_contents) {
+    char *filepath = (char *)malloc(strlen(filepath_in) + strlen(abs_path));
+    filepath = strcat(abs_path, filepath_in);
+    printf("Test.\n");
+    printf("Filepath: %s\n\n", filepath);
+    printf("Attempting open()...");
+    int fd = open(filepath, O_RDONLY);
+    report_errno("Error opening.");
+    long read_status = read(fd, file_contents, BUFFERLEN);
+    report_errno("Error reading.");
+    printf("Through to the other side.\nFile contents: %s\n", file_contents);
+    /*
+    printf("%s\n.", filepath_in);
+    FILE *fd = fopen(filepath_in, O_RDONLY);
+    if (fd == NULL) {
+        report_errno("Problem opening designated file.");
+    }
+    
+    //printf("\n%d\n", filefd);
+    long file_length = fread(fd, file_contents, BUFFERLEN, 0);
+    printf("\n%ld\n", file_length);
+    return file_length;*/
+    return 0;
+}
+
 
 int send_file_not_found(int connfd) {
     if(send(connfd, "HTTP/1.0 404 FILE NOT FOUND", 27,0 ) == -1) {
@@ -59,33 +100,54 @@ int send_file_not_found(int connfd) {
     return 0;
 }
 
+
+
+int send_packets(int connfd, char *file_contents, char* filepath) {
+    printf("sending packets\n");
+    int offset;
+    long bytes_to_send = get_file_contents(filepath, file_contents);
+    printf("got file contents\n%s\n", file_contents);
+    char *message = (char *) malloc(BUFFERLEN);
+    message = "HTTP/1.1 200 OK \r\n\r\n";
+    send(connfd, message, strlen(message), 0);
+    printf("hit\n");
+
+    bytes_to_send = strlen(file_contents);
+    printf("test\n");
+    
+    printf("\n\n%s\n\n", message);
+    
+    if (bytes_to_send == 0) {
+        send_file_not_found(connfd);
+    } else if (bytes_to_send == -1) {
+        send_server_error(connfd);
+    }
+    
+    for (offset = 0; offset < bytes_to_send; offset += PACKETSIZE) {
+        int to_send = PACKETSIZE;
+        if (offset + PACKETSIZE > bytes_to_send) {
+            to_send = bytes_to_send % PACKETSIZE;
+        }
+        long amount_sent = send(connfd, file_contents, to_send, offset);
+        if (amount_sent == -1) {
+            char *error_message = "Error sending to socket with file descriptor %d.\n";
+            report_errno(error_message);
+            return -1;
+        }
+    }
+    
+    return 0; // Everything went smoothly!
+
+}
+
+
+
 void prevent_interrupts(int s)
 {
     while(waitpid(-1, NULL, WNOHANG) > 0);
 }
 
-long get_file_contents(char* filepath, int path_length, char* source) {
-	printf("opening...\n");
-    FILE *fp = fopen(strcat("./", filepath), "r");
-	printf("open.\n");
-    long amount_read;
-    size_t newLen;
-    if (fp != NULL) {
-        newLen = fread(source, sizeof(char), BUFFERLEN, fp);
-        if (newLen == 0) {
-            fputs("Error reading file", stderr);
-            return -2;
-        } else {
-            source[++newLen] = '\0'; 
-            amount_read = newLen;
-        }
-        
-        fclose(fp);
-    } else {
-        return -2; // here, -2 specifically means that the file wasn't found or there was an error reading it.
-    }
-    return amount_read;
-}
+
 
 
 int check_request(char request[BUFFERLEN]) {
@@ -93,12 +155,12 @@ int check_request(char request[BUFFERLEN]) {
     return -1;
 }
 
+// Returns the length of the path in the request, puts the path in `char *filepath`.
 int get_request_path(char request[BUFFERLEN], char *filepath, long filepath_length) {
     char *toReturn[MAXPATHLENGTH];
     memset(&toReturn, ' ', MAXPATHLENGTH);
     int index;
     for (index = 0; index < MAXPATHLENGTH; index++) {
-        //printf("index: %d\tChar: %c\treqChar: %c\n", index, *(filepath+index), request[index+5]);
         if (request[index+5] == ' ') {
             return index;
         } else
@@ -115,34 +177,19 @@ int send_200_request(int connfd, char request[BUFFERLEN]) {
         fprintf(stderr, "Error getting file path %d.\n", connfd);
         return -1;
     } else {
-        printf("Got file path.\n");
+        if (path_length == 0) filepath = "index.html";
         char *file_contents = (char *) malloc(BUFFERLEN);
-        //long file_length = get_file_contents("./index.html", path_length, file_contents);
-        //printf("Got file contents.\n");
-        //if (file_length == -2) printf("The file could not be read.\n");
-        //printf("%s\n", file_contents);
-        //long amountSent = send(connfd, file_contents, file_length, 0);
-        //printf("%ld\n", amountSent);
-		int errno_saved;
-		errno_saved = errno; printf("%d\n", errno_saved);
-        int filefd = open("index.html", O_RDONLY);
-		errno_saved = errno; printf("%d\n", errno_saved);
-		printf("%d\n", filefd);
-		int file_length = read(filefd, file_contents, BUFFERLEN);
-		errno_saved = errno; printf("%d\n", errno_saved);
-        printf("Sending...\n");
-		long amount_sent = send(connfd, file_contents, file_length, 0);
-		errno_saved = errno; printf("%d\n", errno_saved);
-		//int offset = 0;
-		//for (;offset<;offset += 1024) {}
-        //long amountSent = sendfile(filefd, connfd, 0, 0, NULL, 0);
-        printf("Sent?\n");
-        if (amount_sent == -1) {
-            fprintf(stderr, "Error sending to socket with file descriptor %d.\n", connfd);
+        memset(file_contents, ' ', BUFFERLEN);
+        
+        // Send the packets, one packet at a time.
+        if (send_packets(connfd, file_contents, filepath) == -1) {
+            char *message = "Had trouble sending packets. ";
+            report_errno(message);
             return -1;
-        } else {
-            printf("Sent file...?\n");
-        }
+        };
+        
+        printf("Sent all packets!\n");
+		
     }
     
     return 0;
@@ -154,8 +201,8 @@ int process_request(struct sockaddr_storage client_addr, int connfd) {
         memset(&request, ' ', BUFFERLEN);
         long recv_response = recv(connfd, request, BUFFERLEN, 0);
         if (recv_response == -1) {
-            int errno_saved = errno;
-            fprintf(stderr, "Error reading! Errno: %d.\n", errno_saved);
+            char *message = "Error reading! Errno: %d.\n";
+            report_errno(message);
             return -1;
         }
         if(check_request(request) == 200) {
@@ -188,17 +235,17 @@ int acceptConnections(int serverfd) {
                 send_server_error(connfd);
             }
         }
+        close(connfd);
     }
-    // Clean up. We only hit this if there's an error.
-    int errno_saved = errno;
-    fprintf(stderr, "Having trouble accepting the connection! Errno: %d\n", errno_saved);
-    close(connfd);
-    return -1;
-
 }
 
 
 int main(int argc, const char * argv[]) {
+    
+    // Before we do anything else, let's be aware of the path we're at.
+    printf("%s\n", argv[0]);
+    abs_path = (const char *)malloc(strlen(argv[0]) + 1);
+    abs_path = strcat((char *)argv[0], "/");
     
     // Get address information.
     struct addrinfo hints, *server_info_results, *server_info;
@@ -209,8 +256,8 @@ int main(int argc, const char * argv[]) {
     hints.ai_flags = AI_PASSIVE; // Fill in the local IP.
     int getinfo_result = getaddrinfo(NULL, PORT, &hints, &server_info_results);
     if (getinfo_result == -1) {
-        int errno_saved = errno;
-        fprintf(stderr, "Error getting local server information. Errno: %d", errno_saved);
+        char *message = "Error getting local server information. Errno: %d";
+        report_errno(message);
     }
     
     
@@ -248,8 +295,8 @@ int main(int argc, const char * argv[]) {
     // Sockets are at their most useful when they are being listened to.
     int listen_result = listen(serverfd, BACKLOG);
     if (listen_result == -1) {
-        int errno_saved = errno;
-        printf("Had an error listening! Errno code: %d.\n", errno_saved);
+        char *message = "Had an error listening! Errno code: %d.\n";
+        report_errno(message);
     }
     
     // This appears to be entirely unncessesary.
