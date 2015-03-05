@@ -26,7 +26,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/wait.h>
-#include <sys/malloc.h>
+//#include <sys/malloc.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -65,7 +65,9 @@ void prevent_interrupts(int s)
 }
 
 long get_file_contents(char* filepath, int path_length, char* source) {
+	printf("opening...\n");
     FILE *fp = fopen(strcat("./", filepath), "r");
+	printf("open.\n");
     long amount_read;
     size_t newLen;
     if (fp != NULL) {
@@ -74,7 +76,7 @@ long get_file_contents(char* filepath, int path_length, char* source) {
             fputs("Error reading file", stderr);
             return -2;
         } else {
-            source[++newLen] = '\0'; /* Just to be safe. */
+            source[++newLen] = '\0'; 
             amount_read = newLen;
         }
         
@@ -114,19 +116,28 @@ int send_200_request(int connfd, char request[BUFFERLEN]) {
         return -1;
     } else {
         printf("Got file path.\n");
-        //char *file_contents;
-        //long file_length = get_file_contents(filepath, path_length, file_contents);
-        printf("Got file contents.\n");
+        char *file_contents = (char *) malloc(BUFFERLEN);
+        //long file_length = get_file_contents("./index.html", path_length, file_contents);
+        //printf("Got file contents.\n");
         //if (file_length == -2) printf("The file could not be read.\n");
         //printf("%s\n", file_contents);
         //long amountSent = send(connfd, file_contents, file_length, 0);
         //printf("%ld\n", amountSent);
+		int errno_saved;
+		errno_saved = errno; printf("%d\n", errno_saved);
+        int filefd = open("index.html", O_RDONLY);
+		errno_saved = errno; printf("%d\n", errno_saved);
+		printf("%d\n", filefd);
+		int file_length = read(filefd, file_contents, BUFFERLEN);
+		errno_saved = errno; printf("%d\n", errno_saved);
         printf("Sending...\n");
-        int filefd = open(strcat("./",filepath), 'r');
-        printf("%d\n", filefd);
-        long amountSent = sendfile(filefd, connfd, 0, 0, NULL, 0);
+		long amount_sent = send(connfd, file_contents, file_length, 0);
+		errno_saved = errno; printf("%d\n", errno_saved);
+		//int offset = 0;
+		//for (;offset<;offset += 1024) {}
+        //long amountSent = sendfile(filefd, connfd, 0, 0, NULL, 0);
         printf("Sent?\n");
-        if (amountSent == -1) {
+        if (amount_sent == -1) {
             fprintf(stderr, "Error sending to socket with file descriptor %d.\n", connfd);
             return -1;
         } else {
