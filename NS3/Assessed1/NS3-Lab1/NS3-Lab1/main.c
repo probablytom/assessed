@@ -19,7 +19,6 @@
 #include <string.h>
 #include <netdb.h>
 #include <stdlib.h>
-#include <strings.h>
 
 
 
@@ -53,7 +52,7 @@ void report_errno(char *message) {
 
 
 int send_file_not_found(int connfd) {
-    if(send(connfd, "HTTP/1.0 404 FILE NOT FOUND\r\n\r\n404 FILE NOT FOUND", 27,0 ) == -1) {
+    if(send(connfd, "HTTP/1.0 404 FILE NOT FOUND\r\n\r\n404 FILE NOT FOUND", 53,0 ) == -1) {
         // Error here too!
         return -1;
     }
@@ -84,7 +83,7 @@ long get_file_contents(char *filepath, char *file_contents) {
 }
 
 int send_400_response(int connfd) {
-    if(send(connfd, "HTTP/1.1 400 BAD REQUEST\r\n\r\n400 BAD REQUEST", 27,0 ) == -1) {
+    if(send(connfd, "HTTP/1.1 400 BAD REQUEST\r\n\r\n400 BAD REQUEST", 47,0 ) == -1) {
         // Error here too!
         return -1;
     }
@@ -93,7 +92,6 @@ int send_400_response(int connfd) {
 
 
 int send_packets(int connfd, char *file_contents, char* filepath) {
-    printf("sending packets\n");
     int offset;
     long bytes_to_send = get_file_contents(filepath, file_contents);
     char *message = (char *) malloc(BUFFERLEN);
@@ -187,7 +185,6 @@ char *get_request_hostname(char request[BUFFERLEN]) {
 }
 
 int send_200_request(int connfd, char request[BUFFERLEN]) {
-    printf("Sending 200 response.\n");
     char *filepath = (char *) malloc(sizeof(char) * MAXPATHLENGTH);
     int path_length = get_request_path(request, filepath);
     if (path_length == -1) {
@@ -218,9 +215,7 @@ int process_request(int connfd, char *hostname) {
         long recv_response = recv(connfd, request, BUFFERLEN, 0);
 
         // If we have a bad hostname on this request, we can immediately exit.
-        char *request_hostname = get_request_hostname(request);
-        printf("%s\n%s\n", request_hostname, hostname);
-        if (strcmp(hostname, request_hostname) == 0) {
+        if (strcasecmp(hostname, get_request_hostname(request)) != 0) {
             send_400_response(connfd);
             return 0; // We sent a 400, but we dealt with it correctly, so no actual errors.
         }
@@ -239,7 +234,6 @@ int process_request(int connfd, char *hostname) {
     }
 
     // The request's been processed now, so we no longer need our connection.
-    printf("Closing connection %d.\n", connfd);
     close(connfd);
     return 0;
 }
@@ -255,8 +249,7 @@ int acceptConnections(int serverfd, char *hostname) {
             report_errno("Error accepting connection.");
             break;
         } else {
-            printf("Connection made!\n");
-        
+
             // Process the request found at the connection, and return a server error if something goes wrong.
             if (process_request(connfd, hostname) == -1) {
                 printf("Error processing request, sending server error message.\n");
@@ -315,13 +308,10 @@ int main(int argc, const char * argv[]) {
         printf("We found no valid socket to bind to.\n");
         return 1; // Error.
     }
-    printf("We're on the other side...");
 
     gethostname(hostname, MAXHOSTLENGTH);
     struct hostent hostname_data = *gethostbyname(hostname);
     hostname = hostname_data.h_name;
-printf("Hostname: ");
-    printf("%s\n", hostname);
 
     // We've finished with out server_info struct, so let's free it!
     freeaddrinfo(server_info);
