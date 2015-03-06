@@ -63,20 +63,15 @@ void report_errno(char *message) {
 
 
 long get_file_contents(char *filepath_in, char *file_contents) {  // not getting past this
-    char *filepath = (char *)malloc(strlen(filepath_in) + strlen(abs_path));
-    //filepath = strcat(abs_path, filepath_in);
-    printf("Test.\n");
-    printf("Filepath: %s\n", filepath_in);
-    printf("Attempting open()...");
-    int fd = fopen(filepath_in, "r");
+    FILE  *fd = fopen(filepath_in, "r");
     long file_length = 0;
-    char char_read;
-    while( ( char_read = getc(fd) ) != EOF ) {
+
+    int char_read = getc(fd);
+    while( char_read != EOF ) {
         *(file_contents+file_length) = char_read;
+        char_read = getc(fd);
         file_length++;
     }
-    printf("\n");
-    printf("Through to the other side.\nFile contents: %s\n", file_contents);
     return file_length;
 }
 
@@ -98,46 +93,31 @@ int send_packets(int connfd, char *file_contents, char* filepath) {
     char *message = (char *) malloc(BUFFERLEN);
     message = "HTTP/1.1 200 OK \r\n\r\n";
     send(connfd, message, strlen(message), 0);
-    printf("hit\n");
 
-    bytes_to_send = strlen(file_contents);
-    printf("%ld\n", bytes_to_send);
-    
-    printf("\n\n%s\n\n", message);
-    
     if (bytes_to_send == 0) {
         send_file_not_found(connfd);
     } else if (bytes_to_send == -1) {
         send_server_error(connfd);
     }
 
-    printf("\n\n%ld\n\n", bytes_to_send);
+    long to_send = 0;
+
     for (offset = 0; offset < bytes_to_send; offset += PACKETSIZE) {
-        int to_send = PACKETSIZE;
+        to_send = PACKETSIZE;
         if (offset + PACKETSIZE > bytes_to_send) {
             to_send = bytes_to_send % PACKETSIZE;
-            printf("MOD\n");
         }
-        printf("%d\n", to_send);
-        long amount_sent = send(connfd, file_contents, to_send, offset);
+        long amount_sent = send(connfd, file_contents+offset, to_send, 0);
         if (amount_sent == -1) {
-            char *error_message = "Error sending to socket with file descriptor %d.\n";
+            char *error_message = "Error sending to socket with file "\
+                        "descriptor %d.\n";
             report_errno(error_message);
             return -1;
         }
     }
 
-    // We will do nothing with this connection once the packets are all sent, so we can close the connection here.
-    printf("Closing connection %d.", connfd);
-    close(connfd);
-    
     return 0; // Everything went smoothly!
 
-}
-
-
-void prevent_interrupts(int s) {
-    while(waitpid(-1, NULL, WNOHANG) > 0);
 }
 
 
@@ -147,7 +127,7 @@ int check_request(char request[BUFFERLEN]) {
 }
 
 // Returns the length of the path in the request, puts the path in `char *filepath`.
-int get_request_path(char request[BUFFERLEN], char *filepath, long filepath_length) {
+int get_request_path(char request[BUFFERLEN], char *filepath) {
     char *toReturn[MAXPATHLENGTH];
     memset(&toReturn, ' ', MAXPATHLENGTH);
     int index;
@@ -161,9 +141,9 @@ int get_request_path(char request[BUFFERLEN], char *filepath, long filepath_leng
 }
 
 int send_200_request(int connfd, char request[BUFFERLEN]) {
-    printf("Sending 200.\n");
+    printf("Sending 200 response.\n");
     char *filepath = (char *) malloc(sizeof(char) * MAXPATHLENGTH);
-    int path_length = get_request_path(request, filepath, MAXPATHLENGTH);
+    int path_length = get_request_path(request, filepath);
     if (path_length == -1) {
         report_errno("Error getting filepath.");
         send_server_error(connfd);
@@ -180,15 +160,13 @@ int send_200_request(int connfd, char request[BUFFERLEN]) {
             return -1;
         };
         
-        printf("Sent all packets!\n");
+        printf("Sent 200 request.\n");
 		
     }
-    // Now we're done with this, we can close the connection.
-//    close(connfd);
     return 0;
 }
 
-int process_request(struct sockaddr_storage client_addr, int connfd) {
+int process_request(int connfd) {
     if (!fork()) { // This is a child process
         char request[BUFFERLEN];
         memset(&request, ' ', BUFFERLEN);
@@ -201,15 +179,16 @@ int process_request(struct sockaddr_storage client_addr, int connfd) {
         if(check_request(request) == 200) {
             send_200_request(connfd, request);
         } else {
-            printf("%s\n", request);
+            // We've got a request that isn't a GET...let's just throw a ...
+            //     ...500 error back, we have nothing to transfer.
             send_server_error(connfd);
         }
 
     }
 
     // The request's been processed now, so we no longer need our connection.
-//    printf("Closing connection %d.\n", connfd);
-//    close(connfd);
+    printf("Closing connection %d.\n", connfd);
+    close(connfd);
     return 0;
 }
 
@@ -228,13 +207,15 @@ int acceptConnections(int serverfd) {
             printf("Connection made!\n");
         
             // Process the request found at the connection, and return a server error if something goes wrong.
-            if (process_request(client_addr, connfd) == -1) {
+            if (process_request(connfd) == -1) {
                 printf("Error processing request, sending server error message.\n");
                 send_server_error(connfd);
             }
         }
         close(connfd);
     }
+    // If we've git this, there's been an error accepting the connection.
+    return -1;
 }
 
 
@@ -302,19 +283,7 @@ int main(int argc, const char * argv[]) {
         char *message = "Had an error listening! Errno code: %d.\n";
         report_errno(message);
     }
-    
-    // This appears to be entirely unncessesary.
-    
-    // Making sure connections don't get interrupted later (this segment from http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html -- credit where it's due.)
-    struct sigaction sa;
-    sa.sa_handler = prevent_interrupts; // reap all dead processes
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    if (sigaction(SIGCHLD, &sa, NULL) == -1) {
-        perror("sigaction");
-        return 1; // Error...
-    }
-    
+
     
     // Loop for accepting.
     while(1){
