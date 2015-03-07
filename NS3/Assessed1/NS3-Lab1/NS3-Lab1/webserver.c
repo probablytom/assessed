@@ -124,12 +124,6 @@ long get_file_contents(char *filepath, char *file_contents) {
     int file_fd = open(filepath, O_RDONLY);
 
   if (fstat(file_fd, &file_data) == 0) {
-    /*int amount_read = getc(fd);
-    while( char_read != EOF ) {
-      *(file_contents+file_length) = char_read;
-      char_read = getc(fd);
-      file_length++;
-    }*/
       if (read(file_fd, file_contents, file_data.st_size) == -1) {
           char *message = "Error reading file.";
           report_errno(message);
