@@ -22,7 +22,7 @@
 #define BUFFERLEN 65536
 #define MAXPATHLENGTH 1024
 #define MAXHOSTLENGTH 1024
-#define PORT "8068"
+#define PORT "8080"
 #define BACKLOG 10
 #define PACKETSIZE 512 // Packet size in bytes.
 
