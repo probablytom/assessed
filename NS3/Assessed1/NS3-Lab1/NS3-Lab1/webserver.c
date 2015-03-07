@@ -15,6 +15,7 @@
 #include <string.h>
 #include <netdb.h>
 #include <stdlib.h>
+#include <fcntl.h>
 
 
 // Defining constants...
@@ -120,17 +121,20 @@ char *get_content_type(char *filename) {
 long get_file_contents(char *filepath, char *file_contents) {
   // check the file actually exists.
   struct stat file_data;
-  if (stat(filepath, &file_data) == 0) {
-    FILE  *fd = fopen(filepath, "r");
-    long file_length = 0;
+    int file_fd = open(filepath, O_RDONLY);
 
-    int char_read = getc(fd);
+  if (fstat(file_fd, &file_data) == 0) {
+    /*int amount_read = getc(fd);
     while( char_read != EOF ) {
       *(file_contents+file_length) = char_read;
       char_read = getc(fd);
       file_length++;
-    }
-    return file_length;
+    }*/
+      if (read(file_fd, file_contents, file_data.st_size) == -1) {
+          char *message = "Error reading file.";
+          report_errno(message);
+      }
+    return file_data.st_size;
   } else {
     // file did not exist, return a 404.
     return 0;
@@ -386,8 +390,6 @@ int main() {
 
     break;
   }
-
-  fprintf(stdout, "Current serverfd: %d.\n", serverfd);
   // Check to see if we bind()ed successfully or ran out of options.
   if (server_info == NULL) {
     printf("We found no valid socket to bind to.\n");
