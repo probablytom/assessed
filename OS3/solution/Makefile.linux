@@ -1,0 +1,21 @@
+CFLAGS= -Wall -Wno-unused-variable
+OBJECTS=BoundedBuffer.o diagnostics.o fakeapplications.o \
+    freepacketdescriptorstore.o \
+    freepacketdescriptorstore_blocking_get.o \
+    freepacketdescriptorstore_nonblocking_get.o \
+    generic_queue.o \
+    networkdevice.o \
+    networkdevice_ctor.o \
+    networkdevice_reg_rx_pd.o \
+    networkdevice_await_incoming.o \
+    networkdriver.o \
+    networkdriver_rx.o \
+    networkdriver_tx.o \
+    packetdescriptor.o \
+    packetdescriptorcreator.o testharness.o
+
+demo: $(OBJECTS)
+	gcc -o demo $(OBJECTS) -lpthread
+
+clean:
+	rm -f *.o demo
