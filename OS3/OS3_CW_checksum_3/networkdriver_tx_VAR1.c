@@ -91,7 +91,7 @@ void *sender_fn (void *args) {
     for(;;) {
 	msg = (PacketDescriptor) blockingReadBB(myargs->pending_sends);
 	for (sendcount = 0; sendcount < SEND_LIMIT; sendcount++) {
-
+		send_packet(myargs->nd, msg);
 	    if (result)
 	        break;
 	}

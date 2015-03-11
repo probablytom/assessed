@@ -52,6 +52,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <sched.h>
+#include <Foundation/Foundation.h>
 
 
 /* Could allow direct access to the static variables, but this is cleaner... */
@@ -91,7 +92,7 @@ void *sender_fn (void *args) {
     for(;;) {
 	msg = (PacketDescriptor) blockingReadBB(myargs->pending_sends);
 	for (sendcount = 0; sendcount < SEND_LIMIT; sendcount++) {
-
+		result = send_packet(myargs->nd, msg);
 	    if (result)
 	        break;
 	}

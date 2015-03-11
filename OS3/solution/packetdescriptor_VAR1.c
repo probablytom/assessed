@@ -46,7 +46,7 @@ void init_packet_descriptor(PacketDescriptor * pdp)
    if (sizeof(RealPacketDescriptor) != SIZEOF_PacketDescriptor_target)
      fprintf(stderr, "Warning: datatype size mismatch in __FILE__ at line __LINE__");
    // Set pid to 0
-
+    packet_descriptor_set_pid(pdp, 0);
    // Set destination to NULL
    packet_descriptor_set_destination(pdp, NULL);
 

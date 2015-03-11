@@ -75,7 +75,7 @@ void *receiver_fn (void *args) {
     register_receiving_packetdescriptor(myargs->nd, &current_pd);
     for(;;) {
     	// Wait for incoming packets
-
+        await_incoming_packet(myargs->nd);
         filled_pd = current_pd;
 	if (nb_get_pd(myargs->receiver_pool, myargs->fpds, &current_pd)) {
 	    init_packet_descriptor(&current_pd);

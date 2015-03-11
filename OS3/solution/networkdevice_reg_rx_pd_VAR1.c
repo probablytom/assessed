@@ -49,7 +49,7 @@ void register_receiving_packetdescriptor(NetworkDevice nd, PacketDescriptor* pd_
     pthread_mutex_lock(&rnd->in_lock);
     if (!rnd->pd_registered)
     {
-
+    rnd->pd_registered = 1;
 	rnd->pd_filled = 0;
 	rnd->pending_packet_descriptor = pd_ptr;
     }

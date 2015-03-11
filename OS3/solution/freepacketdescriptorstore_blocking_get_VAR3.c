@@ -38,6 +38,7 @@
 #include "generic_queue.h"
 
 #include "packetdescriptor.h"
+#include "definitions.h"
 
 
 /*----------- Get Methods ---------------*/
@@ -48,7 +49,7 @@ void blocking_get_pd(FreePacketDescriptorStore fpds, PacketDescriptor *pd_ptr) {
 
    pthread_mutex_lock(&rfpds->lock);
    while (rfpds->current_length == 0) {
-
+      nonblocking_get_pd(rfpds, pd_ptr);
    }
    response = gqueue_dequeue(rfpds->basic_store, (GQueueElement *) pd_ptr);
    if (response)
