@@ -42,9 +42,9 @@
 
 /*----------- Get Methods ---------------*/
 
-void blocking_get_pd(FreePacketDescriptorStore *fpds, PacketDescriptor pd_ptr) {
+void blocking_get_pd(FreePacketDescriptorStore fpds, PacketDescriptor *pd_ptr) {
    int response = 0;
-   real_fpds* rfpds = (real_fpds*) fpds;
+   real_fpds rfpds = (real_fpds) fpds;
 
    pthread_mutex_lock(&rfpds->lock);
    while (rfpds->current_length == 0) {

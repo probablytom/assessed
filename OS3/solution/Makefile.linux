@@ -1,17 +1,17 @@
 CFLAGS= -Wall -Wno-unused-variable
 OBJECTS=BoundedBuffer.o diagnostics.o fakeapplications.o \
-    freepacketdescriptorstore.o \
-    freepacketdescriptorstore_blocking_get.o \
-    freepacketdescriptorstore_nonblocking_get.o \
+    freepacketdescriptorstore_VAR2.o \
+    freepacketdescriptorstore_blocking_get_VAR3.o \
+    freepacketdescriptorstore_nonblocking_get_VAR3.o \
     generic_queue.o \
     networkdevice.o \
-    networkdevice_ctor.o \
-    networkdevice_reg_rx_pd.o \
-    networkdevice_await_incoming.o \
-    networkdriver.o \
-    networkdriver_rx.o \
-    networkdriver_tx.o \
-    packetdescriptor.o \
+    networkdevice_ctor_VAR1.o \
+    networkdevice_reg_rx_pd_VAR1.o \
+    networkdevice_await_incoming_VAR4.o \
+    networkdriver_VAR1.o \
+    networkdriver_rx_VAR1.o \
+    networkdriver_tx_VAR1.o \
+    packetdescriptor_VAR1.o \
     packetdescriptorcreator.o testharness.o
 
 demo: $(OBJECTS)
