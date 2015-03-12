@@ -522,14 +522,17 @@ public class Dogs extends JFrame {
 			ResultSetMetaData resultsMeta = resultsRS.getMetaData();
 			int noColumns = resultsMeta.getColumnCount();
 			ArrayList<String> data = new ArrayList<String>();
-			for (int i = 1; i <= noColumns; i++) {			
-				if (resultsRS.next()) {
+			if (resultsRS.next()) {
+				for (int i = 1; i <= noColumns; i++) {			
+					//if (resultsRS.next()) {
 					String currentAncestor = resultsRS.getString(i);
 					if (currentAncestor != null) {
 						data.add(currentAncestor);
 					}
 				}
 			}
+			
+			//System.out.println(data.toString());
 			
 			
 			// Main loop
@@ -540,6 +543,7 @@ public class Dogs extends JFrame {
 				anc.add(dogname);
 			} else {
 				parentFunction = true; // Set it up again for next time!
+				System.out.println(anc.toString());
 			}
 		}
 		catch(Exception e) {
@@ -554,16 +558,50 @@ public class Dogs extends JFrame {
 
 
 	private Vector<String> getDescendents(String dogname, Vector<String> desc) {
+		
+		boolean thisisParent = parentFunction; // If we're the parent function, this will be True.
+		parentFunction = false; // Anything recursing after this will have thisIsParent=false.
 		if (desc == null) desc = new Vector<String>();
 
 		try {
-			//INSERT CODE HERE TO FIND DESCENDENTS // TODO
-
+			childStmt.setString(1, dogname);
+			childStmt.setString(2, dogname);
+			ResultSet resultsRS = childStmt.executeQuery();
+			
+			// Data collection
+			ResultSetMetaData resultsMeta = resultsRS.getMetaData();
+			int noColumns = resultsMeta.getColumnCount();
+			ArrayList<String> data = new ArrayList<String>();
+			if (resultsRS.next()) {
+				boolean looping = true;
+				while (looping) {
+					for (int i = 1; i <= noColumns; i++) {			
+						String currentDescendent = resultsRS.getString(i);
+						if (currentDescendent != null) {
+							data.add(currentDescendent);
+						}
+					}
+					looping = resultsRS.next();
+				}
+			}
+						
+			
+			// Main loop
+			for (String currentDog : data) {
+				getDescendents(currentDog, desc);
+			}
+			if (!thisisParent) {
+				desc.add(dogname);
+			} else {
+				parentFunction = true; // Set it up again for next time!
+				System.out.println(desc.toString());
+			}
 		}
 		catch(Exception e) {
 			doError(e, "Failed to execute ancestor query in getBreeding");
 		}
 		return desc;
+		
 
 	}
 
