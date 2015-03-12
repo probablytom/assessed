@@ -1,0 +1,95 @@
+dogid,name,ownerid,kennelname,breedname,mothername,fathername
+444,Lisbon,8009,Grampain kennel club,Irish Setter,Shaka,Murphy
+3,Alex,7134,Semenze kennel club,Pug,Lasey,Tuck
+4,Mole,7134,Scottish kennel club,Pug,Lasey,Tuck
+5,Lasey,43,Strathclyde kennel club,Pug,Tilly,Tom
+7,Simon,6712,Fife kennel club,Pug,Kay,Duffy
+8,Kid,6665,Island kennel club,Pug,Kay,Duffy
+10,Duffy,8009,Clyde River kennel club,Pug,Flower,Mons
+1,Shadow,3076,Scottish kennel club,Pug,Alex,Simon
+2,Opal,4563,Canine kennel club,Pug,Alex,Simon
+13,Sand,6712,Fife kennel club,Poodle,Elory,Duffy
+14,Kaylee,8009,Island kennel club,Poodle,Sand,Elmo
+15,Elmo,6712,Grampain kennel club,Poodle,Epcot,Elvis
+16,Fang,43,Crandford kennel club,Poodle,Epcot,Elvis
+17,Dino,6665,Zain kennel club,Poodle,Epcot,Elvis
+18,Elory,5498,Mills kennel club,Poodle,Fifi,Enzo
+19,Ollie,3076,Peden kennel club,Poodle,Fifi,Enzo
+20,Epcot,5498,Mills kennel club,Poodle,Majuba,Finn
+21,Elvis,8009,Semenze kennel club,Poodle,Akita,Eggo
+23,Enzo,9445,Fife kennel club,Poodle,Laha,Figaro
+25,Snake,6665,Canine kennel club,Corgi,Sage,Fancy
+27,Fatso,4563,Partic kennel club,Irish Setter,Tilly,Loony
+28,Link,8790,Dyce kennel club,Irish Setter,Tilly,Loony
+29,Tilly,9445,Novar kennel club,Irish Setter,Sake,Paco
+30,Seak,43,Zain kennel club,Irish Setter,Sake,Paco
+33,Sake,3076,Kerrland kennel club,Irish Setter,Molly,Dash
+34,Paco,3076,Canine kennel club,Irish Setter,Bobbelina,Tango
+35,Molly,4563,Clyde River kennel club,Irish Setter,Night,Mabula
+41,Loony,6665,Dewers kennel club,Irish Setter,Nappa,Lisbon
+42,Dew,6712,Dyce kennel club,Irish Setter,Nappa,Lisbon
+43,Dice,6712,Dyce kennel club,Irish Setter,Nappa,Lisbon
+44,Nappa,7134,Fife kennel club,Irish Setter,Kobi,Dingo
+47,Otto,9445,Irland kennel club,Daschund,Heidi,Sausage
+48,Face,43,Island kennel club,Daschund,Tara,Otto
+49,Laser,43,Kerrland kennel club,Daschund,Tara,Otto
+52,Kool,5498,Partic kennel club,Daschund,Lady,Kiwi
+53,Minty,6665,Peden kennel club,Daschund,Lady,Kiwi
+54,Lupin,6712,Scottish kennel club,Daschund,Lady,Kiwi
+55,Peekaboo,7134,Semenze kennel club,Daschund,Laser,Kool
+56,Toto,8009,Strathclyde kennel club,Daschund,Laser,Kool
+57,Lali,8790,Summer kennel club,Daschund,Toto,Nacho
+58,Bertie,9445,Zain kennel club,Daschund,Toto,Nacho
+59,Nacho,43,Canine kennel club,Daschund,Lupin,Leila
+60,Tammy,3076,Clyde River kennel club,Daschund,Lupin,Leila
+61,Bratwurst,4563,Crandford kennel club,Daschund,Chuzzlewit,Tombola
+62,Leila,5498,Dewers kennel club,Daschund,Sammy,Oliver
+63,Taboo,6665,Dyce kennel club,Basset,Leila,Theo
+64,Theo,6712,Fife kennel club,Basset,Onyx,Tess
+65,Tar,7134,Partic kennel club,Basset,Onyx,Tess
+66,Onyx,8009,Haydland kennel club,Basset,Durban,Delmas
+67,Tess,8790,Crandford kennel club,Basset,Socks,Stubborn
+70,Duncan,43,Summer kennel club,Daschund,Roger,Lali
+80,McDuff,3076,Canine kennel club,Daschund,Roger,Lali
+81,Ginny,4563,Kerrland kennel club,Daschund,Bertie,Taboo
+83,Amber,5498,Dyce kennel club,Basset,Taboo,Molly
+85,Maya,6665,Fife kennel club,Boxer,Western,Govan
+101,Oink,7134,Partic kennel club,Boxer,Maya,Didi
+90,Lola,8009,Zain kennel club,Boxer,Laduma,Joey
+95,Alfie,8790,Zain kennel club,Boxer,Lola,Oink
+99,Dodo,9445,Haydland kennel club,Boxer,Pluto,Jimbo
+88,Divot,43,Mills kennel club,Boxer,Venus,Jimbo
+200,Dali,3076,Semenze kennel club,Boxer,Dodo,Divot
+203,Lobo,5498,Strathclyde kennel club,Boxer,Dali,Pip
+206,Tang,6665,Grampain kennel club,Boxer,Alfie,Lobo
+210,Dizzy,6712,Semenze kennel club,Boxer,Alfie,Tess
+211,Kiddo,7134,Clyde River kennel club,Boxer,Oink,Dali
+213,Dave,8009,Zain kennel club,Boxer,Alfie,Kiddo
+220,Wors,8790,Semenze kennel club,Daschund,Minty,Lupin
+230,Helga,9445,Irland kennel club,Daschund,Wors,Toto
+231,Pippa,9445,Irland kennel club,Poodle,Kid,Sand
+232,Lucas,43,Island kennel club,Pug,Flower,Simon
+233,Major,3076,Mills kennel club,Irish Setter,Seak,Enzo
+236,Hamlet,6712,Fife kennel club,Corgi,Quintin,Walter
+238,Dai,43,Summer kennel club,Corgi,Blossom,Shem
+239,Caesar,8009,Strathclyde kennel club,Corgi,Jeeves,Wooster
+240,Shem,8790,Clyde River kennel club,Corgi,Walter,Caesar
+241,Tod,9445,Kerrland kennel club,Corgi,Walter,Caesar
+242,Evan,3076,Zain kennel club,Corgi,Blossom,Shem
+24,Sage,7134,Clyde River kennel club,Poodle,Kaylee,Fatso
+32,Tamarind,43,Zain kennel club,Irish Setter,Sake,Paco
+6,Tuck,5498,Grampain kennel club,Pug,Snel,Fox
+12,Mons,7134,Summer kennel club,Pug,Elma,
+26,Fancy,6665,Crandford kennel club,Corgi,Lips,
+11,Flower,9445,Irland kennel club,Pug,,Edge
+22,Fifi,6712,Summer kennel club,Poodle,,Diggory
+40,Dash,5498,Crandford kennel club,Irish Setter,,Oswald
+51,Kiwi,4563,Novar kennel club,Daschund,,Woronga
+9,Kay,8790,Dewers kennel club,Pug,,
+50,Lady,3076,Mills kennel club,Daschund,Karoo,
+68,Roger,9445,Kerrland kennel club,Daschund,Tiny,
+235,Walter,5498,Zain kennel club,Corgi,Fancy,
+237,Blossom,7134,Canine kennel club,Corgi,Hamlet,
+243,Zoom,6665,Irland kennel club,Corgi,Hamlet,
+100,Didi,6712,Clyde River kennel club,Boxer,,
+234,Quintin,4563,Grampain kennel club,Corgi,,
