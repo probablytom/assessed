@@ -341,6 +341,29 @@ public class Dogs extends JFrame {
 
 		Vector <String> ancestors = getAncestors(dogName,null);
 		Vector <String> des = getDescendents(dogName,null);
+		
+		int length = 0;
+		
+		String formattedAncestorData = "";
+		for (String ancestor : ancestors) {
+			formattedAncestorData = formattedAncestorData + ancestor + ", ";
+			length += ancestor.length() + 2;
+			if (length > 25) {
+				formattedAncestorData = formattedAncestorData.substring(0, formattedAncestorData.length() - 2) + "<br>";
+				length = 0;
+			}
+		}
+		
+		length = 0;
+		String formattedDescendentData = "";
+		for (String descendent : des) {
+			length += descendent.length() + 2;
+			formattedDescendentData = formattedDescendentData + descendent + ", ";
+			if (length > 25) {
+				formattedDescendentData = formattedDescendentData.substring(0, formattedDescendentData.length() - 2) + "<br>";
+			}
+		}
+				
 
 
 		if (kennAddr == null) kennAddr = "Unknown";
@@ -386,15 +409,16 @@ public class Dogs extends JFrame {
 				}
 		//output pedigree info
 		pedInfo.setText("<html>" + dogName + "'s siblings: " + siblings + "<br>" +
-				dogName + "'s Parents: " + 
+				/*dogName + "'s Parents: " + 
 				(father != null ? father : "") + 
 				(father != null && mother != null ? ", " : "") +
 				(mother != null ? mother : "") +
 				" " + parentMissingInfo +
 				"<br>" + dogName + "'s Grandparents: " + grandparents + 
-				" " + grandparentMissingInfo +
-				"<br>" + dogName + "'s Children: " + children + "<br>" +
-				dogName + "'s Grandchildren: " + grandchildren +
+				" " + grandparentMissingInfo +*/
+				dogName + "'s Ancestors: " + formattedAncestorData + 
+				"<br>" + dogName + "'s Descendants: " + formattedDescendentData + "<br>" +
+				//dogName + "'s Grandchildren: " + grandchildren +
 				"<br><br>" +
 				(isPureBred ? "Purebred<br>" : "Not purebred<br>") +
 				"Breeding: " + breedingString +
@@ -531,9 +555,7 @@ public class Dogs extends JFrame {
 					}
 				}
 			}
-			
-			//System.out.println(data.toString());
-			
+						
 			
 			// Main loop
 			for (String currentDog : data) {
@@ -543,7 +565,6 @@ public class Dogs extends JFrame {
 				anc.add(dogname);
 			} else {
 				parentFunction = true; // Set it up again for next time!
-				System.out.println(anc.toString());
 			}
 		}
 		catch(Exception e) {
@@ -594,7 +615,6 @@ public class Dogs extends JFrame {
 				desc.add(dogname);
 			} else {
 				parentFunction = true; // Set it up again for next time!
-				System.out.println(desc.toString());
 			}
 		}
 		catch(Exception e) {
