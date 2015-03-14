@@ -73,7 +73,7 @@ static void put_pd(FreePacketDescriptorStore fpds, PacketDescriptor pd) {
    response = gqueue_enqueue(rfpds->basic_store, (GQueueElement) pd);
    if (response) {
        rfpds->current_length++;
-
+       pthread_cond_init(rfpds->non_empty, 1);
    } else
        DIAGNOSTICS("BUG: Failed to insert element into FPDS\n");
    pthread_mutex_unlock(&rfpds->lock);

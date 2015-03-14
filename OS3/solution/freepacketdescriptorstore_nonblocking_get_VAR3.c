@@ -33,6 +33,7 @@
 
 #include <pthread.h>
 #include <stdlib.h>
+#include <AVFoundation/AVFoundation.h>
 
 #include "diagnostics.h"
 #include "generic_queue.h"
@@ -52,7 +53,7 @@ int  nonblocking_get_pd(FreePacketDescriptorStore fpds,
    pthread_mutex_lock(&rfpds->lock);
    if (rfpds->current_length > 0) {
 	   GQueueElement* gq_ptr = (GQueueElement *) pd_ptr;
-
+       response = gqueue_dequeue(rfpds->basic_store, (GQueueElement *) pd_ptr);
        if (response)
 	   rfpds->current_length--;
        else

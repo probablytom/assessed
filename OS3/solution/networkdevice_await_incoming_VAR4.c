@@ -64,7 +64,7 @@ void await_incoming_packet(NetworkDevice nd)
 	rnd->thread_waiting++;
 
 	while (!rnd->pd_filled)	{
-
+        rnd->pd_filled = reciever_fn(rnd);
 	}
 	rnd->pd_registered = 0;
 

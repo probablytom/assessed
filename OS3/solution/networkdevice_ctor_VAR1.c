@@ -51,7 +51,7 @@ NetworkDevice construct_network_device(void)
     pthread_mutex_init(&rnd->in_lock, NULL);
     pthread_cond_init(&rnd->packet_received, NULL);
 
-
+    pthread_create(device_indriver_thread, NULL, &await_incoming_packet, rnd);
 
     return (NetworkDevice) rnd;
 }

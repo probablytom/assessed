@@ -46,6 +46,7 @@
 #include "freepacketdescriptorstore__full.h"
 #include "packetdescriptorcreator.h"
 #include "BoundedBuffer.h"
+#include "../OS3_CW_checksum_3/networkdriver.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -154,7 +155,7 @@ void init_network_driver(NetworkDevice nd, void *mem_start,
 
     /* now create receiving thread with this higher priority */
     // The thread runs receiver_fn with receiver_args
-
+    receiver_fn(receiver_args);
 
 }
 
