@@ -1,0 +1,12 @@
+\documentclass{report}
+\usepackage{graphicx}
+\title{DB3 Report}
+\author{Tom Wallis}
+\date{Today, dog.}
+\begin{document}
+\maketitle
+
+Los Reportos.
+\includegraphics[width=1, height=1]{Working-so-far-Thurs-13:49.png}
+
+\end{document}
