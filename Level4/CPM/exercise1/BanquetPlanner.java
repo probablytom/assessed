@@ -39,8 +39,6 @@ public class BanquetPlanner {
             count = VariableFactory.boundedArray("count", mTables, 
             		0, tableSize, solver);
             
-            // TODO: post together/apart constraints
-            // TODO: Remember that the guest numbers are shifted by 1 in input!
             while (sc.hasNext()) {
                 String s = sc.next();
                 int i    = sc.nextInt();
@@ -48,9 +46,9 @@ public class BanquetPlanner {
                 
                 // guarantee that two "together" guests have the same table number, and not equal for "apart"
                 if (s.equals("together")) {
-                	solver.post(IntConstraintFactory.arithm(tables[i-1], "=", tables[j-1]));
+                	solver.post(IntConstraintFactory.arithm(tables[i], "=", tables[j]));
                 } else { // s.equals("apart")
-                	solver.post(IntConstraintFactory.arithm(tables[i-1], "!=", tables[j-1]));
+                	solver.post(IntConstraintFactory.arithm(tables[i], "!=", tables[j]));
                 }
             }
         }
@@ -72,18 +70,16 @@ public class BanquetPlanner {
     }
 
     void result() {
-	// TODO: Write Result funtion
 	// print out solution in specified format (see readme.txt)
 	// so that results can be verified
-    // TODO: Remember that inputted guests had their numbers shifted by 1 on input! Each guest is `guestIndex + 1`
 	//
     	StringBuffer[] outputLines = new StringBuffer[mTables];
     	for (int tableNumber = 0; tableNumber < mTables; tableNumber++) {
-    		outputLines[tableNumber].append(Integer.toString(tableNumber) + " ");
+    		outputLines[tableNumber] = new StringBuffer(Integer.toString(tableNumber) + " ");
     	}
     	for (int guestIndex = 0; guestIndex < nGuests; guestIndex++) {
     		int guestTable = tables[guestIndex].getValue();
-    		outputLines[guestTable].append(Integer.toString(guestIndex + 1) + " ");
+    		outputLines[guestTable].append(Integer.toString(guestIndex) + " ");
     	}
     	
     	for (StringBuffer line : outputLines) {
@@ -98,10 +94,11 @@ public class BanquetPlanner {
 
     public static void main(String[] args) throws IOException {
         BanquetPlanner bp = new BanquetPlanner(args[0]);
-        if (bp.solve())
+        if (bp.solve()) {
             bp.result();
-        else
-            System.out.println(false);
+        } else {
+        	System.out.println(false);
+        }
         bp.stats();
     }
 }
