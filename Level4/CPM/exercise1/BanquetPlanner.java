@@ -19,10 +19,11 @@ public class BanquetPlanner {
     int mTables;
     int tableSize;
 
-    //
-    // constrained variables declared here
-    //
+    IntVar[] tables; // An array of table allocation for each guest
+    IntVar[] count;  // An array of the counts of guests at each table
 
+    
+    // TODO: Outline algorithm here
     BanquetPlanner(String fname) throws IOException {
         try (Scanner sc = new Scanner(new File(fname))) {
             nGuests   = sc.nextInt(); // number of guests
@@ -30,23 +31,40 @@ public class BanquetPlanner {
             tableSize = nGuests / mTables;
             solver    = new Solver("banquet planner");
 
-	    //
-            // create the constrained variables here
-	    //
-
+            // Create an bounded array of length nGuests, each location a guest
+            // This is bounded instead of enumerated for speed...should it be?
+            tables = VariableFactory.boundedArray("tables", nGuests, 
+            		0, nGuests, solver); 
+            // The count of how many guests are at each table
+            count = VariableFactory.boundedArray("count", mTables, 
+            		0, tableSize, solver);
+            
+            // TODO: post together/apart constraints
+            // TODO: Remember that the guest numbers are shifted by 1 in input!
             while (sc.hasNext()) {
                 String s = sc.next();
                 int i    = sc.nextInt();
                 int j    = sc.nextInt();
-		//
-                // post constraints for together and apart
-		//
+                
+                // guarantee that two "together" guests have the same table number, and not equal for "apart"
+                if (s.equals("together")) {
+                	solver.post(IntConstraintFactory.arithm(tables[i-1], "=", tables[j-1]));
+                } else { // s.equals("apart")
+                	solver.post(IntConstraintFactory.arithm(tables[i-1], "!=", tables[j-1]));
+                }
             }
         }
 
-	//
-	// post constraints to ensure that every table is of size tableSize
-	//
+       
+        
+        //
+        // post constraints to ensure that every table is of size tableSize
+        //
+        for (int tableNumber = 0; tableNumber < mTables; tableNumber++) {
+        	solver.post(ICF.count(tableNumber, tables, count[tableNumber])); // count the guests
+            solver.post(ICF.arithm(count[tableNumber], "=", tableSize));     // guarantee that the count is what is should be
+        }
+        
     }
 
     boolean solve() {
@@ -54,10 +72,24 @@ public class BanquetPlanner {
     }
 
     void result() {
-	//
+	// TODO: Write Result funtion
 	// print out solution in specified format (see readme.txt)
 	// so that results can be verified
+    // TODO: Remember that inputted guests had their numbers shifted by 1 on input! Each guest is `guestIndex + 1`
 	//
+    	StringBuffer[] outputLines = new StringBuffer[mTables];
+    	for (int tableNumber = 0; tableNumber < mTables; tableNumber++) {
+    		outputLines[tableNumber].append(Integer.toString(tableNumber) + " ");
+    	}
+    	for (int guestIndex = 0; guestIndex < nGuests; guestIndex++) {
+    		int guestTable = tables[guestIndex].getValue();
+    		outputLines[guestTable].append(Integer.toString(guestIndex + 1) + " ");
+    	}
+    	
+    	for (StringBuffer line : outputLines) {
+    		System.out.println(line.toString());
+    	}
+    	
     }
 
     void stats() {
