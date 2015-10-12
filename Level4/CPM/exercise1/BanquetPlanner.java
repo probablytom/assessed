@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import org.chocosolver.solver.*;
 import org.chocosolver.solver.variables.*;
+import org.chocosolver.solver.search.strategy.*;
 import org.chocosolver.solver.constraints.*;
 
 public class BanquetPlanner {
@@ -62,6 +63,9 @@ public class BanquetPlanner {
         	solver.post(ICF.count(tableNumber, tables, count[tableNumber])); // count the guests
             solver.post(ICF.arithm(count[tableNumber], "=", tableSize));     // guarantee that the count is what is should be
         }
+        
+        // set a lexicographical ordering
+        solver.set(ISF.lexico_LB(tables));
         
     }
 
