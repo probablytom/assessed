@@ -9,6 +9,8 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.stream.IntStream;
+
 import org.chocosolver.solver.*;
 import org.chocosolver.solver.variables.*;
 import org.chocosolver.solver.search.strategy.*;
@@ -31,13 +33,13 @@ public class BanquetPlanner {
             mTables   = sc.nextInt(); // number of tables
             tableSize = nGuests / mTables;
             solver    = new Solver("banquet planner");
+            
 
             // Create an bounded array of length nGuests, each location a guest
-            // This is bounded instead of enumerated for speed...should it be?
-            tables = VariableFactory.boundedArray("tables", nGuests, 
+            tables = VariableFactory.enumeratedArray("tables", nGuests, 
             		0, nGuests, solver); 
             // The count of how many guests are at each table
-            count = VariableFactory.boundedArray("count", mTables, 
+            count = VariableFactory.integerArray("count", mTables, 
             		0, tableSize, solver);
             
             while (sc.hasNext()) {
@@ -56,16 +58,16 @@ public class BanquetPlanner {
 
        
         
-        //
-        // post constraints to ensure that every table is of size tableSize
-        //
-        for (int tableNumber = 0; tableNumber < mTables; tableNumber++) {
-        	solver.post(ICF.count(tableNumber, tables, count[tableNumber])); // count the guests
-            solver.post(ICF.arithm(count[tableNumber], "=", tableSize));     // guarantee that the count is what is should be
-        }
         
-        // set a lexicographical ordering
+        
+        int[] values = IntStream.rangeClosed(0,mTables-1).toArray();
+        IntVar[] OCC = VF.enumeratedArray("occurences", mTables, tableSize, tableSize, solver);
+        
+        solver.post(ICF.global_cardinality(tables, values, OCC, false));
+        
+        // set a custom variable ordering
         solver.set(ISF.lexico_LB(tables));
+        //solver.set(ISF.custom(ISF.minDomainSize_var_selector(), ISF.min_value_selector(), tables));
         
     }
 
