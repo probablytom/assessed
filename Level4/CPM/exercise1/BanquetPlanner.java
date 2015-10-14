@@ -8,6 +8,7 @@
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
@@ -24,6 +25,7 @@ public class BanquetPlanner {
 
     IntVar[] tables; // An array of table allocation for each guest
     IntVar[] count;  // An array of the counts of guests at each table
+    HashMap<Integer, IntVar> constrainedGuests;
 
     
     // TODO: Outline algorithm here
@@ -33,37 +35,49 @@ public class BanquetPlanner {
             mTables   = sc.nextInt(); // number of tables
             tableSize = nGuests / mTables;
             solver    = new Solver("banquet planner");
+            constrainedGuests = new HashMap<Integer, IntVar>();
             
-
+            /*
             // Create an bounded array of length nGuests, each location a guest
             tables = VariableFactory.enumeratedArray("tables", nGuests, 
             		0, nGuests, solver); 
             // The count of how many guests are at each table
             count = VariableFactory.integerArray("count", mTables, 
             		0, tableSize, solver);
+            */
             
             while (sc.hasNext()) {
                 String s = sc.next();
                 int i    = sc.nextInt();
                 int j    = sc.nextInt();
                 
+                if (!constrainedGuests.containsKey(i)) {
+                	constrainedGuests.put(i, VF.integer("guest" + Integer.toString(i), 0, mTables-1, solver));
+                }
+                if (!constrainedGuests.containsKey(j)) {
+                	constrainedGuests.put(j, VF.integer("guest" + Integer.toString(j), 0, mTables-1, solver));
+                }
+                
+                
+                
+                
+                
                 // guarantee that two "together" guests have the same table number, and not equal for "apart"
+                // ICF.arithm requires that the last argument be an int, so we couldn't simply use i != j.
                 if (s.equals("together")) {
-                	solver.post(IntConstraintFactory.arithm(tables[i], "=", tables[j]));
+                	solver.post(IntConstraintFactory.arithm((IntVar)constrainedGuests.get(i), "-", (IntVar)constrainedGuests.get(j), "=", 0));
                 } else { // s.equals("apart")
-                	solver.post(IntConstraintFactory.arithm(tables[i], "!=", tables[j]));
+                	solver.post(IntConstraintFactory.arithm((IntVar)constrainedGuests.get(i), "-", (IntVar)constrainedGuests.get(j), "!=", 0));
                 }
             }
         }
 
-       
         
-        
-        
+        IntVar[] tableArray = createArrayFromHashMap(constrainedGuests);
         int[] values = IntStream.rangeClosed(0,mTables-1).toArray();
-        IntVar[] OCC = VF.enumeratedArray("occurences", mTables, tableSize, tableSize, solver);
+        IntVar[] OCC = VF.enumeratedArray("occurences", mTables, 0, tableSize, solver);
         
-        solver.post(ICF.global_cardinality(tables, values, OCC, false));
+        solver.post(ICF.global_cardinality(tableArray, values, OCC, false));
         
         // set a custom variable ordering
         solver.set(ISF.lexico_LB(tables));
@@ -78,7 +92,7 @@ public class BanquetPlanner {
     void result() {
 	// print out solution in specified format (see readme.txt)
 	// so that results can be verified
-	//
+	// TODO: Change to work with constrainedGuests hashmap!
     	StringBuffer[] outputLines = new StringBuffer[mTables];
     	for (int tableNumber = 0; tableNumber < mTables; tableNumber++) {
     		outputLines[tableNumber] = new StringBuffer(Integer.toString(tableNumber) + " ");
@@ -106,6 +120,12 @@ public class BanquetPlanner {
         	System.out.println(false);
         }
         bp.stats();
+    }
+    
+    
+    // helper function to pretty up the above code a little. 
+    public IntVar[] createArrayFromHashMap(HashMap<Integer, IntVar> originalHashmap) {
+    	return originalHashmap.values().toArray(VF.integerArray("constrained guests array", constrainedGuests.size(), 0,  mTables-1, solver));
     }
 }
 
