@@ -42,9 +42,12 @@ public class BanquetPlanner {
      *   apart are to have nonequal table numbers. 
      * We enforce this via arithmetic constraints. 
      * 
+     * We can then enforce table size simits by specifying that an array of the created IntVars (table numbers)
+     *   can have at least 0 and at most tableSize occurrences of each table number.
+     * 
      * When we come to print our output, we know that if we have no entry in our hashmap for the guest, 
      *   that guest had no constraints and can be placed at any table. 
-     *   They are given the next available table. 
+     *   They are therefore given the next available table. 
      * 
      */
     
