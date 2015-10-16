@@ -33,10 +33,18 @@ public class BanquetPlanner {
     //TODO: Comments
     //TODO: Clean up code and delete unnecesary variables
     //TODO: Write report
-    // TODO: Outline algorithm here
     /*
+     * As an optimisation, we'll only create IntVars for constrained guests. 
+     * To identify which guests we've made constraints for, and which IntVars correspond to which guests,
+     *   we keep them in a hashmap where the keys are guest IDs and the values are the guests' IntVars.
+     * Each guest's IntVar contains that guest's table number. 
+     * If two guests are to be placed together, they should have an equal table number. Guests to be kept 
+     *   apart are to have nonequal table numbers. 
+     * We enforce this via arithmetic constraints. 
      * 
-     * The algorithm:
+     * When we come to print our output, we know that if we have no entry in our hashmap for the guest, 
+     *   that guest had no constraints and can be placed at any table. 
+     *   They are given the next available table. 
      * 
      */
     
