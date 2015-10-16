@@ -23,14 +23,10 @@ public class BanquetPlanner {
     int nGuests;
     int mTables;
     int tableSize;
-    int tableCapacity;
-
     int[] guestsAtTables; // An array of table allocation for each guest
-    IntVar[] count;  // An array of the counts of guests at each table
     HashMap<Integer, IntVar> constrainedGuests;
     
 
-    //TODO: Clean up code and delete unnecesary variables
     //TODO: Write report
     /*
      * As an optimisation, we'll only create IntVars for constrained guests. 
@@ -73,7 +69,6 @@ public class BanquetPlanner {
                 	constrainedGuests.put(j, VF.integer("guest" + Integer.toString(j), 0, mTables-1, solver));
                 }
                 
-                
                 // guarantee that two "together" guests have the same table number, and not equal for "apart"
                 // ICF.arithm requires that the last argument be an int, so we couldn't simply use i != j.
                 if (s.equals("together")) {
@@ -93,7 +88,6 @@ public class BanquetPlanner {
         solver.post(ICF.global_cardinality(tableArray, values, OCC, false)); // Constrain the table sizes
         
         
-        
         // set a custom variable ordering to process the least constrained first
         solver.set(ISF.custom(ISF.minDomainSize_var_selector(), ISF.min_value_selector(), tableArray));
         
@@ -109,10 +103,9 @@ public class BanquetPlanner {
     	
     	StringBuffer[] outputLines = new StringBuffer[mTables];  // Places to put lines of output
         guestsAtTables = new int[mTables];  // Count how many guests are at each table so far
+        int currentTable = 0;  // So we add unconstrained guests to the right tables
         Integer guestID;  // for readability later
         int tableNumber;  // for readability later
-        
-        int currentTable = 0;  // So we add unconstrained guests to the right tables
         
         // Create our string buffers for output, begin them with their respective tablenumbers
     	for (int table = 0; table < mTables; table++) {
@@ -179,10 +172,10 @@ public class BanquetPlanner {
     // Helper function to make sure we're on the right table to add a guest to in the result() function
     public int correctCurrentTable(int[] guestsAtTables, int currentTable) {
         
-        // If we've reached our capacity, move to the next table and make sure that isn't full too (hence the recursion).
+        // If we've reached our capacity, move to the next table and make sure that isn't full too.
     	if (guestsAtTables[currentTable] == tableSize) {
     		currentTable++;
-    		return correctCurrentTable(guestsAtTables, currentTable); 
+    		return correctCurrentTable(guestsAtTables, currentTable);  // Check the next table isn't full
     	}
     	return currentTable;
     }
