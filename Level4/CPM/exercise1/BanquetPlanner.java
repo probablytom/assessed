@@ -23,20 +23,26 @@ public class BanquetPlanner {
     int nGuests;
     int mTables;
     int tableSize;
-    int tableCapacity;
-
     int[] guestsAtTables; // An array of table allocation for each guest
-    IntVar[] count;  // An array of the counts of guests at each table
     HashMap<Integer, IntVar> constrainedGuests;
     
 
-    //TODO: Comments
-    //TODO: Clean up code and delete unnecesary variables
     //TODO: Write report
-    // TODO: Outline algorithm here
     /*
+     * As an optimisation, we'll only create IntVars for constrained guests. 
+     * To identify which guests we've made constraints for, and which IntVars correspond to which guests,
+     *   we keep them in a hashmap where the keys are guest IDs and the values are the guests' IntVars.
+     * Each guest's IntVar contains that guest's table number. 
+     * If two guests are to be placed together, they should have an equal table number. Guests to be kept 
+     *   apart are to have nonequal table numbers. 
+     * We enforce this via arithmetic constraints. 
      * 
-     * The algorithm:
+     * We can then enforce table size simits by specifying that an array of the created IntVars (table numbers)
+     *   can have at least 0 and at most tableSize occurrences of each table number.
+     * 
+     * When we come to print our output, we know that if we have no entry in our hashmap for the guest, 
+     *   that guest had no constraints and can be placed at any table. 
+     *   They are therefore given the next available table. 
      * 
      */
     
@@ -55,13 +61,13 @@ public class BanquetPlanner {
                 int i    = sc.nextInt();
                 int j    = sc.nextInt();
                 
+                // Create variables for the constrained guests if they don't yet exist
                 if (!constrainedGuests.containsKey(i)) {
                 	constrainedGuests.put(i, VF.integer("guest" + Integer.toString(i), 0, mTables-1, solver));
                 }
                 if (!constrainedGuests.containsKey(j)) {
                 	constrainedGuests.put(j, VF.integer("guest" + Integer.toString(j), 0, mTables-1, solver));
                 }
-                
                 
                 // guarantee that two "together" guests have the same table number, and not equal for "apart"
                 // ICF.arithm requires that the last argument be an int, so we couldn't simply use i != j.
@@ -74,11 +80,12 @@ public class BanquetPlanner {
         }
 
         // Set a constraint so the solution can have 0->tableSize occurrences of each table number.
-        IntVar[] tableArray = createArrayFromHashMap(constrainedGuests);
-        int[] values = IntStream.rangeClosed(0,mTables-1).toArray();
-        IntVar[] OCC = VF.enumeratedArray("occurences", mTables, 0, tableSize, solver);
+        IntVar[] tableArray = createArrayFromHashMap(constrainedGuests);     // An array of the intvars
+        int[] values = IntStream.rangeClosed(0,mTables-1).toArray();         // The values the intVars can take
+        IntVar[] OCC = VF.enumeratedArray("occurences", mTables, 
+                0, tableSize, solver);                                       // The range of allowable occurences of any value in `values`
         
-        solver.post(ICF.global_cardinality(tableArray, values, OCC, false));
+        solver.post(ICF.global_cardinality(tableArray, values, OCC, false)); // Constrain the table sizes
         
         
         // set a custom variable ordering to process the least constrained first
@@ -94,19 +101,18 @@ public class BanquetPlanner {
 	// so that results can be verified
     void result() {
     	
-    	
     	StringBuffer[] outputLines = new StringBuffer[mTables];  // Places to put lines of output
-        guestsAtTables = new int[mTables];  
-        Integer guestID;
-        int tableNumber;
+        guestsAtTables = new int[mTables];  // Count how many guests are at each table so far
+        int currentTable = 0;  // So we add unconstrained guests to the right tables
+        Integer guestID;  // for readability later
+        int tableNumber;  // for readability later
         
-        int currentTable = 0;
-        
+        // Create our string buffers for output, begin them with their respective tablenumbers
     	for (int table = 0; table < mTables; table++) {
     		outputLines[table] = new StringBuffer(Integer.toString(table) + " ");
     	}
     	
-    	
+    	// Allocate the constrained guests to their tables
     	for (Entry<Integer, IntVar> guestDetails : constrainedGuests.entrySet()) {
     		
     		// for readability, convert entry to variables
@@ -117,18 +123,20 @@ public class BanquetPlanner {
     		guestsAtTables[tableNumber]++; 
     	}
     	
-    	
+    	// Add in the unconstrained guests to the tables that aren't yet full
     	for (Integer guestIndex = 0; guestIndex < nGuests; guestIndex++) {
     		
     		// Make sure we don't process a guest twice
     		if (!constrainedGuests.containsKey(guestIndex)) {
-    			currentTable = correctCurrentTable(guestsAtTables, currentTable);
+    		    
+    			currentTable = correctCurrentTable(guestsAtTables, currentTable); // Maybe the table we're at is now full?
     			outputLines[currentTable].append(guestIndex.toString() + " ");
     			guestsAtTables[currentTable]++;
+    			
     		}
     	}
     	
-    	
+    	// We've constructed output with each guest, regardless of constraints. We can print now.
     	for (StringBuffer line : outputLines) {
     		System.out.println(line.toString());
     	}
@@ -150,17 +158,24 @@ public class BanquetPlanner {
     }
     
     
-    // helper function to pretty up the above code a little. 
+    
+    
+    // --------------------------------------------------------
+    // --- Helper functions to clean up the above code a little
+    // --------------------------------------------------------
+    
+    // Turn a constrained guests hashmap into an array of the guests' IntVars, which contain table numbers.
     public IntVar[] createArrayFromHashMap(HashMap<Integer, IntVar> originalHashmap) {
     	return originalHashmap.values().toArray(VF.integerArray("constrained guests array", constrainedGuests.size(), 0,  mTables-1, solver));
     }
     
-    // Helper function to make sure we're on the right table to add a guest to in the print() statement
+    // Helper function to make sure we're on the right table to add a guest to in the result() function
     public int correctCurrentTable(int[] guestsAtTables, int currentTable) {
-        tableCapacity = tableSize - 1;
+        
+        // If we've reached our capacity, move to the next table and make sure that isn't full too.
     	if (guestsAtTables[currentTable] == tableSize) {
     		currentTable++;
-    		return correctCurrentTable(guestsAtTables, currentTable); // there may be a table in guestsAtTables full of constrained guests, so check we haven't reached capacity at the next table
+    		return correctCurrentTable(guestsAtTables, currentTable);  // Check the next table isn't full
     	}
     	return currentTable;
     }
