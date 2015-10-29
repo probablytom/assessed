@@ -86,3 +86,5 @@ hs_err_pid*
 
 # Avoiding storing generated java from PL3 Assessed Exercise.
 */PL3/*.java
+
+DB3/Assessed2/
