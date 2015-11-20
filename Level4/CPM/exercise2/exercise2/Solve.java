@@ -98,9 +98,6 @@ public class Solve {
 
 	public static void main(String[] args) {
 
-		/*for (String arg : args) {
-			System.out.println(arg);
-		}*/
 
 
 		if (args.length == 1) {

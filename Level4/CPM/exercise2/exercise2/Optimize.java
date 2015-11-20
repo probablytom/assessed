@@ -34,8 +34,7 @@ public class Optimize {
 			timeslots = sc.nextInt();
 
 			// Make the variables we'll be using...
-			meetingLimitUpperBound = VF.integer("Upper bound for meeting times", 0, timeslots-1, solver);
-			meetingTimes = VF.enumeratedArray("timeslots", mMeetings, 0, solver); // Should this be -1?
+			meetingTimes = VF.enumeratedArray("timeslots", mMeetings, 0, timeslots, solver); // Should this be -1?
 			attendanceMatrix = new int[nAgents][mMeetings];
 			distanceMatrix = new int[mMeetings][mMeetings];
 			constrainedMeetings = new int[mMeetings][mMeetings];
@@ -86,10 +85,16 @@ public class Optimize {
 				}
 			}
 		}
+		
+		postOptimizationConstraints();
+		
 	}
 
+
+	// Find an optimal solution and ell us whether a solution was found. 
 	public boolean findSolution() {
-		return solver.findOptimalSolution(ResolutionPolicy.MINIMIZE, meetingTimes);
+		solver.findOptimalSolution(ResolutionPolicy.MINIMIZE, meetingLimitUpperBound);
+		return solver.nextSolution();
 	}
 
 	public void printSolution() {
@@ -98,18 +103,24 @@ public class Optimize {
 		}
 
 	}
+	
+	// Post a constraint so that the times chosen must be lower than some bound. 
+	public void postOptimizationConstraints() {
+		meetingLimitUpperBound = VF.integer("Upper bound for meeting times", 1, timeslots, solver); // domain shifted by 1 because we're using '<' to constrain
+		for (int meetingIndex = 0; meetingIndex < mMeetings; meetingIndex++) {
+			solver.post(ICF.arithm(meetingTimes[meetingIndex], "<", meetingLimitUpperBound));
+		}
+	}
 
 	public static void main(String[] args) {
-
-		/*for (String arg : args) {
-			System.out.println(arg);
-		}*/
 
 
 		if (args.length == 1) {
 			try {
 				Solve solution = new Solve(args[0]);
+				
 				boolean resultFound = solution.findSolution();
+				
 				if (resultFound) {
 
 					solution.printSolution();
@@ -121,20 +132,19 @@ public class Optimize {
 				e.printStackTrace();
 			}
 		} else if (args.length == 2) {
-			// The same, but with a timer
-			// TODO: Implement timer
-
-
+			
 			try {
 				Solve solution = new Solve(args[0]);
-				SearchMonitorFactory.limitSolution(solution.solver, args[1]); // Put a time limit on the solution
+				
+				SearchMonitorFactory.limitTime(solution.solver, Integer.parseInt(args[1])); // Put a time limit on the solution
+				
 				boolean resultFound = solution.findSolution();
 				if (resultFound) {
 
 					solution.printSolution();
 
-				} else {
-					System.out.println(resultFound);
+				} else { // If we get no result just print 'false'. 
+					System.out.println(false);
 				}
 				// process output of solver
 			} catch (Exception e) {
