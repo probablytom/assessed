@@ -1,0 +1,3 @@
+Solution:	true
+Nodes:	84
+Time:	0.038310718

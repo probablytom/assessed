@@ -110,9 +110,9 @@ public class SolveFF_stats {
 			System.out.println(Integer.toString(i) + " " + meetingTimes[i].getValue());
 		}*/
 
-		System.out.println();
-		System.out.println("Nodes: \t" + solver.getMeasures().getNodeCount());
-		System.out.println("Time: \t" + solver.getMeasures().getTimeCount());
+		System.out.println("Solution:\t" + solver.findSolution());
+		System.out.println("Nodes:\t" + solver.getMeasures().getNodeCount());
+		System.out.println("Time:\t" + solver.getMeasures().getTimeCount());
 
 	}
 
@@ -123,14 +123,14 @@ public class SolveFF_stats {
 		if (args.length == 1) {
 			try {
 				SolveFF_stats solution = new SolveFF_stats(args[0]);
-				boolean resultFound = solution.findSolution();
-				if (resultFound) {
+				//boolean resultFound = solution.findSolution();
+				//if (resultFound) {
 
 					solution.printSolution();
 
-				} else {
+				/*} else {
 					System.out.println(false);
-				}
+				}*/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

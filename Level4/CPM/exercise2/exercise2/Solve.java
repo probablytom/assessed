@@ -4,9 +4,10 @@ import java.util.Scanner;
 
 import org.chocosolver.solver.*;
 import org.chocosolver.solver.variables.*;
-import org.chocosolver.solver.search.loop.monitors.SearchMonitorFactory;
 import org.chocosolver.solver.search.strategy.*;
+import org.chocosolver.solver.search.strategy.selectors.variables.DomOverWDeg;
 import org.chocosolver.solver.constraints.*;
+import org.chocosolver.solver.search.strategy.selectors.*;
 
 
 
@@ -70,19 +71,26 @@ public class Solve {
 
 						// Create the constraint if we're attending both meetings and there hasn't been a constraint made between these two meetings already.
 						if (attendanceMatrix[agentIndex][meeting1] == 1 && 
-							attendanceMatrix[agentIndex][meeting2] == 1 &&
-							constrainedMeetings[meeting1][meeting2] != 1) {
-							
+								attendanceMatrix[agentIndex][meeting2] == 1 &&
+								constrainedMeetings[meeting1][meeting2] != 1) {
+
 							constrainedMeetings[meeting1][meeting2] = 1;  // Make sure we don't post this contraint twice
 							Constraint travelTime = ICF.distance(meetingTimes[meeting1], meetingTimes[meeting2], ">", distanceMatrix[meeting1][meeting2]);
 							solver.post(travelTime);
-						
+
 						}
-						
+
 					}
 				}
 			}
 		}
+		//postHeuristic();
+	}
+
+
+	public void postHeuristic() {
+		IntValueSelector valueSelector = IntStrategyFactory.min_value_selector();
+		solver.set(new DomOverWDeg(meetingTimes, 0, valueSelector));
 	}
 
 	public boolean findSolution() {
@@ -94,6 +102,11 @@ public class Solve {
 			System.out.println(Integer.toString(i) + " " + meetingTimes[i].getValue());
 		}
 
+		System.out.println();
+
+		System.out.println("Nodes:\t\t" + solver.getMeasures().getNodeCount());
+		System.out.println("Time:\t\t" + solver.getMeasures().getTimeCount());
+
 	}
 
 	public static void main(String[] args) {
@@ -103,18 +116,15 @@ public class Solve {
 		if (args.length == 1) {
 			try {
 				Solve solution = new Solve(args[0]);
+				
 				boolean resultFound = solution.findSolution();
-				if (resultFound) {
+				solution.printSolution();
+				System.out.println("Solution:\t" + resultFound);
 
-					solution.printSolution();
-
-				} else {
-					System.out.println(false);
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		
+
 
 
 		}

@@ -1,3 +1,4 @@
-
-Nodes: 	133
-Time: 	0.025147537
+problem01.txt
+Solution:	true
+Nodes:	21
+Time:	0.020148864

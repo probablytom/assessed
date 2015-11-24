@@ -9,7 +9,7 @@ import org.chocosolver.solver.constraints.*;
 
 
 
-public class Solve {
+public class Solve_stats {
 	
 	Solver solver;
 	IntVar[] meetingTimes;
@@ -19,7 +19,7 @@ public class Solve {
 	int[][] distanceMatrix;
 	int[][] attendanceMatrix;
 	
-	public Solve(String filename) throws IOException {
+	public Solve_stats(String filename) throws IOException {
 
 		solver = new Solver("solver");
 		
@@ -68,7 +68,6 @@ public class Solve {
 						// Create the constraint if we're attending both meetings
 						if (attendanceMatrix[agentIndex][meeting1] == 1 && 
 							attendanceMatrix[agentIndex][meeting2] == 1) {
-							System.out.println("Constraint posted!");
 							solver.post(ICF.distance(meetingTimes[meeting1], meetingTimes[meeting2], ">", distanceMatrix[meeting1][meeting2]));
 						
 						}
@@ -86,9 +85,13 @@ public class Solve {
 	}
 	
 	public void printSolution() {
-		for (int i = 0; i < mMeetings; i++) {
+		/*for (int i = 0; i < mMeetings; i++) {
 			System.out.println(Integer.toString(i) + ": " + meetingTimes[i].getValue());
-		}
+		}*/
+		
+		System.out.println("Solution:\t" + solver.findSolution());
+		System.out.println("Nodes:\t" + solver.getMeasures().getNodeCount());
+		System.out.println("Time:\t" + solver.getMeasures().getTimeCount());
 	}
 
 	public static void main(String[] args) {
@@ -100,13 +103,13 @@ public class Solve {
 		
 		if (args.length == 1) {
 			try {
-				Solve solution = new Solve(args[0]);
-				boolean resultFound = solution.findSolution();
-				if (resultFound) {
+				Solve_stats solution = new Solve_stats(args[0]);
+				//boolean resultFound = solution.findSolution();
+				//if (resultFound) {
 					
 					solution.printSolution();
 					
-				}
+				//}
 				// process output of solver
 			} catch (Exception e) {
 				e.printStackTrace();

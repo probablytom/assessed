@@ -74,19 +74,20 @@ public class SolveDOWD_stats {
 
 						// Create the constraint if we're attending both meetings and there hasn't been a constraint made between these two meetings already.
 						if (attendanceMatrix[agentIndex][meeting1] == 1 && 
-							attendanceMatrix[agentIndex][meeting2] == 1 &&
-							constrainedMeetings[meeting1][meeting2] != 1) {
-							
+								attendanceMatrix[agentIndex][meeting2] == 1 &&
+								constrainedMeetings[meeting1][meeting2] != 1) {
+
 							constrainedMeetings[meeting1][meeting2] = 1;  // Make sure we don't post this contraint twice
 							Constraint travelTime = ICF.distance(meetingTimes[meeting1], meetingTimes[meeting2], ">", distanceMatrix[meeting1][meeting2]);
 							solver.post(travelTime);
-						
+
 						}
-						
+
 					}
 				}
 			}
 		}
+		//postHeuristic();
 	}
 
 
@@ -100,13 +101,14 @@ public class SolveDOWD_stats {
 	}
 
 	public void printSolution() {
-		/*for (int i = 0; i < mMeetings; i++) {
+		for (int i = 0; i < mMeetings; i++) {
 			System.out.println(Integer.toString(i) + " " + meetingTimes[i].getValue());
-		}*/
-		
+		}
+
 		System.out.println();
-		System.out.println("Nodes: \t" + solver.getMeasures().getNodeCount());
-		System.out.println("Time: \t" + solver.getMeasures().getTimeCount());
+
+		System.out.println("Nodes:\t\t" + solver.getMeasures().getNodeCount());
+		System.out.println("Time:\t\t" + solver.getMeasures().getTimeCount());
 
 	}
 
@@ -118,17 +120,14 @@ public class SolveDOWD_stats {
 			try {
 				SolveDOWD_stats solution = new SolveDOWD_stats(args[0]);
 				boolean resultFound = solution.findSolution();
-				if (resultFound) {
 
-					solution.printSolution();
+				solution.printSolution();
+				System.out.println("Solution:\t" + resultFound);
 
-				} else {
-					System.out.println(false);
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		
+
 
 
 		}

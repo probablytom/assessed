@@ -1,12 +1,4 @@
-java SolveDWOD_stats problem01.txt > ../sols/d1.txt
-java SolveDWOD_stats problem02.txt > ../sols/d2.txt
-java SolveDWOD_stats problem03.txt > ../sols/d3.txt
-java SolveDWOD_stats problem04.txt > ../sols/d4.txt
-java SolveDWOD_stats problem05.txt > ../sols/d5.txt
-java SolveDWOD_stats problem06.txt > ../sols/d6.txt
-java SolveDWOD_stats problem07.txt > ../sols/d7.txt
-java SolveDWOD_stats problem08.txt > ../sols/d8.txt
-java SolveDWOD_stats problem09.txt > ../sols/d9.txt
+java SolveDOWD_stats problem01.txt > ../sols/d1.txt
 java SolveDOWD_stats problem10.txt > ../sols/d10.txt
 java SolveFF_stats problem01.txt > ../sols/ff1.txt
 java SolveFF_stats problem02.txt > ../sols/ff2.txt
@@ -28,3 +20,11 @@ java Solve_stats problem07.txt > ../sols/7.txt
 java Solve_stats problem08.txt > ../sols/8.txt
 java Solve_stats problem09.txt > ../sols/9.txt
 java Solve_stats problem10.txt > ../sols/10.txt
+java SolveDOWD_stats problem02.txt > ../sols/d2.txt
+java SolveDOWD_stats problem03.txt > ../sols/d3.txt
+java SolveDOWD_stats problem04.txt > ../sols/d4.txt
+java SolveDOWD_stats problem05.txt > ../sols/d5.txt
+java SolveDWOD_stats problem06.txt > ../sols/d6.txt
+java SolveDOWD_stats problem07.txt > ../sols/d7.txt
+java SolveDOWD_stats problem08.txt > ../sols/d8.txt
+java SolveDWOD_stats problem09.txt > ../sols/d9.txt
