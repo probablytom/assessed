@@ -15,7 +15,10 @@ public class ResidualGraph extends Network {
 	public ResidualGraph (Network net) {
 		super(net.numVertices);
 		// TODO: Can we assume this is a flow? If not, check this.isFlow()
-		
+		this.adjLists = net.adjLists;
+		this.adjMatrix = net.adjMatrix;
+		this.sink = net.sink;
+		this.vertices = net.vertices;
 	}
 
 	/**
@@ -43,7 +46,7 @@ public class ResidualGraph extends Network {
 		// If there's already an entry for the vertice in verticeInOut, we don't add the edges to the source, as we must have visited this source earlier
 		//    ...(inflows must always be processed before outputs, so an entry means we've already added the edges for that vertice)
 		while (!edges.isEmpty()) {
-			ArrayList<Edge> originalEdges = edges;
+			ArrayList<Edge> originalEdges = (ArrayList<Edge>) edges.clone();
 			for (Edge edge : originalEdges) {
 
 				// If we haven't visited this edge's target edge before, we need to add that target's adjacent edges to the set of edges to process
@@ -68,12 +71,14 @@ public class ResidualGraph extends Network {
 				}
 				
 				// Now that we've processed this edge, remove it from the list of edges to process
-				edges.remove(edge);
+				//edges.remove(edge);
 
 			}
+			edges.removeAll(originalEdges);
 		}
 
 		// Find the augmenting path in the residual graph if it exists!
+		
 		// Populate our initial set of paths to check with a list of paths consisting only of edges from the source in resGraph
 		ArrayList<LinkedList<Edge>> possiblePaths = new ArrayList<LinkedList<Edge>>();
 		for (int i = 0; i < numVertices; i++) {
@@ -84,20 +89,23 @@ public class ResidualGraph extends Network {
 			}
 		}
 		
-		// Build paths using breadth-first search and try to hit the source. 
+		// Build paths using breadth-first search and try to hit the sink. Currently possiblePaths contains LLs with only one edge from the source.
 		while (!possiblePaths.isEmpty()) {
+
+			// TODO: remember that we need to push onto the linked list i.e. newer edges go onto the front of the list
+			ArrayList<LinkedList<Edge>> newPaths = new ArrayList<LinkedList<Edge>>();
+			ArrayList<LinkedList<Edge>> originalPaths = (ArrayList<LinkedList<Edge>>) possiblePaths.clone();
+			
 			for (LinkedList<Edge> path : possiblePaths) {
-				// TODO: remember that we need to push onto the linked list i.e. newer edges go onto the front of the list
-				ArrayList<LinkedList<Edge>> newPaths = new ArrayList<LinkedList<Edge>>();
 				int targetLabel = path.peek().getTargetVertex().getLabel();
 				for (int i = 0; i < numVertices; i++) {
 					Edge residualEdge = resGraph[targetLabel][i];
 					if (residualEdge != null && !path.contains(residualEdge)) { // If the edge exists in the residual graph and we haven't already visited it in this path:
-						LinkedList<Edge> newPath = path;
+						LinkedList<Edge> newPath = (LinkedList<Edge>) path.clone();
 						newPath.push(residualEdge); // We push so it goes on the front of the list and we see this edge when we peek i.e. the list is in reverse order.
 						newPaths.add(newPath);
 						
-						if (residualEdge.getTargetVertex().getLabel() == sink.getLabel()) {
+						if (residualEdge.getTargetVertex().getLabel() == this.sinkLabel) {
 							// We need to reverse the path so it's in the right order for returning, because we push earlier.
 							LinkedList<Edge> augmentingPath = new LinkedList<Edge>();
 							while (!newPath.isEmpty()) {
@@ -109,9 +117,9 @@ public class ResidualGraph extends Network {
 					}
 				}
 				
-				possiblePaths.addAll(newPaths);
-				possiblePaths.remove(path);
 			}
+			possiblePaths.addAll(newPaths);
+			possiblePaths.removeAll(originalPaths);
 		}
 		
 		// We didn't find the path in the residual graph, as it hasn't been returned yet, so we return an empty linked list as per spec

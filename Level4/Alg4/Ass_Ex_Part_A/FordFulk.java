@@ -78,10 +78,12 @@ public class FordFulk {
 	 */
 	public void fordFulkerson() {
 
+
 		while(true) {
 			ResidualGraph resGraph = new ResidualGraph(net);
 			LinkedList<Edge> augmentingPath = resGraph.findAugmentingPath();
 			if(augmentingPath.isEmpty()) {
+				System.out.println("Found the max flow");
 				break;  // found the max flow
 			} else {
 				// Find the minimum capacity
@@ -89,20 +91,31 @@ public class FordFulk {
 				for (Edge e : augmentingPath) {
 					if (e.getCap() < minCap) minCap = e.getCap();
 				}
-				
+				StringBuilder testout = new StringBuilder();
+				testout.append(Integer.toString(augmentingPath.peek().getSourceVertex().getLabel()));
 				// Edit the path according to what we've found in the augmenting path
 				for (Edge e : augmentingPath) {
 					// if e is a forward edge:
 					Vertex source = e.getSourceVertex();
 					Vertex target = e.getTargetVertex();
 					Edge originalEdge = net.getAdjMatrixEntry(source, target);
-					if (originalEdge != null && originalEdge.getFlow() + minCap < e.getCap()) {
+					//System.out.println(originalEdge != null);
+					//testout.append(" -> " + Integer.toString(originalEdge.getTargetVertex().getLabel()));
+					if (net.getAdjList(source).contains(target) && originalEdge.getFlow() + minCap <= originalEdge.getCap()) {
 						originalEdge.setFlow(originalEdge.getFlow() + minCap);
 					} else {
-						originalEdge.setFlow(originalEdge.getFlow() - minCap);
+						System.out.println(net.getAdjList(target).contains(source));
+						net.addEdge(source, target, e.getCap());
+						originalEdge = net.getAdjMatrixEntry(target, source);
+						System.out.println(e.getCap());
+						originalEdge.setFlow(net.getAdjMatrixEntry(target, source).getFlow() - minCap);
+						
 					}
 				}
+				System.out.println(testout.toString());
 			}
+			
+			net.printFlow();
 		}
 	}
 

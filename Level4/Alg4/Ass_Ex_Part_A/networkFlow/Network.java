@@ -88,7 +88,7 @@ public class Network extends DirectedGraph {
 		// If there's already an entry for the vertice in verticeInOut, we don't add the edges to the source, as we must have visited this source earlier
 		//    ...(inflows must always be processed before outputs, so an entry means we've already added the edges for that vertice)
 		while (!edges.isEmpty()) {
-			ArrayList<Edge> originalEdges = edges;
+			ArrayList<Edge> originalEdges = (ArrayList<Edge>) edges.clone();
 			for (Edge edge : originalEdges) {
 
 				// Make sure we obey the capacity constraint
@@ -162,7 +162,7 @@ public class Network extends DirectedGraph {
 		for (int vertexNumber = 0; vertexNumber < adjLists.size(); vertexNumber++) {
 			for (Vertex adjVertex : adjLists.get(vertexNumber)) {
 				Edge currentEdge = adjMatrix[vertexNumber][adjVertex.getLabel()];
-				if (!edgesSeen.contains(currentEdge)) {
+				if (!edgesSeen.contains(currentEdge) && currentEdge != null) {
 					edgesSeen.add(currentEdge);
 					output.append("(" + Integer.toString(vertexNumber) + "," + Integer.toString(adjVertex.getLabel()) + ") " + Integer.toString(currentEdge.getCap()) + "/" + Integer.toString(currentEdge.getFlow()) + "\n");
 				}

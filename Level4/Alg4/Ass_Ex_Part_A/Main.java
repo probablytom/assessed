@@ -14,7 +14,7 @@ public class Main {
 
 		// apply Ford-Fulkerson algorithm to constructed network
 		fordFulk.fordFulkerson();
-
+		
 		// check whether the assignment is a valid flow
 		fordFulk.printResults();
 	}
