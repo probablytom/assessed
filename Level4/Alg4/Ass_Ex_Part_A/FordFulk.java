@@ -80,6 +80,7 @@ public class FordFulk {
 
 
 		while(true) {
+			if (net.getAdjMatrixEntry(net.getVertexByIndex(2), net.getVertexByIndex(1)) != null) System.out.println(net.getAdjMatrixEntry(net.getVertexByIndex(2), net.getVertexByIndex(1)));
 			ResidualGraph resGraph = new ResidualGraph(net);
 			LinkedList<Edge> augmentingPath = resGraph.findAugmentingPath();
 			if(augmentingPath.isEmpty()) {
@@ -98,18 +99,23 @@ public class FordFulk {
 					// if e is a forward edge:
 					Vertex source = e.getSourceVertex();
 					Vertex target = e.getTargetVertex();
+					boolean atProblem = false;
+					if (source.getLabel() == 2 && target.getLabel() == 1) {
+						atProblem = true;
+					}
 					Edge originalEdge = net.getAdjMatrixEntry(source, target);
 					//System.out.println(originalEdge != null);
 					//testout.append(" -> " + Integer.toString(originalEdge.getTargetVertex().getLabel()));
 					if (net.getAdjList(source).contains(target) && originalEdge.getFlow() + minCap <= originalEdge.getCap()) {
 						originalEdge.setFlow(originalEdge.getFlow() + minCap);
+						atProblem = false;
 					} else {
-						System.out.println(net.getAdjList(target).contains(source));
-						net.addEdge(source, target, e.getCap());
+						System.out.println(net.getAdjList(source).contains(target));
+						//net.addEdge(target, source, e.getCap());
 						originalEdge = net.getAdjMatrixEntry(target, source);
-						System.out.println(e.getCap());
 						originalEdge.setFlow(net.getAdjMatrixEntry(target, source).getFlow() - minCap);
-						
+						if (atProblem) System.out.println("Problem in backward edge");
+						atProblem = false;
 					}
 				}
 				System.out.println(testout.toString());

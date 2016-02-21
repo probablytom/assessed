@@ -56,6 +56,7 @@ public class ResidualGraph extends Network {
 					verticesSeen.add(target);  // Make sure we can record flow to/from the target, which we'll do in a mo...
 					// Add all of the edges from this vertice to edges.
 					for (Vertex vertexToAdd : adjLists.get(target)) {
+						System.out.println(Integer.toString(target) + " " + Integer.toString(vertexToAdd.getLabel()));
 						edges.add(adjMatrix[target][vertexToAdd.getLabel()]);
 					}
 				}
