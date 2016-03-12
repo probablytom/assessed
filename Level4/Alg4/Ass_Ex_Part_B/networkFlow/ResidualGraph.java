@@ -14,7 +14,6 @@ public class ResidualGraph extends Network {
 	 */
 	public ResidualGraph (Network net) {
 		super(net.numVertices);
-		// TODO: Can we assume this is a flow? If not, check this.isFlow()
 		this.adjLists = net.adjLists;
 		this.adjMatrix = net.adjMatrix;
 		this.sink = net.sink;
@@ -66,15 +65,16 @@ public class ResidualGraph extends Network {
 				if (edge.getFlow() < edge.getCap()) {
 					resGraph[origin][target] = new Edge(edge.getSourceVertex(), edge.getTargetVertex(), edge.getCap()-edge.getFlow());
 				} 
-				if (edge.getFlow() > 0) {
+				// We remove backwards edges
+				/*if (edge.getFlow() > 0) {
 					resGraph[target][origin] = new Edge(edge.getTargetVertex(), edge.getSourceVertex(), edge.getFlow());
-				}
+				}*/
 
 			}
 			edges.removeAll(originalEdges);
 		}
 
-		// Find the augmenting path in the residual graph we just made if it exists!
+		// Find the augmenting path in the residual graph if it exists!
 		
 		// Populate our initial set of paths to check with a list of paths consisting only of edges from the source in resGraph
 		ArrayList<LinkedList<Edge>> possiblePaths = new ArrayList<LinkedList<Edge>>();
@@ -93,7 +93,6 @@ public class ResidualGraph extends Network {
 			ArrayList<LinkedList<Edge>> newPaths = new ArrayList<LinkedList<Edge>>();
 			ArrayList<LinkedList<Edge>> originalPaths = (ArrayList<LinkedList<Edge>>) possiblePaths.clone();
 			
-			// Look through all the paths, build a set of new paths with their next edges, and see whether we've found the sink yet
 			for (LinkedList<Edge> path : possiblePaths) {
 				int targetLabel = path.peek().getTargetVertex().getLabel();
 				for (int i = 0; i < numVertices; i++) {
@@ -103,7 +102,6 @@ public class ResidualGraph extends Network {
 						newPath.push(residualEdge); // We push so it goes on the front of the list and we see this edge when we peek i.e. the list is in reverse order.
 						newPaths.add(newPath);
 						
-						// Have we found the shortest augmenting path?
 						if (residualEdge.getTargetVertex().getLabel() == this.sinkLabel) {
 							// We need to reverse the path so it's in the right order for returning, because we push earlier.
 							LinkedList<Edge> augmentingPath = new LinkedList<Edge>();
@@ -117,8 +115,6 @@ public class ResidualGraph extends Network {
 				}
 				
 			}
-			
-			// Add the new paths to the arraylist and get rid of the paths we've now processed
 			possiblePaths.addAll(newPaths);
 			possiblePaths.removeAll(originalPaths);
 		}
