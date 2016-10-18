@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="exercise2/problems"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/users/level4/2025138w/Downloads/choco-solver-3.3.1-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="/Users/tom/Documents/workspace/assessed/Level4/CPM/choco-solver-3.3.1-with-dependencies.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

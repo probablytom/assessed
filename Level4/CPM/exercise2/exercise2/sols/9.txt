@@ -1,0 +1,4 @@
+problem09.txt
+Solution:	true
+Nodes:	21
+Time:	0.023380475
