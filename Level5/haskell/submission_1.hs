@@ -9,12 +9,11 @@ instance Functor Tree where
           newright = fmap f right
 
 treezip :: (Tree a) -> (Tree b) -> (Tree (a,b))
-treezip Leaf _ = Leaf
-treezip _ Leaf = Leaf
-treezip (Node e1 l1 r1) (Node e2 l2 r2) = Node newe newl newr
-  where newe = (e1, e2)
-        newl = treezip l1 l2
-        newr = treezip r1 r2
+treezip (Node e1 l1 r1) (Node e2 l2 r2) = Node new_e new_l new_r
+  where new_e = (e1, e2)
+        new_l = treezip l1 l2
+        new_r = treezip r1 r2
+treezip _ _ = Leaf  -- Didn't match the above pattern so *must* be Leaf
 
 -- Exploit Tree being a Functor to fmap a lambda through it
 treeunzip :: (Tree (a,b)) -> (Tree a, Tree b)
