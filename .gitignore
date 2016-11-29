@@ -88,3 +88,5 @@ hs_err_pid*
 */PL3/*.java
 
 DB3/Assessed2/
+
+*cabal*
