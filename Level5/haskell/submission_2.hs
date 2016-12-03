@@ -60,6 +60,7 @@ createDirectory directory = do
       render_entry :: (Monad m, Texy t) => [t] -> LaTeXT_ m -> LaTeXT_ m
       render_entry [name, number] l = do
         texy name & texy number
+        lnbk
         hline
         l
        
@@ -70,7 +71,7 @@ main = do
   let rootSource = fromUrl rootUrl
   staffSegments <- runX $ rootSource >>> css "ul#research-teachinglist li a" ! "href"
   let staffUrls = fmap (\x -> rootUrl ++ (staffSection x)) staffSegments
-  let phonebook_entries = foldr (\url book -> book ++ [parseStaffEntry url]) [] (take 3 staffUrls)
+  let phonebook_entries = foldr (\url book -> book ++ [parseStaffEntry url]) [] staffUrls
   unfiltered_phonebook <- sequence phonebook_entries
   let remove_empty_entries = (map fromJust) . (filter isJust)
   let phonebook = remove_empty_entries unfiltered_phonebook
