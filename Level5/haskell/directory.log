@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2016.11.16)  6 DEC 2016 11:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2016.11.16)  6 DEC 2016 11:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -63,15 +63,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 1.
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-
-Package longtable Warning: Column widths have changed
-(longtable)                in table 1 on input line 1.
-
-
-Package longtable Warning: Table widths have changed. Rerun LaTeX.
-
-[2] (./directory.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] (./directory.aux) ) 
 Here is how much of TeX's memory you used:
  320 strings out of 493105
  3530 string characters out of 6137071
@@ -79,12 +71,13 @@ Here is how much of TeX's memory you used:
  3856 multiletter control sequences out of 15000+600000
  7280 words of font info for 26 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 23i,6n,17p,2594b,260s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on directory.pdf (2 pages, 55505 bytes).
+ 23i,6n,17p,2594b,259s stack positions out of 5000i,500n,10000p,200000b,80000s
+</u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
+Output written on directory.pdf (2 pages, 55495 bytes).
 PDF statistics:
  27 PDF objects out of 1000 (max. 8388607)
  18 compressed objects within 1 object stream

@@ -16,7 +16,7 @@ longtabular ts  = liftL $ TeXEnv "longtable" [ FixArg $ TeXRaw $ renderAppend ts
 
 data PhonebookEntry = Entry (String, String) deriving Show
 
-rootUrl = "http://www.gla.ac.uk/schools/computing/staff/"
+rootUrl = "http://www.gla.ac.uk"
 
 
 -- Convenience function to get the last part of a string separated by '/'
@@ -70,14 +70,13 @@ createDirectory directory = do
         lnbk
         hline
         l
-       
 
 -- To be run
 main :: IO ()
 main = do
-  let rootSource = fromUrl rootUrl
-  staffUrls <- runX $ rootSource >>> css "ul#research-teachinglist li a" ! "href"
---  let staffUrls = fmap (\x -> rootUrl ++ (staffSection x)) staffSegments
+  let rootSource = fromUrl $ rootUrl ++ "/schools/computing/staff/"
+  staffPartialUrls <- runX $ rootSource >>> css "ul#research-teachinglist li a" ! "href"
+  let staffUrls = fmap (\x -> rootUrl ++ x ++ "/") staffPartialUrls
   let phonebook_entries = foldr (\url book -> book ++ [parseStaffEntry url]) [] staffUrls
   unfiltered_phonebook <- sequence phonebook_entries
   let remove_empty_entries = (map fromJust) . (filter isJust)
