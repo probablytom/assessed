@@ -2,16 +2,22 @@
 
 import Text.XML.HXT.Core
 import Text.HandsomeSoup
-import Data.List.Split
+import Data.List.Split (splitOn)
 import Data.Maybe
---import Control.Monad.IO.Class
 import Data.Char (isDigit)
 import Text.LaTeX
 import Data.Text (pack)
+-- Longtable definition from Jeremy Singer. Thanks, Jeremy!
+import Text.LaTeX.Base.Class
+import Text.LaTeX.Base.Commands
+import Text.LaTeX.Base.Syntax
+longtabular :: LaTeXC l => [TableSpec] -> l -> l
+longtabular ts  = liftL $ TeXEnv "longtable" [ FixArg $ TeXRaw $ renderAppend ts ]
 
 data PhonebookEntry = Entry (String, String) deriving Show
 
 rootUrl = "http://www.gla.ac.uk/schools/computing/staff/"
+
 
 -- Convenience function to get the last part of a string separated by '/'
 staffSection :: String -> String
@@ -45,6 +51,7 @@ phoneDirectory directory = do
 preamble :: Monad m => LaTeXT_ m
 preamble = do
   documentclass [] article
+  usepackage [] "longtable"
   author "Tom Wallis"
   title "Functional Programming A.E. 2"
 
@@ -53,7 +60,7 @@ createDirectory :: Monad m => [PhonebookEntry] -> LaTeXT_ m
 createDirectory directory = do
   maketitle
   section "Directory"
-  center $ tabular Nothing [CenterColumn, LeftColumn] $ do
+  center $ longtabular [CenterColumn, LeftColumn] $ do
     let entries = fmap (fmap pack) [[name, number] | (Entry (name, number)) <- directory]
     foldr render_entry (return ()) entries
      where
@@ -69,8 +76,8 @@ createDirectory directory = do
 main :: IO ()
 main = do
   let rootSource = fromUrl rootUrl
-  staffSegments <- runX $ rootSource >>> css "ul#research-teachinglist li a" ! "href"
-  let staffUrls = fmap (\x -> rootUrl ++ (staffSection x)) staffSegments
+  staffUrls <- runX $ rootSource >>> css "ul#research-teachinglist li a" ! "href"
+--  let staffUrls = fmap (\x -> rootUrl ++ (staffSection x)) staffSegments
   let phonebook_entries = foldr (\url book -> book ++ [parseStaffEntry url]) [] staffUrls
   unfiltered_phonebook <- sequence phonebook_entries
   let remove_empty_entries = (map fromJust) . (filter isJust)
