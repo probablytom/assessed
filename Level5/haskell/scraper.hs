@@ -40,7 +40,7 @@ contructEntry name phoneNumber = if validName name && validNumber phoneNumber
 
 -- TODO: Don't just select the second element, select the element after "telephone"
 findNumber :: [String] -> String
-findNumber x = [n | n <- (x !! 2), isDigit n]
+findNumber x = [n | n <- (x !! 2), or [isDigit n, n == '+']]
 
 phoneDirectory :: Monad m => [PhonebookEntry] -> LaTeXT_ m
 phoneDirectory directory = do
