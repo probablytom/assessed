@@ -1,3 +1,4 @@
 directory:
-  ghc scraper.hs
-  pdflatex directory.tex
+	ghc scraper.hs
+	./scraper
+	pdflatex directory.tex
