@@ -77,13 +77,13 @@ createDirectory :: Monad m => [PhonebookEntry] -> LaTeXT_ m
 createDirectory directory = do
   maketitle
   section "Directory"
-  center $ longtabular [CenterColumn, LeftColumn] $ do
+  center $ longtabular [RightColumn, CenterColumn, LeftColumn] $ do -- CenterColumn filled with hskip for spacing
     let entries = fmap (fmap pack) [[name, number] | (Entry (name, number)) <- directory]
     foldr render_entry (return ()) entries
      where
       render_entry :: (Monad m, Texy t) => [t] -> LaTeXT_ m -> LaTeXT_ m
       render_entry [name, number] l = do
-        texy name & texy number
+        texy name & (texy . pack) " " & texy number
         lnbk
         hline
         l
