@@ -10,9 +10,18 @@
 \usepackage{color}
 \usepackage{hyperref}
 \usepackage[colorinlistoftodos,textsize=tiny,obeyDraft]{todonotes}
+\usepackage{cleveref}
  
 \author{William Wallis --- 2025138W}
 \title{Reviewing the Systematic Review}
 
 \setlength{\oddsidemargin}{0.9847in-1in}
 \setlength{\textwidth}{\paperwidth{}-0.9847in-0.9847in}
+
+\crefname{chapter}{\S}{\S\S}
+\crefname{section}{\S}{\S\S}
+\setcounter{secnumdepth}{3}
+\crefname{table}{table}{tables}
+\Crefname{table}{Table}{Tables}
+\crefname{figure}{figure}{figures}
+\Crefname{figure}{Figure}{Figures}
