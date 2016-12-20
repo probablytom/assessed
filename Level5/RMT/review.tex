@@ -41,7 +41,7 @@ The reviews chosen were picked as a result of their popularity on the ``\emph{Go
 % - There may well be useful insight in the motivation case, for example, but simple counts of papers were presented instead. 
 % - Results seem cursory this way --- never much food for thought, and a literature review is the best opportunity for thought food: someone's just read loads of papers and can tell us things we don't know about the field at large!
 
-The systematic reviews selected have all been reviews of literature pertaining to a niche in software engineering. Interestingly, a common theme emerged, which was that there was frequently scarce quantitative data for the reviewers to analyse statistically.\par
+The systematic reviews selected have all been reviews of literature pertaining to a niche in software engineering. Interestingly, a common theme emerged, which was that there was frequently limited quantitative data for the reviewers to analyse statistically.\par
 
 This seemed to occur for two reasons:
 \begin{enumerate}
@@ -57,6 +57,21 @@ For review culture where textual analysis is intended to go hand-in-hand with re
 
 An alternative method for solving these issues would be to adopt the statistical analysis methods from~\cite{Kitchenham2013} or~\cite{Chen2007}. This would allow at least modest statistical analysis of taxonomical data, should researchers be particularly inclined toward the systematic philosophy of literature reviewing.\par
 
+Also worth noting is the high number of papers often needed to search to collect a sufficient sample to analyse from the search criteria Kitchenham advocates. Specifically:
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllllll@{}}
+\toprule
+                & \cite{Kampenes2007} & \cite{Smite2010} & \cite{Chen2007} & \cite{Benavides} & \cite{Kitchenham2013} & \cite{Beecham2007} \\ \midrule
+Papers Found    &    5453      &  387                    &   628   &    72       &    410        &  519       \\
+Papers Reviewed &     78     &    59                     &   34   &     53      &     45       &     92    \\
+\% Utilised     &     1.43     &   15.24                  &  5.5    &   73.61        &  10.98          &   17.73      \\ \bottomrule
+\end{tabular}%
+}
+\caption{Papers reviewed to achieve desired samples}
+\end{table}
 \section{Conclusion}
 
 % Did the literature reviews matter?
