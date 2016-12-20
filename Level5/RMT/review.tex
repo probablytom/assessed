@@ -11,7 +11,7 @@ Systematic reviewing is a technique for bringing scientific rigour to a computer
 A Systematic Review is a literature review which collates the results of many papers, using statistical analysis to draw empirical results about the state of a research field and to answer research questions posited as the motivation for the review. Systematic reviews are born from the philosophy that a literature review should have scientific merit, and produce reproducible results, rather than standard techniques for literature reviews, which leave more room for subjective insight. The scientific nature of a systematic literature review, in theory, removes ambiguity and bias from literature review practice and lends the review the same validity and credence as a research study.\par
 
 % Introduce the notion that there's a problem with the technique --- bring up the original guidelines.
-Kitchenham's systematic literature review technique\footnote{Kitchenham's guidelines have undergone some revisions over time --- the two most cited versions in the papers reviewed being \cite{Kitchenham2004} and \cite{Kitchenham2007}. As the latter is an incremental improvement over the former, all of Kitchenham's guideline versions will be referred to through this document simply as Kitchenham's guidelines.} has begun to dominate as a literature review technique for software engineering. Kitchenham's review procedure stems largely from literature review techniques in medical research~\citep{Kitchenham2004, khan2001undertaking}, where empirical studies which verify the validity of literature already published in peer-reviewed journals is paramount to civilian safety. Conventional computing science literature reviews might closer resemble Webster's guidelines~\citep{Webster2002}, which are less rigorous, and less focused on empiricism and repeatability. While the technique has seen widespread adoption, some issues exist with the implementation --- as noted by Kitchenham herself in a systematic review of systematic review procedures~\citep{Kitchenham2013}. More fundamentally, in Kitchenham's original guidelines there exist some notes which cast doubt on the suitability of a systematic review in the field of software engineering. For example:
+Kitchenham's systematic literature review technique\footnote{Kitchenham's guidelines have undergone some revisions over time --- the two most cited versions in the papers reviewed being~\cite{Kitchenham2004} and~\cite{Kitchenham2007}. As the latter is an incremental improvement over the former, all of Kitchenham's guideline versions will be referred to through this document simply as Kitchenham's guidelines.} has begun to dominate as a literature review technique for software engineering. Kitchenham's review procedure stems largely from literature review techniques in medical research~\citep{Kitchenham2004, khan2001undertaking}, where empirical studies which verify the validity of literature already published in peer-reviewed journals is paramount to civilian safety. Conventional computing science literature reviews might closer resemble Webster's guidelines~\citep{Webster2002}, which are less rigorous, and less focused on empiricism and repeatability. While the technique has seen widespread adoption, some issues exist with the implementation --- as noted by Kitchenham herself in a systematic review of systematic review procedures~\citep{Kitchenham2013}. More fundamentally, in Kitchenham's original guidelines there exist some notes which cast doubt on the suitability of a systematic review in the field of software engineering. For example:
 
 \begin{displayquote}
     In particular, software engineering research has relatively little empirical research compared with the large quantities of research available on medical issues, and research methods used by software engineers are not as rigorous as those used by medical researchers.
@@ -35,10 +35,24 @@ The reviews chosen were picked as a result of their popularity on the ``\emph{Go
 
 
 \section{Discussion}\label{sec:discussion}
-
 % Worth pointing out that you can't subject a regular review to the same sort of scrutiny as a systematic review
 % - At least you're guaranteed data and rigour as a reader
 % - Maybe this is something semantic guidelines might be able to provide?
+The systematic reviews selected have all been reviews of literature pertaining to a niche in software engineering. Interestingly, a common theme emerged, which was that there was frequently scarce quantitative data for the reviewers to analyse statistically.\par
+
+This seemed to occur for two reasons:
+\begin{enumerate}
+    \item Some subject areas did not easily produce empirical quantitative data. An example of this would be the~\cite{Benavides} article on Motivation; achieving consistently reliable quantitative data in psychological or ethnographic problem domains is difficult to do.
+    \item The research culture of some subject areas did not seem inclined to promote the production and publication of quantitative data as a part of their work. Examples of this would be~\cite{Chen2007}, or~\cite{Smite2010}. 
+\end{enumerate}
+
+Unsurprisingly,~\cite{Kitchenham2013} succeeds in creating statistical analyses from the taxonomic data the authors collate over the course of the review. Also worth noting is that another paper,~\cite{Kampanes2007}, \emph{did} succeed in creating statistical measurements from the taxonomical data produced. One of the authors, however --- Dyba --- has their own systematic review procedure published~\citep{dybaguidelines}, so this comes at little surprise.\par
+
+For systematic reviews to have a more scientific advantage over more orthodox review techniques, quantitative data evaluation is paramount. It remains the most reliable and clearest metric of a piece of scientific research's reproducibility.\par
+
+For review culture where textual analysis is intended to go hand-in-hand with repeatability, a review method such as~\cite{Webster2002} may be more appropriate. Webster's method offers a helpful guide for getting away from the ``phonebook'' issues some literature reviews encounter. In addition, the repeatable nature of the taxonomical data they produce fits nicely in line with Webster's method.\par
+
+An alternative method for solving these issues would be to adopt the statistical analysis methods from \cite{Kitchenham2013} or \cite{Chen2007}. This would allow at least modest statistical analysis of taxonomical data, should researchers be particularly inclined toward the systematic philosophy of literature reviewing.\par
 
 % Best thing we can say about all of these papers is that regardless of whether they use statistics, they're repeatable. 
 % - Does repeatability matter in this case?
