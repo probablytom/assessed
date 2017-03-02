@@ -143,13 +143,35 @@ C\&F in its non-graded form therefore has middling applicability in the real wor
 It is clear to see that, between even these two early models of only one trait, a significant degree of difference exists in the implementation detail of the two formalisms. Moreover, their philosophies with regards social sciences differ; Marsh taking an approach between sociology and psychology, C\&F leaning more to the sociological aspects. However, both models are created with the intention of directing the behaviour of intelligent agents. Therefore, at least some similarities exist which might be used to construct methodologies and guidelines around.\par
 
 \subsubsection*{Eigentrust}\label{sec:eigentrust}
+In comparison to the social sciences-oriented approaches taken by Marsh and C\&F, Eigentrust\cite{Kamvar2003} takes a very different approach. Eigentrust leverages a reputation-centric approach, basing its algorithms on star ratings often used by eCommerce platforms such as eBay and Amazon for rating their traders. The core of the algorithm rests on a very simple calculation of overall satisfaction:
+\[s_{i, j} = sat(i, j) - unsat(i, j)\]
+\ldots{}where \(sat\) is a function representing the number of interactions agent \(i\) has had with agent \(j\) which they deem ``satisfactory'', and \(unsat\) the function representing the number of interactions deemed ``unsatisfactory''. From this simple formula, Eigentrust calculates agent \(j\)'s reputation from the perspective of agent \(i\), and through a series of more complex transformations using linear algebra, arrives at a distributed ledger of reputation scores which takes into account the input from all agents.\par
+
+Eigentrust is therefore different to Marsh and C\&F's respective formalisms in important ways. Examples include:
+\begin{itemize}
+    \item Networking agents together\\
+        Agents under Eigentrust discuss each others' assessments of reputation with each other; to facilitate this, protocols for communicating reputation scores between these agents must be established. Unlike models created by Marsh and C\&F, Eigentrust permits an agent to trust or distrust another agent by taking into account the interactions the other agent has had with third parties.
+    \item Evaluation\\
+        The intended application of Eigentrust is directing the behaviour of an intelligent agent, but unlike Marsh or C\&F's models, Eigentrust is designed to be directly applied in areas such as network security. While C\&F and Marsh can evaluate their models based on whether the actors behave in more ``trusting'' ways, for some metric of trust, Eigentrust is evaluated via its efficacy in protecting nodes on a network from unsatisfactory interactions (such as downloading viruses or receiving bad packets).
+    \item Trust as a useful metaphor, rather than creating a realistic anthropomorphic model\\
+        One can see from this difference in evaluation that Eigentrust is fundamentally an application of trust as a useful metaphor in security engineering. Eigentrust's goal is not a realistic representation of trust, but a more limited application of trust to fulfil a specific purpose. 
+\end{itemize}
+
+These differences would, at first glance, indicate that differences between formalisms can be wide-reaching enough that one set of methodologies or guidelines for their research would not cover models for even one trait; however, while their implementation and application \emph{do} vary considerably, Eigentrust's direction of agent behaviour indicates that some middle ground can indeed be reached. However, due to the broad spectrum of possible formalisms a set of methodologies and guidelines would need to cover, one must be particularly familiar with a range of formalisms to successfully cover this range. The work to be undertaken, therefore, is far from trivial, and would require a great degree of time to cover properly.\par
+
+\subsection{Reputation}
+Rather than using reputation to bootstrap a model of trust, some formalisms simply model reputation. REGRET\cite{Sabater} from Sabater \& Sierra is one such formalism.\par
+
+The perspective of REGRET is that reputation is the ``opinion or view of one (agent) about something''\cite{Sabater}. This definition of reputation has no specific roots in psychology or sociology; however, REGRET makes use of social sciences research indicating that social structure and recency of events are important factors in an anthropomorphic agent's assessment of reputation. The authors' philosophy is that reputation is fundamentally an opinion; therefore, it is unsurprising that a main focus of this model is the successful modelling of an agent's opinion. Other factors assessed include ``social reputation'', being an agent's inclination to inherit opinions which other agents hold (where some social connection between the two exists).\par
+
+REGRET lies in the middle of the spectrum carved by socially anthropomorphic models, such as Marsh's, and metaphorically anthropomorphic models, such as Eigentrust. Due to its practical nature, it is easy to evaluate and to implement in real-world use cases; however, it draws on social sciences research heavily enough to have a particular lean toward a socially centred model. This balance makes REGRET a good example of a middle ground which can be carved between models.\par
+
+REGRET also presents an important use case of the guidelines and methodologies produced as a part of the proposed research. A model such as Eigentrust, in its original detail, is tightly coupled to its implicit model of reputation; future work might combine the reputation modelling provided by REGRET into Eigentrust's calculation of graded trust, so as to explore how Eigentrust fares when modelling responsibility differently. Current approaches to the problem of anthropomorphic algorithm design and engineering do not present elegant methods for combining the different aspects of Eigentrust in a modular, uncoupled way. However, with appropriate guidelines, methodologies and tooling, this limitation of the current status quo need not create more difficult future research; however, these methods produced must apply not only to Trust modelling, but to Reputation, a largely unrelated behavioural trait, also.\par
+
+\subsection{Comfort}
 
 
-\subsection*{Reputation}
-
-\subsection*{Comfort}
-
-\subsection*{Responsibility}
+\subsection{Responsibility}
 
 
 \section{Methodology}
