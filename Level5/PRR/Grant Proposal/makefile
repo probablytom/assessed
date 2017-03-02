@@ -17,3 +17,8 @@ wc:
 
 available:
 	cp Proposal.pdf /home/tom/webdav
+
+commit:
+	git add .
+	git commit
+	git push

@@ -45,26 +45,50 @@ Therefore, no suitable system currently exists for undertaking this research. Ei
 
 Moreover, this interdisciplinary disparity can create further tensions, as no guidelines exist on how these models should be implemented and tested. A team of differing backgrounds will naturally diverge on how a formalism should be evaluated, and its creation can be complicated by the lack of clear guidelines on its implementation and evaluation. A model of multiple human traits can quickly couple the many traits together, and should one trait need to be altered, this can ripple through a particularly sophisticated model to cause major setbacks. Given the difficulty communicating between team members, and the complexity of the project for a single researcher, these major setbacks should be expected at present.\par
 
-Solving this problem has its own complexities. This particularly can be seen when analysing the intricate nature of psychological and sociological research on a single topic\footnote{As an example, consider the differences between Luhmann's approaches to trust~\cite{luhmann2000familiarity} compared to Deutsch's~\cite{deutsch1962cooperation}. Deutsch believed that trust was inherently a perspective of an individual regarding the world, whereas Luhmann's perspective centred around the broader-scale sociological impact that trust has.}. The problem can be tackled however --- as will be seen --- by separating the engineering from the theory, and creating guidelines and tooling which simplify the model's creation and structure.\par
+Solving this problem has its own complexities. This particularly can be seen when analysing the intricate nature of psychological and sociological research on a single topic.\footnote{As an example, consider the differences between Luhmann's approaches to trust~\cite{luhmann2000familiarity} compared to Deutsch's~\cite{deutsch1962cooperation} Deutsch believed that trust was inherently a perspective of an individual regarding the world, whereas Luhmann's perspective centred around the broader-scale sociological impact that trust has.}. The problem can be tackled however --- as will be seen --- by separating the engineering from the theory, and creating guidelines and tooling which simplify the model's creation and structure.\par
 \subsection*{Approaching the Problem}\label{sec:approaching_the_problem}
 
 % Our approach is to:
 % - develop methodologies support anthropomorphic algorithm research and developing
 % - develop tooling to support research and development according to the methodologies, and to simplify the overall structure of a model through this support
+To approach the problem of simplifying the engineering, one must first analyse what trends exist currently --- a standard should fit the direction that the field is currently taking. Once undertaken, however, this analysis will lend itself to the creation of:
+\begin{enumerate}
+    \item A methodology for formalism creation and evaluation.\\
+    This should help the engineering effort to get out of the way of the research, being the definition and evaluation of a formalism of a trait.
+    \item Tooling to support this methodology.\\
+    This will help drive adoption of the methodology, as well as ensuring that evaluable, well-engineered formalisms are easier to create --- strengthening the case for industrial applications.
+\end{enumerate}
 
+\subsubsection*{Methodology/Guideline Component}\label{sec:methodology}
 % Methodologies
 % - identify similarities in:
 %   | models' construction and the way they're used
 %   | social science research used in model creation
 % - Show how one framework can support lots of different models
 % - create a jargon around that framework, and produce guidelines to simplify research and interdisciplinary communication
+To create the methodology appropriate for solving the problem of the creation and engineering of these anthropomorphic algorithms, it will be important to analyse multiple aspects of the existing literature.\par
 
+For example, it is critical that the methodologies and guidelines produced are in line with existing models. Moreover, it is vital that these methodologies and guidelines are suitable at a number of levels: they must support not only the engineering of a model, but the engineering of models with psychological, sociological, ethnographic or philosophical perspectives on their respective traits.\par
+
+The methodologies and guidelines created would note only support the creation of a model, but would support the creation of several models, ideally of different traits. This would increase the degree to which different models can be compared, and can be used as the basis of other models.\par
+
+Once these methodologies and guidelines exist, jargons around this framework can be made concrete, providing one jargon that all members of a research team investigating anthropomorphic algorithms and formalisms of human traits can learn. This would simplify the existing research, and solve some of the issues in interdisciplinary communication.\par
+
+\subsubsection*{Tooling Component}\label{sec:tooling}
 % Tooling
 % - Once that methodology is created, create tools such as trait containers and design patterns to aid formalism production and design.
 % - Produce example formalisms:
 %   | single-trait
 %   | multiple-trait
+Once the methodology and guideline component of work is complete, tooling for the system can be constructed which supports this as a specification. This tooling would take the form of engineering techniques, such as appropriate design patterns, as well as libraries which encourage the construction and design of a formalism according to the guidelines.\par
 
+Ideally, these guidelines would simplify model construction so as to greatly reduce the technological barrier to entry; perhaps enabling social sciences researchers to implement the models themselves without a dedicated software engineer/computing science researcher. The feasibility of this goal is dependant on the results of an in-depth background survey, which would identify the complexity of the methodologies and guidelines, as well as whether one set of methodologies and guidelines can sufficiently cover all anticipated models.\par
+
+An aspect of this tooling component would be demonstration that the tools would work; this can be done in two stages. 
+\begin{enumerate}
+    \item Re-implementation/redesign of existing models according to the methodologies and guidelines, built using the tools created.
+    \item An industrial proof-of-concept, using the tools to create models with the simplicity, reliability, and power to have commercial application.
+\end{enumerate}
 
 \subsection{Use Cases}
 % passive authentication -- tim's paper
