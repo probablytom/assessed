@@ -11,55 +11,144 @@
 \section{Proposed Approach}
 \label{sec:proposed_approach}
 %====================================================
+\subsection{Abstract}\label{sec:abstract}
+The\todo{try to keep this section to one page!} field of human-like computing --- and the study of algorithms which mimic human behaviours especially\footnote{Henceforth referred to as ``Anthropomorphic Algorithms''.} --- is one of increasing importance in academic and industrial circles. Academic circles are increasingly looking to use the metaphor of anthropomorphic behaviour in information security, human-computer interaction, and fields tangentially related to computing science such as urban planning and smart city development.\par
+
+Developing these anthropomorphic algorithms can be complicated, however. They require rigorous study in social sciences such as psychology, anthropology, and sociology, as well as the understanding of artistic studies such as philosophy. This added complication means that pursuit of human-like computing requires interdisciplinary study to effectively research and implement these systems. This complexity often results in simple models of one human behavioural trait, rather than more involved multiple-trait models.\par
+
+This limitation is problematic: the complexity of the field, and its obscurity relative to other fields such as pervasive computation or quantum computing paradigms, mean that many researchers are not drawn to the field as a possible opportunity.\par
+
+In this proposal, a research opportunity is described which can solve both of these issues by producing currently absent tooling and methodologies for the field. Once successfully completed, the tools and methodologies produced would reduce the interdisciplinary complexity of the field, and create jargon and tools which reduce the friction involved in undertaking this research from multiple angles. These tools and methodologies would, in turn, permit currently difficult-to-pursue research which engineers multiple-trait anthropomorphic algorithms. These models would strengthen the industrial utility of this field, as the utility of the models is compounded with more traits --- garnering more interest in the field, and putting existing research to better use, though applications in smart cities, voice assistants, and more.\par
+
+\subsection*{Problem Outline}\label{sec:problem_outline}
+% a fair degree of research has been done in this field
+% - lots in trust, other traits like comfort, reputation, regret
+
+% this research is difficult
+% - and while there's utility in the field, it's complicated and interdisciplinary
+
+% It's made more difficult by the lack of 
+% * a common jargon
+% * a common way of solving problems
+% * interdisciplinary-focused researchers who can understand multiple jargons and multiple problem-solving methods
+
+% Unfortunately, it's not a simple case of just "making it simpler". 
+% - we need to take the complexities of social science and humanities into account! We can't make humans and culture simpler. 
+%   | ...so maybe we can simplify the engineering?
+% - how do we simplify engineering, so we can focus on those complexities?
+
+Human-like computing, as a research field, has grown significantly in recent years --- particularly with regards literature on trust formalisms. However, the field is unusual, in that the development of an anthropomorphic algorithm requires an understanding of not only computing science, but also social sciences: a formalism's accuracy depends on its psychological and sociological perspective. More anthropomorphic formalisms require an understanding of other fields, such as philosophy and ethnography also, as their modelling of human traits --- and affect on our culture --- is critical to understand during the model's creation. This interdisciplinary nature is one of the field's greatest strengths and most curious aspects.\par
+
+It is also one of its greatest weaknesses. The requirement for a formalism to have a well-defined psychological and sociological model, as well as potential ethnographic and philosophical perspectives, so as to be implemented and evaluated by a computing science researcher, means that only particularly polymathematical researchers can undertake the research --- assuming that it arouses their interest in the first place. The alternative, an interdisciplinary team who can perform the research with a shared understanding of different components of the formalism, has its own complications, communication can be hampered by the differences in different parties' jargons. Moreover, the aims of researchers with different backgrounds can differ: some fields, such as the social sciences, have an interest in modelling human activity accurately, but computing scientists and philosophers can find the models useful as a metaphor in their studies --- as a thought experiment for philosophers, and in human-computer interaction for computing scientists.\par
+
+Therefore, no suitable system currently exists for undertaking this research. Either a researcher adept in both computing science and social science is required, or a team with unusually good communication skills, each of the members of which should understand the (complicated) jargons of the others.\par
+
+Moreover, this interdisciplinary disparity can create further tensions, as no guidelines exist on how these models should be implemented and tested. A team of differing backgrounds will naturally diverge on how a formalism should be evaluated, and its creation can be complicated by the lack of clear guidelines on its implementation and evaluation. A model of multiple human traits can quickly couple the many traits together, and should one trait need to be altered, this can ripple through a particularly sophisticated model to cause major setbacks. Given the difficulty communicating between team members, and the complexity of the project for a single researcher, these major setbacks should be expected at present.\par
+
+Solving this problem has its own complexities. This particularly can be seen when analysing the intricate nature of psychological and sociological research on a single topic\footnote{As an example, consider the differences between Luhmann's approaches to trust~\cite{luhmann2000familiarity} compared to Deutsch's~\cite{deutsch1962cooperation}. Deutsch believed that trust was inherently a perspective of an individual regarding the world, whereas Luhmann's perspective centred around the broader-scale sociological impact that trust has.}. The problem can be tackled however --- as will be seen --- by separating the engineering from the theory, and creating guidelines and tooling which simplify the model's creation and structure.\par
+\subsection*{Approaching the Problem}\label{sec:approaching_the_problem}
+
+% Our approach is to:
+% - develop methodologies support anthropomorphic algorithm research and developing
+% - develop tooling to support research and development according to the methodologies, and to simplify the overall structure of a model through this support
+
+% Methodologies
+% - identify similarities in:
+%   | models' construction and the way they're used
+%   | social science research used in model creation
+% - Show how one framework can support lots of different models
+% - create a jargon around that framework, and produce guidelines to simplify research and interdisciplinary communication
+
+% Tooling
+% - Once that methodology is created, create tools such as trait containers and design patterns to aid formalism production and design.
+% - Produce example formalisms:
+%   | single-trait
+%   | multiple-trait
 
 
-%-------------------------------------------
-\subsection*{Subsection Title}
-\label{sec:label-subsection}
-%-------------------------------------------
+\subsection{Use Cases}
+% passive authentication -- tim's paper
 
+% Smart cities
+
+% Voice assistants
 
 %====================================================
 \section{Background}
 \label{sec:background}
 %====================================================
+% There's a lot of variety in the related literature, because there's a variety of different traits that can be modelled. 
 
+\subsection*{Trust}\label{sec:trust}
+% The biggest field of research is trust. 
+% Lots of different approaches to trust modelling.
+
+
+\subsubsection*{Marsh}\label{sec:marsh}
 Something about Marsh\cite{marsh1994}
 
-%====================================================
+\subsubsection*{C\&F}\label{sec:cnf}
+
+\subsubsection*{Eigentrust}\label{sec:eigentrust}
+
+\subsection*{Reputation}
+
+\subsection*{Comfort}
+
+\subsection*{Responsibility}
+
+
 \section{Methodology}
 \label{sec:methodology}
-%====================================================
 
+% How are we going to put the tools together?
 
-%====================================================
+% Identify commonalities between the models and the traits
+% - Analysis of the models
+% - Analysis of the traits being modelled
+
+% Produce guidelines for model creation based on how thee models are made / have been made / can & should be made
+
+% Produce design patterns for research and models based on these models
+
+% Produce tooling and libraries which support these design patterns
+
+% Produce source code for existing models created against these guidelines using these tools
+
+% Produce new models which are suitable for industry-setting deployment
+% - either smart cities or voice assistants
+
 \section{Risks}
 \label{sec:risks}
-%====================================================
+% The work's complex -- one set of guidelines might not be enough
+
+% Creating these tools doesn't mean people will adopt them -- we'd need to get the word out, and that can cost! We'd need money for conferences and things. 
+
+% 
 
 
-%====================================================
 \section{Project Management}
 \label{sec:project_management}
-%====================================================
+% GTD-style management in a hierarchical structure
 
 
-%====================================================
 \section{Impact}
 \label{sec:proposed_approach}
-%====================================================
+% Impact in two ways!
 
 
-%-------------------------------------------
 \subsection*{National Importance}
 \label{sec:national_importance}
-%-------------------------------------------
+% Relates to EPSRC's push in ICT themes
+% Improvements to British technological advancements
+% Improvements in british urban development, and consumer electronics
 
-
-%-------------------------------------------
 \subsection*{Academic Impact}
 \label{sec:academic_impact}
-%-------------------------------------------
+% Ties well into EPSRC's intention to grow funding opportunities in software engineering!
+% Improvements to CS research, and HCI, and software engineering
+% Improvements to many other fields, such as psych, socio, geography, philosophy, ethnography...
+
 
 
 \let\oldbibliography\thebibliography
