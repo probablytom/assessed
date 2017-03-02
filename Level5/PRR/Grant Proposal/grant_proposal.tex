@@ -12,12 +12,12 @@
 \label{sec:proposed_approach}
 %====================================================
 \subsection{Abstract}\label{sec:abstract}
-The\todo{try to keep this section to one page!} field of human-like computing --- and the study of algorithms which mimic human behaviours especially\footnote{Henceforth referred to as ``Anthropomorphic Algorithms''.} --- is one of increasing importance in academic and industrial circles. Academic circles are increasingly looking to use the metaphor of anthropomorphic behaviour in information security, human-computer interaction, and fields tangentially related to computing science such as urban planning and smart city development.\par
+The field of human-like computing --- and the study of algorithms which mimic human behaviours especially\footnote{Henceforth referred to as ``Anthropomorphic Algorithms''.} --- is one of increasing importance in academic and industrial circles, and sees application in information security and human-computer interaction, as well as tangenially related fields, such as smart city development.\par
 
 Developing these anthropomorphic algorithms can be complicated, however. They require rigorous study in social sciences such as psychology, anthropology, and sociology, as well as the understanding of artistic studies such as philosophy. This added complication means that pursuit of human-like computing requires interdisciplinary study to effectively research and implement these systems. This complexity often results in simple models of one human behavioural trait, rather than more involved multiple-trait models.\par
 
-This limitation is problematic: the complexity of the field, and its obscurity relative to other fields such as pervasive computation or quantum computing paradigms, mean that many researchers are not drawn to the field as a possible opportunity.\par
-
+% This limitation is problematic: the complexity of the field, and its obscurity relative to other fields such as pervasive computation or quantum computing paradigms, mean that many researchers are not drawn to the field as a possible opportunity.\par
+% 
 In this proposal, a research opportunity is described which can solve both of these issues by producing currently absent tooling and methodologies for the field. Once successfully completed, the tools and methodologies produced would reduce the interdisciplinary complexity of the field, and create jargon and tools which reduce the friction involved in undertaking this research from multiple angles. These tools and methodologies would, in turn, permit currently difficult-to-pursue research which engineers multiple-trait anthropomorphic algorithms. These models would strengthen the industrial utility of this field, as the utility of the models is compounded with more traits --- garnering more interest in the field, and putting existing research to better use, though applications in smart cities, voice assistants, and more.\par
 
 \subsection{Problem Outline}\label{sec:problem_outline}
@@ -82,13 +82,7 @@ Once these methodologies and guidelines exist, jargons around this framework can
 %   | multiple-trait
 Once the methodology and guideline component of work is complete, tooling for the system can be constructed which supports this as a specification. This tooling would take the form of engineering techniques, such as appropriate design patterns, as well as libraries which encourage the construction and design of a formalism according to the guidelines.\par
 
-Ideally, these guidelines would simplify model construction so as to greatly reduce the technological barrier to entry; perhaps enabling social sciences researchers to implement the models themselves without a dedicated software engineer/computing science researcher. The feasibility of this goal is dependant on the results of an in-depth background survey, which would identify the complexity of the methodologies and guidelines, as well as whether one set of methodologies and guidelines can sufficiently cover all anticipated models.\par
-
-An aspect of this tooling component would be demonstration that the tools would work; this can be done in two stages. 
-\begin{enumerate}
-    \item Re-implementation/redesign of existing models according to the methodologies and guidelines, built using the tools created.
-    \item An industrial proof-of-concept, using the tools to create models with the simplicity, reliability, and power to have commercial application.
-\end{enumerate}
+Ideally, these guidelines would simplify model construction so as to greatly reduce the technological barrier to entry; perhaps enabling social sciences researchers to implement the models themselves without a dedicated software engineer/computing science researcher.\par
 
 \subsection{Use Cases}
 % passive authentication -- Tim's paper
@@ -171,7 +165,7 @@ REGRET also presents an important use case of the guidelines and methodologies p
 \subsection{Responsibility}
 Similarly to Trust modelling, some varied work has been done in the pursuit of responsibility formalisms.
 
-\subsubsection{Deontic Logic}
+\subsubsection*{Deontic Logic}
 
 An early mathematical framework of responsibility can be found in the popular deontic logic\cite{deontic-logic}. Deontic Logic is a modal logic, similar to Kramdi's modal logic for trust.\cite{kramdi} It is worth noting that Kramdi's logic for trust is substantially more advanced than deontic logic is for responsibility --- therefore, while deontic logic is elegant in its simplicity, it is of limited practical use.\par
 
@@ -212,7 +206,7 @@ As the guidelines and methodologies which are created are finished, a library of
 \subsection{Tool Usage Examples}
 Once the libraries are created, previous implementations of existing models will be re-engineered to make use of the new technologies. Further examples will then be developed, such as smart city development, voice assistant integration, and passive authentication.\par
 
-This unit of work will present these examples, with the existing models showing the academic impact of the work produced, and the integration with commercial interests showing the industrial impact of the work.\par
+This unit of work will present these examples, with the existing models showing the academic impact of the work produced, and the integration with commercial interests showing the industrial impact of the work. Consumer electronics companies and cities interested in smart technologies will be offered the opportunity to collaborate on these applications, enabled by the EPSRC grant.\par
 
 % How are we going to put the tools together?
 
@@ -244,21 +238,34 @@ Another risk worth noting is that the creation of these tools does not imply ado
 \section{Impact}
 \label{sec:proposed_approach}
 % Impact in two ways!
+This research, due to its academic nature and potential to disrupt commercial spaces, has these two distinct aspects of its impact; plus the national importance, as can be seen in relation to EPSRC's current interests.
 
-
-\subsection*{National Importance}
+\subsection{National Importance}
 \label{sec:national_importance}
 % Relates to EPSRC's push in ICT themes
 % Improvements to British technological advancements
-% Improvements in british urban development, and consumer electronics
+% Improvements in British urban development, and consumer electronics
+EPSRC's theme of Information and Communication Technologies clearly relate to the proposed work, in two important respects:
+\begin{itemize}
+    \item The Informatics research involved in the proposed work is undoubtedly groundbreaking, and pushes the state of the art forward while guiding the next generation of research in the area
+    \item Anthropomorphic algorithms have a great utility in communications technology, as they allow a device to communicate with a user in unusually human-centric ways.\cite{Crawford2013127}
+\end{itemize}
 
-\subsection*{Academic Impact}
+These advancements notwithstanding, Britain has a long history of pursuing the very forefront of emerging computing technologies; anthropomorphic algorithms clearly represent the next stage in this tradition, and Britain can currently pave a way as a global leader in this emerging area of research.
+
+\subsubsection{Commercial Potential}
+An aspect of this national importance is the commercial potential which the research represents. As Britain would be carving the path for both research and industry with the proposed work, an opportunity presents itself to lead the pack in commercial applications of these technologies.\par
+
+Examples of the commercial viability of the work are provided as part of the delivered research; some of the funds provided by the EPSRC grant will be used for the integration of these technologies with consumer electronics companies and urban planning departments in Britain, so as to pursue some of the use cases outlined in this proposal.\par
+
+\subsection{Academic Impact}
 \label{sec:academic_impact}
 % Ties well into EPSRC's intention to grow funding opportunities in software engineering!
 % Improvements to CS research, and HCI, and software engineering
 % Improvements to many other fields, such as psych, socio, geography, philosophy, ethnography...
+EPSRC's current intention to grow its investment in software engineering research ties particularly well into this research. Not only would this research explore software engineering in a field previously neglected by engineering research, but this engineering has the opportunity to impact multiple aspects of computing science: improving the standards of not only software engineering, but enabling better research in fields such as human-computer interaction also. The return on investment of this particular body of work can therefore be expected to be unusually high --- especially when accounting for the commercial impact of the work also.\par
 
-
+This research does not only impact a range of computing science areas, however. Due to its interdisciplinary nature, better guidelines and methodologies for anthropomorphic algorithm research --- and tooling to make model creation vastly simpler --- allows researchers in other fields the opportunity to benefit from this work also. One can expect impacts from this research in philosophy of mind and political philosophy, as well as conflict resolution and trait modelling in psychology and sociology, urban planning opportunities in geography, and a greater toolset by which to analyse culture development in ethnography. 
 
 \let\oldbibliography\thebibliography
 \renewcommand{\thebibliography}[1]{\oldbibliography{#1}
