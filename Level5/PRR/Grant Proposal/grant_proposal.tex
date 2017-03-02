@@ -109,7 +109,7 @@ Designers can further the anthropomorphic metaphor used in many of these devices
 % There's a lot of variety in the related literature, because there's a variety of different traits that can be modelled. 
 Related literature on anthropomorphic algorithms varies widely, due to the multitude of different traits which are formalised. However, the trait with the greatest degree of pre-existing literature is trust; this background survey will therefore cover the nuances of trust research particularly, as an example of the different natures of anthropomorphic algorithms which the methodologies and tools would need to support.\par
 
-\subsection*{Trust}\label{sec:trust}
+\subsection{Trust}\label{sec:trust}
 % The biggest field of research is trust. 
 % Lots of different approaches to trust modelling.
 Many different approaches have been taken to trust modelling. For example, Marsh's seminal model of trust\cite{marsh1994} is largely founded in psychology and sociology research; Eigentrust\cite{Kamvar2003} instead uses trust modelling as a metaphor on which to base network security algorithms. This subsection will explore the myriad ways in which trust modelling can vary in its academic philosophy.\par
@@ -138,12 +138,12 @@ The degree of detail Castelfranchi and Falcone provide creates a simple method f
 
 C\&F, however, has its own problems. For example, the boolean logical approach that C\&F provide makes gradations of trust difficult to calculate. While they provide one possible approach at the end of their original paper, the elegance and simplicity of the non-graded approach is lost to the additional detail.\par
 
-C\&F in its non-graded form therefore has middling applicability in the real world; however, it has served as the basis of much further work\cite{Herzig2009}, including more powerful modal logics.\cite{Kramdi}\par
+C\&F in its non-graded form therefore has middling applicability in the real world; however, it has served as the basis of much further work\cite{Herzig2009}, including more powerful modal logics.\cite{kramdi}\par
 
 It is clear to see that, between even these two early models of only one trait, a significant degree of difference exists in the implementation detail of the two formalisms. Moreover, their philosophies with regards social sciences differ; Marsh taking an approach between sociology and psychology, C\&F leaning more to the sociological aspects. However, both models are created with the intention of directing the behaviour of intelligent agents. Therefore, at least some similarities exist which might be used to construct methodologies and guidelines around.\par
 
 \subsubsection*{Eigentrust}\label{sec:eigentrust}
-In comparison to the social sciences-oriented approaches taken by Marsh and C\&F, Eigentrust\cite{Kamvar2003} takes a very different approach. Eigentrust leverages a reputation-centric approach, basing its algorithms on star ratings often used by eCommerce platforms such as eBay and Amazon for rating their traders. The core of the algorithm rests on a very simple calculation of overall satisfaction:
+In comparison to the social sciences-oriented approaches taken by Marsh and C\&F, Eigentrust\cite{Kamvar2003} takes a very different approach. Eigentrust leverages a reputation-centric approach, basing its algorithms on star ratings often used by e-commerce platforms such as eBay and Amazon for rating their traders. The core of the algorithm rests on a very simple calculation of overall satisfaction:
 \[s_{i, j} = sat(i, j) - unsat(i, j)\]
 \ldots{}where \(sat\) is a function representing the number of interactions agent \(i\) has had with agent \(j\) which they deem ``satisfactory'', and \(unsat\) the function representing the number of interactions deemed ``unsatisfactory''. From this simple formula, Eigentrust calculates agent \(j\)'s reputation from the perspective of agent \(i\), and through a series of more complex transformations using linear algebra, arrives at a distributed ledger of reputation scores which takes into account the input from all agents.\par
 
@@ -168,11 +168,28 @@ REGRET lies in the middle of the spectrum carved by socially anthropomorphic mod
 
 REGRET also presents an important use case of the guidelines and methodologies produced as a part of the proposed research. A model such as Eigentrust, in its original detail, is tightly coupled to its implicit model of reputation; future work might combine the reputation modelling provided by REGRET into Eigentrust's calculation of graded trust, so as to explore how Eigentrust fares when modelling responsibility differently. Current approaches to the problem of anthropomorphic algorithm design and engineering do not present elegant methods for combining the different aspects of Eigentrust in a modular, uncoupled way. However, with appropriate guidelines, methodologies and tooling, this limitation of the current status quo need not create more difficult future research; however, these methods produced must apply not only to Trust modelling, but to Reputation, a largely unrelated behavioural trait, also.\par
 
-\subsection{Comfort}
-
-
 \subsection{Responsibility}
+Similarly to Trust modelling, some varied work has been done in the pursuit of responsibility formalisms.
 
+\subsubsection{Deontic Logic}
+
+An early mathematical framework of responsibility can be found in the popular deontic logic\cite{deontic-logic}. Deontic Logic is a modal logic, similar to Kramdi's modal logic for trust.\cite{kramdi} It is worth noting that Kramdi's logic for trust is substantially more advanced than deontic logic is for responsibility --- therefore, while deontic logic is elegant in its simplicity, it is of limited practical use.\par
+
+Some attempts are made to overcome this. DeLima et al., for example, create more complex responsibility models which are able to model the allocation and discharge of tasks with greater detail, even in complex MAS.\cite{DeLima2008} However, further research is yet required to develop DeLima et al.~'s model into a fully featured anthropomorphic algorithm for responsibility.
+
+\subsubsection*{Wallis}
+Lately, some attention has been paid to responsibility modelling via anthropomorphic algorithms.\cite{wallis2017} While previously logical models of responsibility has been developed~\cite{berreby2015modelling}, responsibility formalism work currently underway (by the researchers involved in this grant proposal) provide a socially inspired responsibility formalism in the same vein as Marsh's trust modelling formalism.\par
+
+This work presents a model of responsibility inspired heavily by sociotechnical systems research --- particularly that of Ian Sommerville\cite{Sommerville:2007ec}. In sociotechnical literature, responsibilities are actions which can be discharged; the history of discharged responsibilities discussed as ``consequential'' responsibilities, and obligation to act in the future identified as ``causal'' responsibilities. Similar demarcations are made in philosophical literature by Scanlon\cite{scanlon2006justice} and by Strawson\cite{strawson}.\par
+
+As indicated earlier --- and as a result of its philosophical inspiration --- Wallis' model of responsibility lies on the Marsh and C\&F side of the aforementioned spectrum. This might be to be expected: where C\&F might consider trust as the belief that another agent will act, Wallis' model of responsibility treats a responsibility as an obligation to act in a certain way. The two traits can, by certain philosophies, be seen as very similar: Wallis' model of responsibility might work particularly well with Marsh's model of trust, for example. By contrast, there is very little similarity in Eigentrust's model of trust and Wallis' model of responsibility. Therefore, the approach one takes when initially creating a model is important; should the software engineer in a research team be unable to grasp the nuances of the social science aspect of a formalism, it may fail to fulfil its requirements simply by being insufficiently similar to the perspectives of other formalisms it is designed to work alongside.\par
+
+\subsection{Discussion}
+As can be seen, there exists a great breadth in the nature and detail of different anthropomorphic algorithms.\par
+
+Some models use their respective traits as a metaphor by which they can represent some human-like behaviour; other models use research in philosophy and social sciences for an anthropomorphic realism. Even within the latter camp, differences in perspective with regards social science research can greatly affect the nature of the resulting model.\par
+
+The creation of a set of guidelines by which this broad research can be carried out is clearly a complex task, which requires a great deal of interdisciplinary knowledge, and a particularly communicative and open-minded set of researchers to enact. However, the research is also urgent: in only 23 years since Marsh's seminal computational model of trust, the field has exploded into myriad forms, which vary wildly. To combat further divergence of the field, which would require even more work to generalise into methodologies and guidelines, this research should be undertaken as soon as possible.\par
 
 \section{Methodology}
 \label{sec:methodology}
@@ -199,13 +216,6 @@ REGRET also presents an important use case of the guidelines and methodologies p
 % The work's complex -- one set of guidelines might not be enough
 
 % Creating these tools doesn't mean people will adopt them -- we'd need to get the word out, and that can cost! We'd need money for conferences and things. 
-
-% 
-
-
-\section{Project Management}
-\label{sec:project_management}
-% GTD-style management in a hierarchical structure
 
 
 \section{Impact}
