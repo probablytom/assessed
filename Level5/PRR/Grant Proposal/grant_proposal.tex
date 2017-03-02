@@ -20,7 +20,7 @@ This limitation is problematic: the complexity of the field, and its obscurity r
 
 In this proposal, a research opportunity is described which can solve both of these issues by producing currently absent tooling and methodologies for the field. Once successfully completed, the tools and methodologies produced would reduce the interdisciplinary complexity of the field, and create jargon and tools which reduce the friction involved in undertaking this research from multiple angles. These tools and methodologies would, in turn, permit currently difficult-to-pursue research which engineers multiple-trait anthropomorphic algorithms. These models would strengthen the industrial utility of this field, as the utility of the models is compounded with more traits --- garnering more interest in the field, and putting existing research to better use, though applications in smart cities, voice assistants, and more.\par
 
-\subsection*{Problem Outline}\label{sec:problem_outline}
+\subsection{Problem Outline}\label{sec:problem_outline}
 % a fair degree of research has been done in this field
 % - lots in trust, other traits like comfort, reputation, regret
 
@@ -46,7 +46,7 @@ Therefore, no suitable system currently exists for undertaking this research. Ei
 Moreover, this interdisciplinary disparity can create further tensions, as no guidelines exist on how these models should be implemented and tested. A team of differing backgrounds will naturally diverge on how a formalism should be evaluated, and its creation can be complicated by the lack of clear guidelines on its implementation and evaluation. A model of multiple human traits can quickly couple the many traits together, and should one trait need to be altered, this can ripple through a particularly sophisticated model to cause major setbacks. Given the difficulty communicating between team members, and the complexity of the project for a single researcher, these major setbacks should be expected at present.\par
 
 Solving this problem has its own complexities. This particularly can be seen when analysing the intricate nature of psychological and sociological research on a single topic.\footnote{As an example, consider the differences between Luhmann's approaches to trust~\cite{luhmann2000familiarity} compared to Deutsch's~\cite{deutsch1962cooperation} Deutsch believed that trust was inherently a perspective of an individual regarding the world, whereas Luhmann's perspective centred around the broader-scale sociological impact that trust has.}. The problem can be tackled however --- as will be seen --- by separating the engineering from the theory, and creating guidelines and tooling which simplify the model's creation and structure.\par
-\subsection*{Approaching the Problem}\label{sec:approaching_the_problem}
+\subsection{Approaching the Problem}\label{sec:approaching_the_problem}
 
 % Our approach is to:
 % - develop methodologies support anthropomorphic algorithm research and developing
@@ -91,29 +91,59 @@ An aspect of this tooling component would be demonstration that the tools would 
 \end{enumerate}
 
 \subsection{Use Cases}
-% passive authentication -- tim's paper
+% passive authentication -- Tim's paper
+One possible application of this work would be simpler methods for using anthropomorphic algorithms in passive authentication. This would build on already published work applying anthropomorphic properties to device security\cite{Crawford2013127}, strengthening the system and allowing the formalisms used to be evaluated more reliably. Evaluation becomes more reliable as the engineering of the anthropomorphic algorithm becomes more reliable, and can be tested against other similar anthropomorphic algorithms engineered using the same techniques.\par
 
 % Smart cities
+Another potential application would be smart city development. Currently, many programmes exist for the development of smarter cities\cite{nam2011conceptualizing}, yet anthropomorphic algorithms see little application in the space of urban planning. Many applications of anthropomorphic algorithms can be envisaged\cite{wallis_x}, resilient city development and anthropomorphically responsible emergency response being two examples.\par
 
 % Voice assistants
+Voice assistants in commercial electronics are becoming more popular, as can be seen from the rise in popularity of technologies such as Apple's ``Siri'', Amazon's ``Alexa'', and the Google Now assistant. From a human-computer interaction perspective, these technologies rely in part on a human-like interaction mechanism through the use of a human-like voice, and natural language parsing.\par
+
+Designers can further the anthropomorphic metaphor used in many of these devices through the application of anthropomorphic algorithms --- however, no well-founded engineering standard exists for this technology, preventing its broader commercial application. A potential use case would be the integration of anthropomorphic algorithms to these consumer electronics products.\par
 
 %====================================================
 \section{Background}
 \label{sec:background}
 %====================================================
 % There's a lot of variety in the related literature, because there's a variety of different traits that can be modelled. 
+Related literature on anthropomorphic algorithms varies widely, due to the multitude of different traits which are formalised. However, the trait with the greatest degree of pre-existing literature is trust; this background survey will therefore cover the nuances of trust research particularly, as an example of the different natures of anthropomorphic algorithms which the methodologies and tools would need to support.\par
 
 \subsection*{Trust}\label{sec:trust}
 % The biggest field of research is trust. 
 % Lots of different approaches to trust modelling.
-
+Many different approaches have been taken to trust modelling. For example, Marsh's seminal model of trust\cite{marsh1994} is largely founded in psychology and sociology research; Eigentrust\cite{Kamvar2003} instead uses trust modelling as a metaphor on which to base network security algorithms. This subsection will explore the myriad ways in which trust modelling can vary in its academic philosophy.\par
 
 \subsubsection*{Marsh}\label{sec:marsh}
-Something about Marsh\cite{marsh1994}
+Marsh's model of trust is the first specifically computational perspective on a human behavioural trait\footnote{Birkhoff's early work on the mathematics of Aesthetics\cite{Birkhoff1933} being a possible exception, though Birkhoff's intention was not to create a computational model --- ``Aesthetic Measure'' pre-dates the Church-Turing thesis by about three years.}. It draws on psychological and sociological work to formalise a general theory of trust, and creates a mathematical representation of this theory. The theory is then tested by evaluating it in application to reinforcement learning agents.\par
+
+One particularly interesting notion Marsh provides is that Trust can be considered from three degrees of detail:
+\begin{itemize}
+    \item Basic Trust\\
+        This is an agent's general inclination to trust; from a human perspective, one might consider it the ``trusting-ness'' of the agent.
+    \item General Trust\\
+        This is an agent's inclination to trust another, specific agent. An example of general trust might be a student's degree of trust toward their thesis advisor --- the student might trust the advisor completely, not at all, or somewhere in-between.
+    \item Specific Trust\\
+        This is an agent's inclination to trust another, specific agent to enact a task or complete some goal. An example of Specific Trust might be that a student might trust their supervisor completely to write a reference, but not to fly a Boeing 777.
+\end{itemize}
+
+In creating these degrees of detail, Marsh attempts to replicate the way that human beings trust when considering different aspects of a scenario. One can imagine asserting, ``He's rather trusting'', ``She trusts her advisor'', or ``they don't trust each other to write a grant proposal'' --- each having its own related, yet distinct meaning. In integrating this notion into his model of trust, Marsh creates an algorithm which satisfies the literature he cites for both psychological and sociological perspectives on trust.\par
+
+Worth noting is that Marsh's model permits graded degrees of trust for all of these types. That is to say, Marsh's model can associate numbers to its measurement of trust, and so weigh up different degrees of trust to make decisions.\par
 
 \subsubsection*{C\&F}\label{sec:cnf}
+Castelfranchi and Falcone\cite{Castelfranchi2001} --- abbreviated to C\&F in popular literature --- created their own model of trust, based on a logical formalism of social trust. Their formalism defines logical predicates which define the nature of trust in terms of confidence, dependence, and disposition, which are also defined by them in logical terms.\par
+
+The degree of detail Castelfranchi and Falcone provide creates a simple method for calculating and assessing whether one agent trusts another, in a boolean fashion, in a way which scales to complicated multi-agent systems (or ``MAS'') effectively. This is more difficult in Marsh's model of trust, which is designed to measure degrees of trust from multiple agents' perspectives, and involves more complex calculation as a result.\par
+
+C\&F, however, has its own problems. For example, the boolean logical approach that C\&F provide makes gradations of trust difficult to calculate. While they provide one possible approach at the end of their original paper, the elegance and simplicity of the non-graded approach is lost to the additional detail.\par
+
+C\&F in its non-graded form therefore has middling applicability in the real world; however, it has served as the basis of much further work\cite{Herzig2009}, including more powerful modal logics.\cite{Kramdi}\par
+
+It is clear to see that, between even these two early models of only one trait, a significant degree of difference exists in the implementation detail of the two formalisms. Moreover, their philosophies with regards social sciences differ; Marsh taking an approach between sociology and psychology, C\&F leaning more to the sociological aspects. However, both models are created with the intention of directing the behaviour of intelligent agents. Therefore, at least some similarities exist which might be used to construct methodologies and guidelines around.\par
 
 \subsubsection*{Eigentrust}\label{sec:eigentrust}
+
 
 \subsection*{Reputation}
 
