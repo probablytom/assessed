@@ -22,3 +22,12 @@ commit:
 	git add .
 	git commit
 	git push
+
+gantt:
+	pdflatex gantt.tex
+	pdflatex gantt.tex
+	pdflatex gantt.tex
+	mv gantt.pdf work_plan.pdf
+
+gantt-available:
+	cp work_plan.pdf /home/tom/webdav/work_plan.pdf

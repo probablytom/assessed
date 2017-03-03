@@ -1,0 +1,30 @@
+\documentclass{article}
+% \documentclass[landscape]{article}
+% \usepackage[pdftex,active]{preview}
+\usepackage{pgfgantt}
+\usepackage{geometry} % to change margins
+\usepackage{pdflscape} % provides the landscape environment
+\usepackage{ragged2e} % provides \RaggedLeft
+
+
+\begin{document}
+\newgeometry{vmargin=1cm}
+\begin{landscape}
+\thispagestyle{empty}\centering
+    \begin{ganttchart}[x unit=2.4cm,
+group left shift=0,
+group right shift=0]{1}{8}
+  \gantttitle{Work Plan}{8} \\
+  \gantttitlelist{"Year 1", "Year 2", "Year 3", "Year 4"}{2} \\
+  \gantttitlelist{"Half 1","Half 2","Half 1","Half 2","Half 1","Half 2","Half 1","Half 2"}{1} \\
+  \ganttgroup{Guideline Component}{1}{4} \\
+  \ganttgroup{Tooling Component}{5}{8} \\
+  \ganttbar{Deep Review \& Model Construction}{1}{1} \ganttnewline
+  \ganttlinkedbar{Guideline/Methodology Construction}{2}{4} \ganttnewline
+  \ganttlinkedmilestone{Guidelines published}{4} \ganttnewline
+  \ganttlinkedbar{Tooling Construction}{5}{6}\ganttnewline
+  \ganttlinkedbar{Existing Model Re-engineering}{7}{7}\ganttnewline
+  \ganttlinkedbar{Developing Commercial Examples}{8}{8}
+  \end{ganttchart}
+\end{landscape}
+\end{document}
